@@ -10,7 +10,10 @@ knitr::opts_chunk$set(echo = TRUE)
 install.packages("tidyverse")
 install.packages("readr")
 
-read.csv()
+library(tidyverse)
+library(readr)
+
+fuels <- read.csv(file = "Dead-River.csv")
 
 ```
 
