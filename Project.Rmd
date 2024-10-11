@@ -13,7 +13,7 @@ install.packages("readr")
 library(tidyverse)
 library(readr)
 
-fuels <- read.csv(file = "Dead-River.csv")
+fuels <- read.csv(file = "data/Dead-River.csv")
 
 ```
 
