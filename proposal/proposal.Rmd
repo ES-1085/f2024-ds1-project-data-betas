@@ -1,6 +1,6 @@
 ---
 title: "Project proposal"
-author: "Team name"
+author: "Data Betas"
 output: html_document
 ---
 
@@ -11,7 +11,17 @@ library(broom)
 
 ## 1. Introduction
 
-Text goes here. Refer to the Markdown Quick Reference: Help -> Markdown Quick Reference. 
+#### Research Question
+
+Which college owned buildings should be prioritized in order to transition the college off of fossil fuels by 2030?
+
+#### Data
+
+To answer this research question, we will be using data collected by the COA Community Energy Center on fossil fuel consumption of college owned buildings. The data set includes delivery dates, fuel types, number of gallons, unit cost and total cost for fossil fuel deliveries to all buildings using fossil fuels on campus as well as the two farms. The data covers all of these deliveries from March 2014 to April 2024. We are planning on adding data about the square footage of the buildings and their heating and water heating systems to the data set.
+
+#### Rationale
+
+In 2022, College of the Atlantic's All College Meeting passed an [energy policy](https://www.coa.edu/about/environmental-commitment/publications-policies/) requiring the college to transition off of fossil fuels by 2030. A lot of work has been done towards this goal, but there is still more work to do. As we get closer to the date, it is important to have a good understanding of how much fossil fuels we are still consuming and what areas should be prioritized.
 
 ## 2. Data
 
@@ -23,15 +33,22 @@ Text goes here.
 
 ## 3. Data analysis plan
 
-Text goes here.
+#### What variables will you visualize to explore your research questions?
 
+Our analysis will generally focus on comparisons between the buildings. We plan to look at monthly fossil fuel consumption across the last 10 years by building as well as the cost associated with it. We will also visualize changes in unit price of the different types of fossil fuels over the last 10 years. We will have to keep in mind that the data we have is based on fuel tank deliveries and not on continuous consumption. Different tanks have different capacities, so we could consider adding that data to our analysis as well.
+
+#### Will there be any other data that you need to find to help with your research question?
+
+In order to make better sense of our data and explore different methods for prioritization, we plan to add the square footage of the buildings and what kinds of heating and water heating systems they use. We might also add data about when major changes were made to the buildings in case those account for significant increases or decreases in fossil fuel consumption. Another set of data we could include are the average monthly temperatures over the last 10 years.
+
+#### Very preliminary exploratory data analysis, including some summary statistics and visualizations, along with some explanation on how they help you learn more about your data. (You can add to these later as you work on your project.)
+
+#### The data visualization(s) that you believe will be useful in exploring your question(s). (You can update these later as you work on your project.)
 
 ```{r}
 # Code goes here
 ```
 
-
 ## 4. Data Ethics Review
 
 The data ethics review section will be introduced in a separate class and is not part of the original proposal deadline.
-
