@@ -11,7 +11,17 @@ library(broom)
 
 ## 1. Introduction
 
-Text goes here. Refer to the Markdown Quick Reference: Help -> Markdown Quick Reference. 
+#### Research Question
+
+Which college owned buildings should be prioritized in order to transition the college off of fossil fuels by 2030?
+
+#### Data
+
+To answer this research question, we will be using data collected by the COA Community Energy Center on fossil fuel consumption of college owned buildings. The data set includes delivery dates, fuel types, number of gallons, unit cost and total cost for fossil fuel deliveries to all buildings using fossil fuels on campus as well as the two farms. The data covers all of these deliveries from March 2014 to April 2024. We are planning on adding data about the square footage of the buildings and their heating and water heating systems to the data set.
+
+#### Rationale
+
+In 2022, College of the Atlantic's All College Meeting passed a policy requiring the college to transition off of fossil fuels by 2030. A lot of work has been done towards this goal, but there is still more work to do. As we get closer to the date, it is important to have a good understanding of how much fossil fuels we are still consuming and what areas should be prioritized.
 
 ## 2. Data
 
@@ -25,13 +35,10 @@ Text goes here.
 
 Text goes here.
 
-
 ```{r}
 # Code goes here
 ```
 
-
 ## 4. Data Ethics Review
 
 The data ethics review section will be introduced in a separate class and is not part of the original proposal deadline.
-
