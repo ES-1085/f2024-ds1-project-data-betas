@@ -21,7 +21,7 @@ To answer this research question, we will be using data collected by the COA Com
 
 #### Rationale
 
-In 2022, College of the Atlantic's All College Meeting passed a policy requiring the college to transition off of fossil fuels by 2030. A lot of work has been done towards this goal, but there is still more work to do. As we get closer to the date, it is important to have a good understanding of how much fossil fuels we are still consuming and what areas should be prioritized.
+In 2022, College of the Atlantic's All College Meeting passed an [energy policy](https://www.coa.edu/about/environmental-commitment/publications-policies/) requiring the college to transition off of fossil fuels by 2030. A lot of work has been done towards this goal, but there is still more work to do. As we get closer to the date, it is important to have a good understanding of how much fossil fuels we are still consuming and what areas should be prioritized.
 
 ## 2. Data
 
