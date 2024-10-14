@@ -1,6 +1,6 @@
 ---
 title: "Project proposal"
-author: "Team name"
+author: "Data Betas"
 output: html_document
 ---
 
@@ -33,7 +33,17 @@ Text goes here.
 
 ## 3. Data analysis plan
 
-Text goes here.
+#### What variables will you visualize to explore your research questions?
+
+Our analysis will generally focus on comparisons between the buildings. We plan to look at monthly fossil fuel consumption across the last 10 years by building as well as the cost associated with it. We will also visualize changes in unit price of the different types of fossil fuels over the last 10 years. We will have to keep in mind that the data we have is based on fuel tank deliveries and not on continuous consumption. Different tanks have different capacities, so we could consider adding that data to our analysis as well.
+
+#### Will there be any other data that you need to find to help with your research question?
+
+In order to make better sense of our data and explore different methods for prioritization, we plan to add the square footage of the buildings and what kinds of heating and water heating systems they use. We might also add data about when major changes were made to the buildings in case those account for significant increases or decreases in fossil fuel consumption. Another set of data we could include are the average monthly temperatures over the last 10 years.
+
+#### Very preliminary exploratory data analysis, including some summary statistics and visualizations, along with some explanation on how they help you learn more about your data. (You can add to these later as you work on your project.)
+
+#### The data visualization(s) that you believe will be useful in exploring your question(s). (You can update these later as you work on your project.)
 
 ```{r}
 # Code goes here
