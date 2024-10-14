@@ -5,7 +5,9 @@ Place data file(s) in this folder.
 Then, include codebooks (variables, and their descriptions) for your data file(s)
 using the following format.
 
-## name of data file
+## Dead River
+
+There are `r nrow(fuels)` rows and `r ncol(fuels)` columns.
 
 - `Delivery_date`: The date each tank was delivered to the building
 - `Fuel_type`: The type of fuel in the tank

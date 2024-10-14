@@ -2,6 +2,8 @@
 title: "Project proposal"
 author: "Data Betas"
 output: html_document
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r load-packages, message = FALSE}
@@ -46,7 +48,7 @@ In order to make better sense of our data and explore different methods for prio
 #### The data visualization(s) that you believe will be useful in exploring your question(s). (You can update these later as you work on your project.)
 
 ```{r}
-# Code goes here
+
 ```
 
 ## 4. Data Ethics Review

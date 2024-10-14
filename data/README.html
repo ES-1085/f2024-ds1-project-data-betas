@@ -357,14 +357,20 @@ display: none;
 <p>Place data file(s) in this folder.</p>
 <p>Then, include codebooks (variables, and their descriptions) for your
 data file(s) using the following format.</p>
-<div id="name-of-data-file" class="section level2">
-<h2>name of data file</h2>
+<div id="dead-river" class="section level2">
+<h2>Dead River</h2>
+<p>There are <code>r nrow(fuels)</code> rows and
+<code>r ncol(fuels)</code> columns.</p>
 <ul>
-<li><code>Delivery.Date</code>: The date each tank was delivered to the
+<li><code>Delivery_date</code>: The date each tank was delivered to the
 building</li>
-<li><code>variable2</code>: The type of fuel in the tank</li>
-<li><code>variable3</code>: The number on the tank</li>
-<li>…</li>
+<li><code>Fuel_type</code>: The type of fuel in the tank</li>
+<li><code>Tank_number</code>: The number on the tank</li>
+<li><code>Building</code>: The building to which the fuel tank was
+delivered and will be used in</li>
+<li><code>Gallons</code>: The number of gallons in the fuel tank</li>
+<li><code>Unit_cost</code>: The cost per gallon in the fuel tank</li>
+<li><code>Cost</code>: The cost of the fuel tank</li>
 </ul>
 </div>
 </div>
