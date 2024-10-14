@@ -13,7 +13,12 @@ install.packages("readr")
 library(tidyverse)
 library(readr)
 
-fuels <- read.csv(file = "data/Dead-River.csv")
+fuels <- read_csv("data/Dead-River.csv",
+                  col_names = c("X1", "X2", 
+                                "Delivery_date", "Fuel_type",
+                                "Tank_number", "Building",
+                                "Gallons", "Unit_cost",
+                                "Cost"))
 
 ```
 
@@ -25,7 +30,9 @@ When you click the **Knit** button a document will be generated that includes bo
 
 ```{r clean_data}
 fuels <- fuels %>% 
-select(Delivery.Date, Fuel.Type, Tank.., Building, Gallons, Unit.Cost, Cost)
+  select(Delivery_date, Fuel_type, Tank_number, 
+       Building, Gallons, Unit_cost, Cost) |>
+  filter(Delivery_date != "Delivery Date")
 ```
 
 ## Including Plots
