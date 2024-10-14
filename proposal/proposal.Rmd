@@ -1,17 +1,16 @@
 ---
 title: "Project proposal"
 author: "Data Betas"
-output: html_document
-editor_options: 
-  chunk_output_type: console
----
+output:
+  html_document: default
+  pdf_document: default
 
 ```{r load-packages, message = FALSE}
 library(tidyverse)
 library(broom)
 ```
 
-## 1. Introduction
+## Introduction
 
 #### Research Question
 
@@ -26,11 +25,10 @@ To answer this research question, we will be using data collected by the COA Com
 In 2022, College of the Atlantic's All College Meeting passed an [energy policy](https://www.coa.edu/about/environmental-commitment/publications-policies/) requiring the college to transition off of fossil fuels by 2030. A lot of work has been done towards this goal, but there is still more work to do. As we get closer to the date, it is important to have a good understanding of how much fossil fuels we are still consuming and what areas should be prioritized.
 
 ## 2. Data
+The data set has `r nrow(fuels)` observations, each representing a fossil fuel delivery to a tank supplying a college owned building. It has `r ncol(fuels)` variables.
 
-Text goes here.
-
-```{r}
-# Code goes here
+```{r glimpse_data}
+glimpse(fuels)
 ```
 
 ## 3. Data analysis plan
