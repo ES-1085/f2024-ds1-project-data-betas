@@ -29,7 +29,13 @@ fossil_fuels <- read_csv("../data/Dead-River.csv",
   Tank_number == "Tank 17" ~ "17",
   TRUE ~ Tank_number
 ),
-Tank_number = as.numeric(Tank_number))
+Tank_number = as.numeric(Tank_number)) %>% 
+  
+  mutate(Cost = case_when(
+    Cost == "610.12 cr" ~ "-610.12",
+    TRUE ~ Cost
+  ),
+  Cost = as.numeric(Cost))
 ```
 ## Introduction
 
