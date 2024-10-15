@@ -7,8 +7,8 @@ date: "2024-10-11"
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 
-install.packages("tidyverse")
-install.packages("readr")
+# install.packages("tidyverse")
+# install.packages("readr")
 
 library(tidyverse)
 library(readr)
