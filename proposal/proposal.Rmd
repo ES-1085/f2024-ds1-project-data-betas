@@ -35,7 +35,9 @@ Tank_number = as.numeric(Tank_number)) %>%
     Cost == "610.12 cr" ~ "-610.12",
     TRUE ~ Cost
   ),
-  Cost = as.numeric(Cost))
+  Cost = as.numeric(Cost)) %>% 
+  
+  mutate(Gallons = as.numeric(Gallons))
 ```
 ## Introduction
 
@@ -58,7 +60,12 @@ The data set has `r nrow(fossil_fuels)` observations, each representing a fossil
 dplyr::glimpse(fossil_fuels)
 
 ```
+```{r filter}
+fossil_fuels %>% 
+  filter(is.na(Unit_cost
+               ))
 
+```
 ## 3. Data analysis plan
 
 #### What variables will you visualize to explore your research questions?
