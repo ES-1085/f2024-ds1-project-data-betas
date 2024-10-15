@@ -374,15 +374,16 @@ library(readr)</code></pre>
   Tank_number == &quot;Tank 17&quot; ~ &quot;17&quot;,
   TRUE ~ Tank_number
 ),
-Tank_number = as.numeric(Tank_number))</code></pre>
-<pre><code>## Rows: 2859 Columns: 9
-## ── Column specification ────────────────────────────────────────────────────────
-## Delimiter: &quot;,&quot;
-## chr (7): Delivery_date, Fuel_type, Tank_number, Building, Gallons, Unit_cost...
-## lgl (2): X1, X2
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+Tank_number = as.integer(Tank_number)) %&gt;% 
+  
+  mutate(Cost = case_when(
+    Cost == &quot;610.12 cr&quot; ~ &quot;-610.12&quot;,
+    TRUE ~ Cost
+  ),
+  Cost = as.numeric(Cost)) %&gt;% 
+  
+  mutate(Gallons = as.numeric(Gallons)) %&gt;% 
+  mutate(Unit_cost = as.numeric(Unit_cost))</code></pre>
 <div id="introduction" class="section level2">
 <h2>Introduction</h2>
 <div id="research-question" class="section level4">
@@ -421,11 +422,11 @@ variables.</p>
 ## Columns: 7
 ## $ Delivery_date &lt;chr&gt; &quot;01/03/2014&quot;, &quot;01/03/2014&quot;, &quot;01/04/2014&quot;, &quot;01/04/2014&quot;, …
 ## $ Fuel_type     &lt;chr&gt; &quot;LIQUID PROPANE&quot;, &quot;DYED KEROSENE&quot;, &quot;#2 HEATING OIL&quot;, &quot;#2…
-## $ Tank_number   &lt;dbl&gt; 14, 27, 24, 3, 5, 11, 35, 37, 8, 9, 21, 1, 26, 24, 11, 1…
+## $ Tank_number   &lt;int&gt; 14, 27, 24, 3, 5, 11, 35, 37, 8, 9, 21, 1, 26, 24, 11, 1…
 ## $ Building      &lt;chr&gt; &quot;171 Beech Hill Road&quot;, &quot;Witchcliff Apartments&quot;, &quot;Dorr NH…
-## $ Gallons       &lt;chr&gt; &quot;10.00&quot;, &quot;170.00&quot;, &quot;185.30&quot;, &quot;264.90&quot;, &quot;281.40&quot;, &quot;299.10…
-## $ Unit_cost     &lt;chr&gt; &quot;1.848100&quot;, &quot;3.730400&quot;, &quot;3.341700&quot;, &quot;3.341700&quot;, &quot;3.34170…
-## $ Cost          &lt;chr&gt; &quot;18.48&quot;, &quot;634.17&quot;, &quot;619.22&quot;, &quot;885.22&quot;, &quot;940.35&quot;, &quot;986.97…</code></pre>
+## $ Gallons       &lt;dbl&gt; 10.0, 170.0, 185.3, 264.9, 281.4, 299.1, 40.9, 71.6, 827…
+## $ Unit_cost     &lt;dbl&gt; 1.8481, 3.7304, 3.3417, 3.3417, 3.3417, 3.2998, 1.8481, …
+## $ Cost          &lt;dbl&gt; 18.48, 634.17, 619.22, 885.22, 940.35, 986.97, 75.59, 13…</code></pre>
 </div>
 <div id="data-analysis-plan" class="section level2">
 <h2>3. Data analysis plan</h2>

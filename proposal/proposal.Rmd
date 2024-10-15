@@ -12,7 +12,7 @@ library(broom)
 library(readr)
 ```
 
-``` {r load_data}
+``` {r load_data, message = FALSE, warning = FALSE}
 fossil_fuels <- read_csv("../data/Dead-River.csv",
                   col_names = c("X1", "X2", 
                                 "Delivery_date", "Fuel_type",
@@ -29,7 +29,7 @@ fossil_fuels <- read_csv("../data/Dead-River.csv",
   Tank_number == "Tank 17" ~ "17",
   TRUE ~ Tank_number
 ),
-Tank_number = as.numeric(Tank_number)) %>% 
+Tank_number = as.integer(Tank_number)) %>% 
   
   mutate(Cost = case_when(
     Cost == "610.12 cr" ~ "-610.12",
@@ -37,7 +37,8 @@ Tank_number = as.numeric(Tank_number)) %>%
   ),
   Cost = as.numeric(Cost)) %>% 
   
-  mutate(Gallons = as.numeric(Gallons))
+  mutate(Gallons = as.numeric(Gallons)) %>% 
+  mutate(Unit_cost = as.numeric(Unit_cost))
 ```
 ## Introduction
 
@@ -58,12 +59,6 @@ The data set has `r nrow(fossil_fuels)` observations, each representing a fossil
 
 ```{r glimpse_data}
 dplyr::glimpse(fossil_fuels)
-
-```
-```{r filter}
-fossil_fuels %>% 
-  filter(is.na(Unit_cost
-               ))
 
 ```
 ## 3. Data analysis plan
