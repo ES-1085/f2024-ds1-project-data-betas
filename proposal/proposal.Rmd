@@ -1,4 +1,4 @@
----
+
 title: "Project proposal"
 author: "Data Betas"
 output:
@@ -12,7 +12,7 @@ library(readr)
 ```
 
 ``` {r load_data, message = FALSE, warning = FALSE}
-fossil_fuels <- read_csv("../data/Dead-River.csv",
+fuels <- read_csv("data/Dead-River.csv",
                   col_names = c("X1", "X2", 
                                 "Delivery_date", "Fuel_type",
                                 "Tank_number", "Building",
@@ -58,7 +58,7 @@ In 2022, College of the Atlantic's All College Meeting passed an [energy policy]
 The data set has `r nrow(fossil_fuels)` observations, each representing a fossil fuel delivery to a tank supplying a college owned building. It has `r ncol(fossil_fuels)` variables.
 
 ```{r glimpse_data}
-glimpse(fossil_fuels)
+glimpse(fuels)
 
 ```
 ## 3. Data analysis plan
@@ -76,6 +76,19 @@ In order to make better sense of our data and explore different methods for prio
 #### The data visualization(s) that you believe will be useful in exploring your question(s). (You can update these later as you work on your project.)
 
 ```{r}
+
+ggplot(fuels, aes(x = Building, y = Gallons)) +
+  geom_boxplot() +
+  scale_x_discrete(guide = guide_axis(angle = 45))
+
+fuels |>
+  filter(Building == "Kaelber") |>
+  ggplot(aes(x = Delivery_date, y = Cost)) +
+  geom_point()
+
+ggplot(fuels, aes(x = Fuel_type)) +
+  geom_bar() +
+  scale_x_discrete(guide = guide_axis(angle = 45))
 
 ```
 
