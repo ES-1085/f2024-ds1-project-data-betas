@@ -102,10 +102,10 @@ ggplot(aes(x = Fuel_type)) +
 
 ggplot(fuels, aes(x = Delivery_date, y = Gallons)) +
   geom_point() +
-  scale_x_discrete(guide = guide_axis(angle = 45)) +
+  scale_x_date(guide = guide_axis(angle = 45)) +
   labs(x = "Delivery date",
        y = "Gallons",
-       title = "Delivery Date Compared to Gallons being delivered") # this doesn't really make sense and we need to change the date problem
+       title = "Delivery Date Compared to Gallons being delivered")
 
 ```
 
