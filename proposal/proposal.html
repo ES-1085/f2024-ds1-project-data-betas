@@ -356,7 +356,34 @@ display: none;
 
 
 <pre class="r"><code>library(tidyverse)
-library(broom)</code></pre>
+library(broom)
+library(readr)</code></pre>
+<pre class="r"><code>fossil_fuels &lt;- read_csv(&quot;../data/Dead-River.csv&quot;,
+                  col_names = c(&quot;X1&quot;, &quot;X2&quot;, 
+                                &quot;Delivery_date&quot;, &quot;Fuel_type&quot;,
+                                &quot;Tank_number&quot;, &quot;Building&quot;,
+                                &quot;Gallons&quot;, &quot;Unit_cost&quot;,
+                                &quot;Cost&quot;)) %&gt;% 
+  select(Delivery_date, Fuel_type, Tank_number, 
+       Building, Gallons, Unit_cost, Cost) |&gt;
+  filter(Delivery_date != &quot;Delivery Date&quot;) %&gt;% 
+  mutate(Tank_number = case_when(
+  Tank_number == &quot;Tank 8&quot; ~ &quot;8&quot;,
+  Tank_number == &quot;Tank 3&quot; ~ &quot;3&quot;,
+  Tank_number == &quot;Tank 24&quot; ~ &quot;24&quot;,
+  Tank_number == &quot;Tank 17&quot; ~ &quot;17&quot;,
+  TRUE ~ Tank_number
+),
+Tank_number = as.integer(Tank_number)) %&gt;% 
+  
+  mutate(Cost = case_when(
+    Cost == &quot;610.12 cr&quot; ~ &quot;-610.12&quot;,
+    TRUE ~ Cost
+  ),
+  Cost = as.numeric(Cost)) %&gt;% 
+  
+  mutate(Gallons = as.numeric(Gallons)) %&gt;% 
+  mutate(Unit_cost = as.numeric(Unit_cost))</code></pre>
 <div id="introduction" class="section level2">
 <h2>Introduction</h2>
 <div id="research-question" class="section level4">
@@ -387,6 +414,19 @@ what areas should be prioritized.</p>
 </div>
 <div id="data-1" class="section level2">
 <h2>2. Data</h2>
+<p>The data set has 2858 observations, each representing a fossil fuel
+delivery to a tank supplying a college owned building. It has 7
+variables.</p>
+<pre class="r"><code>glimpse(fossil_fuels)</code></pre>
+<pre><code>## Rows: 2,858
+## Columns: 7
+## $ Delivery_date &lt;chr&gt; &quot;01/03/2014&quot;, &quot;01/03/2014&quot;, &quot;01/04/2014&quot;, &quot;01/04/2014&quot;, …
+## $ Fuel_type     &lt;chr&gt; &quot;LIQUID PROPANE&quot;, &quot;DYED KEROSENE&quot;, &quot;#2 HEATING OIL&quot;, &quot;#2…
+## $ Tank_number   &lt;int&gt; 14, 27, 24, 3, 5, 11, 35, 37, 8, 9, 21, 1, 26, 24, 11, 1…
+## $ Building      &lt;chr&gt; &quot;171 Beech Hill Road&quot;, &quot;Witchcliff Apartments&quot;, &quot;Dorr NH…
+## $ Gallons       &lt;dbl&gt; 10.0, 170.0, 185.3, 264.9, 281.4, 299.1, 40.9, 71.6, 827…
+## $ Unit_cost     &lt;dbl&gt; 1.8481, 3.7304, 3.3417, 3.3417, 3.3417, 3.2998, 1.8481, …
+## $ Cost          &lt;dbl&gt; 18.48, 634.17, 619.22, 885.22, 940.35, 986.97, 75.59, 13…</code></pre>
 </div>
 <div id="data-analysis-plan" class="section level2">
 <h2>3. Data analysis plan</h2>
