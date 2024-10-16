@@ -9,6 +9,7 @@ output:
 library(tidyverse)
 library(broom)
 library(readr)
+library(lubridate)
 ```
 
 ``` {r load_data, message = FALSE, warning = FALSE}
@@ -17,10 +18,10 @@ fuels <- read_csv("../data/Dead-River.csv",
                                 "Delivery_date", "Fuel_type",
                                 "Tank_number", "Building",
                                 "Gallons", "Unit_cost",
-                                "Cost")) %>% 
-  select(Delivery_date, Fuel_type, Tank_number, 
-       Building, Gallons, Unit_cost, Cost) |>
-  filter(Delivery_date != "Delivery Date") %>% 
+                                "Cost")) |>
+  select(Delivery_date, Fuel_type, Tank_number, Building, Gallons, Unit_cost, Cost) |>
+  filter(Delivery_date != "Delivery Date") |> 
+  mutate(Delivery_date = mdy(Delivery_date)) |>
   mutate(Tank_number = case_when(
   Tank_number == "Tank 8" ~ "8",
   Tank_number == "Tank 3" ~ "3",
@@ -29,13 +30,11 @@ fuels <- read_csv("../data/Dead-River.csv",
   TRUE ~ Tank_number
 ),
 Tank_number = as.integer(Tank_number)) %>% 
-  
-  mutate(Cost = case_when(
+mutate(Cost = case_when(
     Cost == "610.12 cr" ~ "-610.12",
     TRUE ~ Cost
   ),
   Cost = as.numeric(Cost)) %>% 
-  
   mutate(Gallons = as.numeric(Gallons)) %>% 
   mutate(Unit_cost = as.numeric(Unit_cost))
 ```
@@ -75,9 +74,9 @@ In order to make better sense of our data and explore different methods for prio
 
 #### The data visualization(s) that you believe will be useful in exploring your question(s). (You can update these later as you work on your project.)
 
-```{r visualizations}
-
-ggplot(fuels, aes(x = Building, y = Gallons)) +
+```{r graphs}
+fuels |>
+ggplot(aes(x = Building, y = Gallons)) +
   geom_boxplot() +
   labs(x = "Building",
        y = "Gallons of  Fuel",
@@ -88,12 +87,13 @@ fuels |>
   filter(Building == "Kaelber") |>
   ggplot(aes(x = Delivery_date, y = Cost)) +
   geom_point() +
-  scale_x_discrete(guide = guide_axis(angle = 45)) +
+  scale_x_date(guide = guide_axis(angle = 45)) +
   labs(x = "Delivery date",
        y = "Cost",
        title = "Delivery Date Compared to Cost of Fuel")
 
-ggplot(fuels, aes(x = Fuel_type)) +
+fuels |>
+ggplot(aes(x = Fuel_type)) +
   geom_bar() +
   scale_x_discrete(guide = guide_axis(angle = 45)) +
   labs(x = "Fuel type",
