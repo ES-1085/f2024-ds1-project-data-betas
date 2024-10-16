@@ -81,7 +81,7 @@ ggplot(fuels, aes(x = Building, y = Gallons)) +
   geom_boxplot() +
   labs(x = "Building",
        y = "Gallons of  Fuel",
-       title = "Gallons of Fuel Used per Building") +
+       title = "Distribution of Gallons of Fuel Used per Building Over Time") +
   scale_x_discrete(guide = guide_axis(angle = 45))
 
 fuels |>
@@ -91,7 +91,7 @@ fuels |>
   scale_x_discrete(guide = guide_axis(angle = 45)) +
   labs(x = "Delivery date",
        y = "Cost",
-       title = "Delivery Date Compared to Cost of Fuel")
+       title = "Delivery Date Compared to Cost of Fuel in Kaelber")
 
 ggplot(fuels, aes(x = Fuel_type)) +
   geom_bar() +
@@ -100,7 +100,19 @@ ggplot(fuels, aes(x = Fuel_type)) +
        y = "Number of deliveries",
        title = "Number of Deliveries per Fuel Type")
 
+ggplot(fuels, aes(x = Delivery_date, y = Gallons)) +
+  geom_point() +
+  scale_x_discrete(guide = guide_axis(angle = 45)) +
+  labs(x = "Delivery date",
+       y = "Gallons",
+       title = "Delivery Date Compared to Gallons being delivered") # this doesn't really make sense and we need to change the date problem
+
 ```
+
+Data Visualizations that will be useful:
+- Total Gallons of fuel per building
+- Total Gallons of fuel per metre squared of each building
+- Total fuel consumption over time (and projections?)
 
 ## 4. Data Ethics Review
 
