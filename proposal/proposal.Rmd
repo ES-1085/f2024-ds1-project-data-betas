@@ -79,16 +79,26 @@ In order to make better sense of our data and explore different methods for prio
 
 ggplot(fuels, aes(x = Building, y = Gallons)) +
   geom_boxplot() +
+  labs(x = "Building",
+       y = "Gallons of  Fuel",
+       title = "Gallons of Fuel Used per Building") +
   scale_x_discrete(guide = guide_axis(angle = 45))
 
 fuels |>
   filter(Building == "Kaelber") |>
   ggplot(aes(x = Delivery_date, y = Cost)) +
-  geom_point()
+  geom_point() +
+  scale_x_discrete(guide = guide_axis(angle = 45)) +
+  labs(x = "Delivery date",
+       y = "Cost",
+       title = "Delivery Date Compared to Cost of Fuel")
 
 ggplot(fuels, aes(x = Fuel_type)) +
   geom_bar() +
-  scale_x_discrete(guide = guide_axis(angle = 45))
+  scale_x_discrete(guide = guide_axis(angle = 45)) +
+  labs(x = "Fuel type",
+       y = "Number of deliveries",
+       title = "Number of Deliveries per Fuel Type")
 
 ```
 
