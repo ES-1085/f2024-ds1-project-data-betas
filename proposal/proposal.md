@@ -161,7 +161,7 @@ ggplot(fuels, aes(x = Delivery_date, y = Gallons)) +
 
 Data Visualizations that will be useful: - Total Gallons of fuel per
 building - Total Gallons of fuel per metre squared of each building -
-Total fuel consumption over time (and projections?)
+Total fuel consumption over time and projections
 
 ## 4. Data Ethics Review
 
