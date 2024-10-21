@@ -9,14 +9,39 @@ This document should contain a detailed account of the data clean up for your da
 ```{r load-packages, message = FALSE}
 library(tidyverse)
 library(broom)
+library(readr)
+library(lubridate)
 ```
 
 ## Data Clean Up Steps for Overall Data
 
 ### Step 1: _________
 
-```{r}
-
+``` {r clean_data, message = FALSE, warning = FALSE}
+fuels <- read_csv("../data/Dead-River.csv",
+                  col_names = c("X1", "X2", 
+                                "Delivery_date", "Fuel_type",
+                                "Tank_number", "Building",
+                                "Gallons", "Unit_cost",
+                                "Cost")) |>
+  select(Delivery_date, Fuel_type, Tank_number, Building, Gallons, Unit_cost, Cost) |>
+  filter(Delivery_date != "Delivery Date") |> 
+  mutate(Delivery_date = mdy(Delivery_date)) |>
+  mutate(Tank_number = case_when(
+  Tank_number == "Tank 8" ~ "8",
+  Tank_number == "Tank 3" ~ "3",
+  Tank_number == "Tank 24" ~ "24",
+  Tank_number == "Tank 17" ~ "17",
+  TRUE ~ Tank_number
+),
+Tank_number = as.integer(Tank_number)) %>% 
+mutate(Cost = case_when(
+    Cost == "610.12 cr" ~ "-610.12",
+    TRUE ~ Cost
+  ),
+  Cost = as.numeric(Cost)) %>% 
+  mutate(Gallons = as.numeric(Gallons)) %>% 
+  mutate(Unit_cost = as.numeric(Unit_cost))
 ```
 
 ### Step 2: ________

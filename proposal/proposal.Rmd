@@ -15,7 +15,7 @@ library(ggplot2)
 
 ```
 
-``` {r load_data, message = FALSE, warning = FALSE}
+```{r load_data, message = FALSE, warning = FALSE}
 fuels <- read_csv("../data/Dead-River.csv",
                   col_names = c("X1", "X2", 
                                 "Delivery_date", "Fuel_type",
@@ -57,12 +57,14 @@ To answer this research question, we will be using data collected by the COA Com
 In 2022, College of the Atlantic's All College Meeting passed an [energy policy](https://www.coa.edu/about/environmental-commitment/publications-policies/) requiring the college to transition off of fossil fuels by 2030. A lot of work has been done towards this goal, but there is still a significant amount of work to do. As we get closer to the date, it is important to have a good understanding of how much fossil fuels we are still consuming and what areas should be prioritized.
 
 ## 2. Data
+
 The data set has `r nrow(fuels)` observations, each representing a fossil fuel delivery to a tank supplying a college owned building. It has `r ncol(fuels)` variables.
 
 ```{r glimpse_data}
 glimpse(fuels)
 
 ```
+
 ## 3. Data analysis plan
 
 #### What variables will you visualize to explore your research questions?
@@ -112,7 +114,9 @@ ggplot(fuels, aes(x = Delivery_date, y = Gallons)) +
 
 ```
 
-Data Visualizations that will be useful:
+Data Visualizations that will be useful: 
+- Total Gallons of fuel per building - Total Gallons of fuel per metre squared of each building 
+- Total fuel consumption over time (and projections?)
 - Total Gallons of fuel per building
 - Total Gallons of fuel per metre squared of each building
 - Total fuel consumption over time and projections
