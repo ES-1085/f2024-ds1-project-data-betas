@@ -7,6 +7,7 @@ library(tidyverse)
 library(broom)
 library(readr)
 library(lubridate)
+library(ggplot2)
 ```
 
 ``` r
