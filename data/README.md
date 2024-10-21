@@ -7,7 +7,7 @@ using the following format.
 
 ## Dead River
 
-There are `r nrow(fuels)` rows and `r ncol(fuels)` columns.
+There are 2858 rows and 7 columns.
 
 - `Delivery_date`: The date each tank was delivered to the building
 - `Fuel_type`: The type of fuel in the tank
