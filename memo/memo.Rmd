@@ -41,8 +41,18 @@ mutate(Cost = case_when(
   ),
   Cost = as.numeric(Cost)) %>% 
   mutate(Gallons = as.numeric(Gallons)) %>% 
-  mutate(Unit_cost = as.numeric(Unit_cost))
+  mutate(Unit_cost = as.numeric(Unit_cost)) %>% 
+  mutate(Fuel_type = case_when(
+    Fuel_type == "#2 HEATING OIL" ~ "Heating Oil",
+    Fuel_type == "#2 Heating Oil" ~ "Heating Oil",
+    Fuel_type == "SLPP #2 FUEL OIL" ~ "Heating Oil",
+    Fuel_type == "SLP LIQ PROPANE" ~ "Propane",
+    Fuel_type == "LIQUID PROPANE" ~ "Propane",
+    Fuel_type == "DYED KEROSENE" ~ "Dyed Kerosene",
+  TRUE ~ Fuel_type
+  ))
 ```
+
 
 ### Step 2: ________
 
