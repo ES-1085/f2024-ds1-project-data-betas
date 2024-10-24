@@ -7,6 +7,7 @@ library(tidyverse)
 library(broom)
 library(readr)
 library(lubridate)
+library(ggplot2)
 ```
 
 ``` r
@@ -116,8 +117,8 @@ fuels |>
 ggplot(aes(x = Building, y = Gallons)) +
   geom_boxplot() +
   labs(x = "Building",
-       y = "Gallons of  Fuel",
-       title = "Distribution of Gallons of Fuel Used per Building Over Time") +
+       y = "Gallons of  Fuel Delivered",
+       title = "Distribution of Gallons of Fuel Delivered per Building Over Time") +
   scale_x_discrete(guide = guide_axis(angle = 45))
 ```
 
@@ -137,7 +138,8 @@ fuels |>
 ![](proposal_files/figure-gfm/graphs-2.png)<!-- -->
 
 ``` r
-fuels |>
+# This should probably be total gallons per fuel type
+fuels |> 
 ggplot(aes(x = Fuel_type)) +
   geom_bar() +
   scale_x_discrete(guide = guide_axis(angle = 45)) +
@@ -149,6 +151,7 @@ ggplot(aes(x = Fuel_type)) +
 ![](proposal_files/figure-gfm/graphs-3.png)<!-- -->
 
 ``` r
+# The negative values are to compensate for previous overestimations
 ggplot(fuels, aes(x = Delivery_date, y = Gallons)) +
   geom_point() +
   scale_x_date(guide = guide_axis(angle = 45)) +
@@ -160,8 +163,10 @@ ggplot(fuels, aes(x = Delivery_date, y = Gallons)) +
 ![](proposal_files/figure-gfm/graphs-4.png)<!-- -->
 
 Data Visualizations that will be useful: - Total Gallons of fuel per
-building - Total Gallons of fuel per metre squared of each building -
-Total fuel consumption over time and projections
+building - Total Gallons of fuel per foot squared of each building -
+Total fuel consumption over time - Price increase of different fuel over
+time - Comparing the cost of this fuel to overall college spending - How
+the amount of each type of fuel changes over the years
 
 ## 4. Data Ethics Review
 
