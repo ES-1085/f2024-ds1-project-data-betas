@@ -90,6 +90,7 @@ ggsave("example-starwars-wide.png", width = 6, height = 4)
 fuels %>% 
   ggplot(mapping = aes(x = Delivery_date, y = Unit_cost, color = Fuel_type)) +
   geom_point() +
+  geom_line() +
   facet_wrap(~ Fuel_type) +
   scale_color_viridis_d() +
   theme_minimal() +
