@@ -82,23 +82,24 @@ ggsave("example-starwars-wide.png", width = 6, height = 4)
 
 
 
-### Plot 1: _________
-
-#### Data cleanup steps specific to plot 1
-
-These data cleaning sections are optional and depend on if you have some data cleaning steps specific to a particular plot
-
-```{r}
-
-```
-
+### Plot 1: Fuel Prices Over Time
 
 #### Final Plot 1
 
 ```{r}
+fuels %>% 
+  ggplot(mapping = aes(x = Delivery_date, y = Unit_cost, color = Fuel_type)) +
+  geom_point() +
+  facet_wrap(~ Fuel_type) +
+  scale_color_viridis_d() +
+  theme_minimal() +
+  guides(color = FALSE) +
+  labs(title = "Fuel Prices Over Time",
+       subtitle = "2014 - 2024",
+       x = "Delivery date",
+       y = "Cost per gallon in USD")
 
 ```
-
 
 ### Plot 2: _________
 

@@ -82,14 +82,34 @@ ggsave("example-starwars.png", width = 4, height = 4)
 ggsave("example-starwars-wide.png", width = 6, height = 4)
 ```
 
-### Plot 1: \_\_\_\_\_\_\_\_\_
-
-#### Data cleanup steps specific to plot 1
-
-These data cleaning sections are optional and depend on if you have some
-data cleaning steps specific to a particular plot
+### Plot 1: Fuel Prices Over Time
 
 #### Final Plot 1
+
+``` r
+fuels %>% 
+  ggplot(mapping = aes(x = Delivery_date, y = Unit_cost, color = Fuel_type)) +
+  geom_point() +
+  facet_wrap(~ Fuel_type) +
+  scale_color_viridis_d() +
+  theme_minimal() +
+  guides(color = FALSE) +
+  labs(title = "Fuel Prices Over Time",
+       subtitle = "2014 - 2024",
+       x = "Delivery date",
+       y = "Cost per gallon in USD")
+```
+
+    ## Warning: The `<scale>` argument of `guides()` cannot be `FALSE`. Use "none" instead as
+    ## of ggplot2 3.3.4.
+    ## This warning is displayed once every 8 hours.
+    ## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+    ## generated.
+
+    ## Warning: Removed 2 rows containing missing values or values outside the scale range
+    ## (`geom_point()`).
+
+![](memo_files/figure-gfm/unnamed-chunk-1-1.png)<!-- -->
 
 ### Plot 2: \_\_\_\_\_\_\_\_\_
 
