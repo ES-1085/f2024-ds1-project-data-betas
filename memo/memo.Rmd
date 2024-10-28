@@ -102,7 +102,20 @@ fuels %>%
 
 ```
 
-### Plot 2: _________
+### Plot 2: Total Amount of Fuel per Building
+
+```{r}
+fuels %>%
+ggplot(mapping = aes(x = Building)) +
+  geom_bar() +
+  scale_x_discrete(guide = guide_axis(angle = 45)) +
+  theme_minimal() +
+  guides(color = FALSE) +
+  labs(title = "Total Amount of Fuel per Building",
+       x = "Building",
+       y = "Amount of Fuel")
+
+```
 
 ### Plot 3: ___________
 

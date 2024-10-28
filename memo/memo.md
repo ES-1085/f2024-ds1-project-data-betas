@@ -112,7 +112,21 @@ fuels %>%
 
 ![](memo_files/figure-gfm/unnamed-chunk-1-1.png)<!-- -->
 
-### Plot 2: \_\_\_\_\_\_\_\_\_
+### Plot 2: Total Amount of Fuel per Building
+
+``` r
+fuels %>%
+ggplot(mapping = aes(x = Building)) +
+  geom_bar() +
+  scale_x_discrete(guide = guide_axis(angle = 45)) +
+  theme_minimal() +
+  guides(color = FALSE) +
+  labs(title = "Total Amount of Fuel per Building",
+       x = "Building",
+       y = "Amount of Fuel")
+```
+
+![](memo_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
 
 ### Plot 3: \_\_\_\_\_\_\_\_\_\_\_
 
