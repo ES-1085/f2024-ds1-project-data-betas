@@ -2,6 +2,8 @@
 title: "Project memo"
 author: "Team name"
 output: github_document
+editor_options: 
+  chunk_output_type: console
 ---
 
 This document should contain a detailed account of the data clean up for your data and the design choices you are making for your plots. For instance you will want to document choices you've made that were intentional for your graphic, e.g. color you've chosen for the plot. Think of this document as a code script someone can follow to reproduce the data cleaning steps and graphics in your handout.
@@ -11,6 +13,7 @@ library(tidyverse)
 library(broom)
 library(readr)
 library(lubridate)
+library(stringr)
 ```
 
 ## Data Clean Up Steps for Overall Data
@@ -102,7 +105,7 @@ fuels %>%
 
 ```
 
-### Plot 2: Total Amount of Fuel per Building
+### Plot 2: *Total Amount of Fuel per Building* (I don't think this one is right unfortunately)
 
 ```{r}
 fuels %>%
@@ -117,9 +120,61 @@ ggplot(mapping = aes(x = Building)) +
 
 ```
 
-### Plot 3: ___________
+### Plot 3: Total Amount of Fuel per Building
 
-Add more plot sections as needed. Each project should have at least 3 plots, but talk to me if you have fewer than 3.
+```{r}
 
-### Plot 4: ___________ 
+fuels <- fuels |>
+  group_by(Building) |>
+  mutate(Total_Gallons_per_Building = sum(Gallons)) 
+
+ggplot(fuels, aes(x = Building, y = Total_Gallons_per_Building)) +
+  geom_col() +
+  scale_x_discrete(guide = guide_axis(angle = 45)) +
+  theme_minimal() +
+  guides(color = FALSE) +
+  labs(title = "Total Amount of Fuel per Building",
+       x = "Building",
+       y = "Amount of Fuel")
+
+```
+
+
+### Plot 4: A bunch that I'll rename and clean up later 
+
+```{r}
+
+fuels <- fuels |>
+  mutate(Year = substr(Delivery_date, 1, 4))
+
+fuels <- fuels |>
+  group_by(Fuel_type) |>
+  mutate(Total_Gallons_per_Fuel_Type = sum(Gallons))
+
+fuels |>
+  group_by(Year) |>
+  mutate(Total_Gallons_per_year = sum(Gallons)) %>% 
+  ggplot(aes(x = Year, y = Total_Gallons_per_year, fill = Fuel_type))+
+  geom_col() +
+  theme_minimal()
+
+ggplot(fuels, aes(x = Fuel_type, y = Total_Gallons_per_Fuel_Type)) +
+  geom_col() +
+  scale_x_discrete(guide = guide_axis(angle = 45)) +
+  theme_minimal() +
+  guides(color = FALSE) +
+  labs(title = "Total Amount of Fuel per Fuel Type",
+       x = "Fuel Type",
+       y = "Amount of Fuel")
+
+ggplot(fuels, aes(x = Year, y = Total_Gallons_per_Fuel_Type)) +
+  geom_col() +
+  scale_x_discrete(guide = guide_axis(angle = 45)) +
+  theme_minimal() +
+  guides(color = FALSE) +
+  labs(title = "Total Amount of Fuel per Building",
+       x = "Building",
+       y = "Amount of Fuel")
+
+```
 

@@ -14,6 +14,7 @@ library(tidyverse)
 library(broom)
 library(readr)
 library(lubridate)
+library(stringr)
 ```
 
 ## Data Clean Up Steps for Overall Data
@@ -112,7 +113,7 @@ fuels %>%
 
 ![](memo_files/figure-gfm/unnamed-chunk-1-1.png)<!-- -->
 
-### Plot 2: Total Amount of Fuel per Building
+### Plot 2: *Total Amount of Fuel per Building* (I don’t think this one is right unfortunately)
 
 ``` r
 fuels %>%
@@ -128,9 +129,67 @@ ggplot(mapping = aes(x = Building)) +
 
 ![](memo_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
 
-### Plot 3: \_\_\_\_\_\_\_\_\_\_\_
+### Plot 3: Total Amount of Fuel per Building
 
-Add more plot sections as needed. Each project should have at least 3
-plots, but talk to me if you have fewer than 3.
+``` r
+fuels <- fuels |>
+  group_by(Building) |>
+  mutate(Total_Gallons_per_Building = sum(Gallons)) 
 
-### Plot 4: \_\_\_\_\_\_\_\_\_\_\_
+ggplot(fuels, aes(x = Building, y = Total_Gallons_per_Building)) +
+  geom_col() +
+  scale_x_discrete(guide = guide_axis(angle = 45)) +
+  theme_minimal() +
+  guides(color = FALSE) +
+  labs(title = "Total Amount of Fuel per Building",
+       x = "Building",
+       y = "Amount of Fuel")
+```
+
+![](memo_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
+
+### Plot 4: A bunch that I’ll rename and clean up later
+
+``` r
+fuels <- fuels |>
+  mutate(Year = substr(Delivery_date, 1, 4))
+
+fuels <- fuels |>
+  group_by(Fuel_type) |>
+  mutate(Total_Gallons_per_Fuel_Type = sum(Gallons))
+
+fuels |>
+  group_by(Year) |>
+  mutate(Total_Gallons_per_year = sum(Gallons)) %>% 
+  ggplot(aes(x = Year, y = Total_Gallons_per_year, fill = Fuel_type))+
+  geom_col() +
+  theme_minimal()
+```
+
+![](memo_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
+
+``` r
+ggplot(fuels, aes(x = Fuel_type, y = Total_Gallons_per_Fuel_Type)) +
+  geom_col() +
+  scale_x_discrete(guide = guide_axis(angle = 45)) +
+  theme_minimal() +
+  guides(color = FALSE) +
+  labs(title = "Total Amount of Fuel per Fuel Type",
+       x = "Fuel Type",
+       y = "Amount of Fuel")
+```
+
+![](memo_files/figure-gfm/unnamed-chunk-4-2.png)<!-- -->
+
+``` r
+ggplot(fuels, aes(x = Year, y = Total_Gallons_per_Fuel_Type)) +
+  geom_col() +
+  scale_x_discrete(guide = guide_axis(angle = 45)) +
+  theme_minimal() +
+  guides(color = FALSE) +
+  labs(title = "Total Amount of Fuel per Building",
+       x = "Building",
+       y = "Amount of Fuel")
+```
+
+![](memo_files/figure-gfm/unnamed-chunk-4-3.png)<!-- -->
