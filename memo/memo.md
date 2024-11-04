@@ -57,7 +57,54 @@ mutate(Cost = case_when(
   ))
 ```
 
-### Step 2: \_\_\_\_\_\_\_\_
+### Step 2: Totals
+
+``` r
+fuels <- fuels |>
+  group_by(Building) |>
+  mutate(Total_Gallons_per_Building = sum(Gallons))
+```
+
+### Step 3: Year
+
+``` r
+fuels <- fuels |>
+  mutate(Year = substr(Delivery_date, 1, 4))
+```
+
+### Step 4: Total Gallons per Fuel Type
+
+``` r
+fuels <- fuels |>
+  group_by(Fuel_type) |>
+  mutate(Total_Gallons_per_Fuel_Type = sum(Gallons))
+```
+
+### Step 5: Total Gallons per Year
+
+``` r
+fuels |>
+  group_by(Year) |>
+  mutate(Total_Gallons_per_year = sum(Gallons))
+```
+
+    ## # A tibble: 2,858 × 11
+    ## # Groups:   Year [11]
+    ##    Delivery_date Fuel_type     Tank_number Building     Gallons Unit_cost   Cost
+    ##    <date>        <chr>               <int> <chr>          <dbl>     <dbl>  <dbl>
+    ##  1 2014-01-03    Propane                14 171 Beech H…    10        1.85   18.5
+    ##  2 2014-01-03    Dyed Kerosene          27 Witchcliff …   170        3.73  634. 
+    ##  3 2014-01-04    Heating Oil            24 Dorr NHM       185.       3.34  619. 
+    ##  4 2014-01-04    Heating Oil             3 Seafox         265.       3.34  885. 
+    ##  5 2014-01-04    Heating Oil             5 Turrets        281.       3.34  940. 
+    ##  6 2014-01-05    Heating Oil            11 Kaelber        299.       3.30  987. 
+    ##  7 2014-01-06    Propane                35 B&G             40.9      1.85   75.6
+    ##  8 2014-01-06    Propane                37 Turrets Ann…    71.6      1.85  132. 
+    ##  9 2014-01-06    Propane                 8 Arts & Sci …   828.       1.85 1529. 
+    ## 10 2014-01-06    Propane                 9 Pottery Stu…    34.7      1.85   64.1
+    ## # ℹ 2,848 more rows
+    ## # ℹ 4 more variables: Total_Gallons_per_Building <dbl>, Year <chr>,
+    ## #   Total_Gallons_per_Fuel_Type <dbl>, Total_Gallons_per_year <dbl>
 
 ## Plots
 
@@ -107,31 +154,11 @@ fuels %>%
     ## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
     ## generated.
 
-![](memo_files/figure-gfm/unnamed-chunk-1-1.png)<!-- -->
+![](memo_files/figure-gfm/prices_over_time-1.png)<!-- -->
 
-### Plot 2: *Total Amount of Fuel per Building* (I don’t think this one is right unfortunately)
-
-``` r
-fuels %>%
-ggplot(mapping = aes(x = Building)) +
-  geom_bar() +
-  scale_x_discrete(guide = guide_axis(angle = 45)) +
-  theme_minimal() +
-  guides(color = FALSE) +
-  labs(title = "Total Amount of Fuel per Building",
-       x = "Building",
-       y = "Amount of Fuel")
-```
-
-![](memo_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
-
-### Plot 3: Total Amount of Fuel per Building
+### Plot 2: Total Amount of Fuel per Building
 
 ``` r
-fuels <- fuels |>
-  group_by(Building) |>
-  mutate(Total_Gallons_per_Building = sum(Gallons)) 
-
 ggplot(fuels, aes(x = Building, y = Total_Gallons_per_Building)) +
   geom_col() +
   scale_x_discrete(guide = guide_axis(angle = 45)) +
@@ -142,27 +169,9 @@ ggplot(fuels, aes(x = Building, y = Total_Gallons_per_Building)) +
        y = "Amount of Fuel")
 ```
 
-![](memo_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
+![](memo_files/figure-gfm/total_fuel_per_building-1.png)<!-- -->
 
-### Plot 4: A bunch that I’ll rename and clean up later
-
-``` r
-fuels <- fuels |>
-  mutate(Year = substr(Delivery_date, 1, 4))
-
-fuels <- fuels |>
-  group_by(Fuel_type) |>
-  mutate(Total_Gallons_per_Fuel_Type = sum(Gallons))
-
-fuels |>
-  group_by(Year) |>
-  mutate(Total_Gallons_per_year = sum(Gallons)) %>% 
-  ggplot(aes(x = Year, y = Total_Gallons_per_year, fill = Fuel_type))+
-  geom_col() +
-  theme_minimal()
-```
-
-![](memo_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
+### Plot 3: A bunch that I’ll rename and clean up later
 
 ``` r
 ggplot(fuels, aes(x = Fuel_type, y = Total_Gallons_per_Fuel_Type)) +
@@ -175,7 +184,7 @@ ggplot(fuels, aes(x = Fuel_type, y = Total_Gallons_per_Fuel_Type)) +
        y = "Amount of Fuel")
 ```
 
-![](memo_files/figure-gfm/unnamed-chunk-4-2.png)<!-- -->
+![](memo_files/figure-gfm/gallons_per_type-1.png)<!-- -->
 
 ``` r
 ggplot(fuels, aes(x = Year, y = Total_Gallons_per_Fuel_Type)) +
@@ -183,9 +192,9 @@ ggplot(fuels, aes(x = Year, y = Total_Gallons_per_Fuel_Type)) +
   scale_x_discrete(guide = guide_axis(angle = 45)) +
   theme_minimal() +
   guides(color = FALSE) +
-  labs(title = "Total Amount of Fuel per Building",
-       x = "Building",
+  labs(title = "Total Amount of Fuel per Year",
+       x = "Year",
        y = "Amount of Fuel")
 ```
 
-![](memo_files/figure-gfm/unnamed-chunk-4-3.png)<!-- -->
+![](memo_files/figure-gfm/gallons_per_fuel_type-1.png)<!-- -->

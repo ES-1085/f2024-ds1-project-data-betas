@@ -57,7 +57,34 @@ mutate(Cost = case_when(
 ```
 
 
-### Step 2: ________
+### Step 2: Totals
+
+```{r add_up_fuel_building}
+fuels <- fuels |>
+  group_by(Building) |>
+  mutate(Total_Gallons_per_Building = sum(Gallons))
+```
+
+### Step 3: Year
+```{r}
+fuels <- fuels |>
+  mutate(Year = substr(Delivery_date, 1, 4))
+```
+
+### Step 4: Total Gallons per Fuel Type
+```{r}
+fuels <- fuels |>
+  group_by(Fuel_type) |>
+  mutate(Total_Gallons_per_Fuel_Type = sum(Gallons))
+```
+
+### Step 5: Total Gallons per Year
+```{r}
+fuels |>
+  group_by(Year) |>
+  mutate(Total_Gallons_per_year = sum(Gallons))
+```
+
 
 ## Plots
 
@@ -89,7 +116,7 @@ ggsave("example-starwars-wide.png", width = 6, height = 4)
 
 #### Final Plot 1
 
-```{r}
+```{r prices_over_time}
 fuels %>% 
   ggplot(mapping = aes(x = Delivery_date, y = Unit_cost, color = Fuel_type)) +
   geom_line() +
@@ -104,28 +131,9 @@ fuels %>%
 
 ```
 
-### Plot 2: *Total Amount of Fuel per Building* (I don't think this one is right unfortunately)
+### Plot 2: Total Amount of Fuel per Building
 
-```{r}
-fuels %>%
-ggplot(mapping = aes(x = Building)) +
-  geom_bar() +
-  scale_x_discrete(guide = guide_axis(angle = 45)) +
-  theme_minimal() +
-  guides(color = FALSE) +
-  labs(title = "Total Amount of Fuel per Building",
-       x = "Building",
-       y = "Amount of Fuel")
-
-```
-
-### Plot 3: Total Amount of Fuel per Building
-
-```{r}
-
-fuels <- fuels |>
-  group_by(Building) |>
-  mutate(Total_Gallons_per_Building = sum(Gallons)) 
+```{r total_fuel_per_building}
 
 ggplot(fuels, aes(x = Building, y = Total_Gallons_per_Building)) +
   geom_col() +
@@ -139,24 +147,9 @@ ggplot(fuels, aes(x = Building, y = Total_Gallons_per_Building)) +
 ```
 
 
-### Plot 4: A bunch that I'll rename and clean up later 
+### Plot 3: A bunch that I'll rename and clean up later 
 
-```{r}
-
-fuels <- fuels |>
-  mutate(Year = substr(Delivery_date, 1, 4))
-
-fuels <- fuels |>
-  group_by(Fuel_type) |>
-  mutate(Total_Gallons_per_Fuel_Type = sum(Gallons))
-
-fuels |>
-  group_by(Year) |>
-  mutate(Total_Gallons_per_year = sum(Gallons)) %>% 
-  ggplot(aes(x = Year, y = Total_Gallons_per_year, fill = Fuel_type))+
-  geom_col() +
-  theme_minimal()
-
+```{r gallons_per_type}
 ggplot(fuels, aes(x = Fuel_type, y = Total_Gallons_per_Fuel_Type)) +
   geom_col() +
   scale_x_discrete(guide = guide_axis(angle = 45)) +
@@ -165,15 +158,16 @@ ggplot(fuels, aes(x = Fuel_type, y = Total_Gallons_per_Fuel_Type)) +
   labs(title = "Total Amount of Fuel per Fuel Type",
        x = "Fuel Type",
        y = "Amount of Fuel")
+```
 
+```{r gallons_per_fuel_type}
 ggplot(fuels, aes(x = Year, y = Total_Gallons_per_Fuel_Type)) +
   geom_col() +
   scale_x_discrete(guide = guide_axis(angle = 45)) +
   theme_minimal() +
   guides(color = FALSE) +
-  labs(title = "Total Amount of Fuel per Building",
-       x = "Building",
+  labs(title = "Total Amount of Fuel per Year",
+       x = "Year",
        y = "Amount of Fuel")
-
 ```
 
