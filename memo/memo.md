@@ -90,7 +90,6 @@ ggsave("example-starwars-wide.png", width = 6, height = 4)
 ``` r
 fuels %>% 
   ggplot(mapping = aes(x = Delivery_date, y = Unit_cost, color = Fuel_type)) +
-  geom_point() +
   geom_line() +
   facet_wrap(~ Fuel_type) +
   scale_color_viridis_d() +
@@ -107,9 +106,6 @@ fuels %>%
     ## This warning is displayed once every 8 hours.
     ## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
     ## generated.
-
-    ## Warning: Removed 2 rows containing missing values or values outside the scale range
-    ## (`geom_point()`).
 
 ![](memo_files/figure-gfm/unnamed-chunk-1-1.png)<!-- -->
 
