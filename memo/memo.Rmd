@@ -178,7 +178,17 @@ fuels |>
   mutate(Total_Gallons_per_year = sum(Gallons)) %>% 
   ggplot(aes(x = Year, y = Total_Gallons_per_year, fill = Fuel_type))+
   geom_col() +
+  facet_wrap(~Building)
   theme_minimal()
+
+```
+
+```{r needs_work}
+
+fuels |>
+  filter(Building == "Blair Tyson" & Year > 2022) |>
+  ggplot(aes(x = Delivery_date, y = Gallons)) +
+  geom_point()
 
 ```
 
