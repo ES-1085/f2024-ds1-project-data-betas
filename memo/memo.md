@@ -19,7 +19,7 @@ library(stringr)
 
 ## Data Clean Up Steps for Overall Data
 
-### Step 1: \_\_\_\_\_\_\_\_\_
+### Step 1: Change Column Names
 
 ``` r
 fuels <- read_csv("../data/Dead-River.csv",
@@ -56,6 +56,10 @@ mutate(Cost = case_when(
   TRUE ~ Fuel_type
   ))
 ```
+
+### Step 2: Change Delivery Date
+
+### Step 3: Change tank numbers to only numeric
 
 ### Step 2: Totals
 
@@ -159,9 +163,9 @@ fuels %>%
 ### Plot 2: Total Amount of Fuel per Building
 
 ``` r
-ggplot(fuels, aes(x = Building, y = Total_Gallons_per_Building)) +
+ggplot(fuels, aes(y = Building, x = Total_Gallons_per_Building)) +
   geom_col() +
-  scale_x_discrete(guide = guide_axis(angle = 45)) +
+  #scale_x_discrete(guide = guide_axis(angle = 45)) +
   theme_minimal() +
   guides(color = FALSE) +
   labs(title = "Total Amount of Fuel per Building",
@@ -198,3 +202,14 @@ ggplot(fuels, aes(x = Year, y = Total_Gallons_per_Fuel_Type)) +
 ```
 
 ![](memo_files/figure-gfm/gallons_per_fuel_type-1.png)<!-- -->
+
+``` r
+fuels |>
+  group_by(Year) |>
+  mutate(Total_Gallons_per_year = sum(Gallons)) %>% 
+  ggplot(aes(x = Year, y = Total_Gallons_per_year, fill = Fuel_type))+
+  geom_col() +
+  theme_minimal()
+```
+
+![](memo_files/figure-gfm/gallons_per_fuel_type_per_year-1.png)<!-- -->
