@@ -56,6 +56,10 @@ mutate(Cost = case_when(
   ))
 ```
 
+### Step 2: Change Delivery Date
+
+### Step 3: Change tank numbers to only numeric
+
 
 ### Step 2: Totals
 
