@@ -92,7 +92,7 @@ fuels <- fuels |>
   mutate(Unit_cost = as.numeric(Unit_cost))
 ```
 
-### Step 2: Totals
+### Step 7: Add total gallons per building variable
 
 ``` r
 fuels <- fuels |>
@@ -100,7 +100,7 @@ fuels <- fuels |>
   mutate(Total_Gallons_per_Building = sum(Gallons))
 ```
 
-### Step 3: Year
+### Step 8: Add year and month variables
 
 ``` r
 fuels <- fuels |>
@@ -108,7 +108,7 @@ fuels <- fuels |>
   mutate(Month = substr(Delivery_date, 6, 7))
 ```
 
-### Step 4: Total Gallons per Fuel Type
+### Step 9: Add total gallons per fuel type variable
 
 ``` r
 fuels <- fuels |>
@@ -116,34 +116,15 @@ fuels <- fuels |>
   mutate(Total_Gallons_per_Fuel_Type = sum(Gallons))
 ```
 
-### Step 5: Total Gallons per Year
+### Step 10: Add total gallons per year variable
 
 ``` r
-fuels |>
+fuels <- fuels |>
   group_by(Year) |>
   mutate(Total_Gallons_per_year = sum(Gallons))
 ```
 
-    ## # A tibble: 2,858 × 12
-    ## # Groups:   Year [11]
-    ##    Delivery_date Fuel_type     Tank_number Building     Gallons Unit_cost   Cost
-    ##    <date>        <chr>               <int> <chr>          <dbl>     <dbl>  <dbl>
-    ##  1 2014-01-03    Propane                14 171 Beech H…    10        1.85   18.5
-    ##  2 2014-01-03    Dyed Kerosene          27 Witchcliff …   170        3.73  634. 
-    ##  3 2014-01-04    Heating Oil            24 Dorr NHM       185.       3.34  619. 
-    ##  4 2014-01-04    Heating Oil             3 Seafox         265.       3.34  885. 
-    ##  5 2014-01-04    Heating Oil             5 Turrets        281.       3.34  940. 
-    ##  6 2014-01-05    Heating Oil            11 Kaelber        299.       3.30  987. 
-    ##  7 2014-01-06    Propane                35 B&G             40.9      1.85   75.6
-    ##  8 2014-01-06    Propane                37 Turrets Ann…    71.6      1.85  132. 
-    ##  9 2014-01-06    Propane                 8 Arts & Sci …   828.       1.85 1529. 
-    ## 10 2014-01-06    Propane                 9 Pottery Stu…    34.7      1.85   64.1
-    ## # ℹ 2,848 more rows
-    ## # ℹ 5 more variables: Total_Gallons_per_Building <dbl>, Year <chr>,
-    ## #   Month <chr>, Total_Gallons_per_Fuel_Type <dbl>,
-    ## #   Total_Gallons_per_year <dbl>
-
-### Step 6: Ignore for now I’m working on it but am confused
+### Step ?: Ignore for now I’m working on it but am confused
 
 ``` r
 # make one big function

@@ -87,36 +87,36 @@ fuels <- fuels |>
 ```
 
 
-### Step 2: Totals
+### Step 7: Add total gallons per building variable
 
-```{r add_up_fuel_building}
+```{r add_total_gallons_per_building}
 fuels <- fuels |>
   group_by(Building) |>
   mutate(Total_Gallons_per_Building = sum(Gallons))
 ```
 
-### Step 3: Year
-```{r}
+### Step 8: Add year and month variables
+```{r add_year_month}
 fuels <- fuels |>
   mutate(Year = substr(Delivery_date, 1, 4)) |>
   mutate(Month = substr(Delivery_date, 6, 7))
 ```
 
-### Step 4: Total Gallons per Fuel Type
-```{r}
+### Step 9: Add total gallons per fuel type variable
+```{r add_total_gallons_per_fuel_type}
 fuels <- fuels |>
   group_by(Fuel_type) |>
   mutate(Total_Gallons_per_Fuel_Type = sum(Gallons))
 ```
 
-### Step 5: Total Gallons per Year
-```{r}
-fuels |>
+### Step 10: Add total gallons per year variable
+```{r add_total_gallons_per_year}
+fuels <- fuels |>
   group_by(Year) |>
   mutate(Total_Gallons_per_year = sum(Gallons))
 ```
 
-### Step 6: Ignore for now I'm working on it but am confused
+### Step ?: Ignore for now I'm working on it but am confused
 ```{r}
 
 # make one big function
