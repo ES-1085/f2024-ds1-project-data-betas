@@ -18,7 +18,7 @@ library(stringr)
 
 ## Data Clean Up Steps for Overall Data
 
-### Step 1: Change Column Names
+### Step 1: Load data and change column names
 
 ``` {r clean_data, message = FALSE, warning = FALSE}
 fuels <- read_csv("../data/Dead-River.csv",
@@ -26,25 +26,47 @@ fuels <- read_csv("../data/Dead-River.csv",
                                 "Delivery_date", "Fuel_type",
                                 "Tank_number", "Building",
                                 "Gallons", "Unit_cost",
-                                "Cost")) |>
-  select(Delivery_date, Fuel_type, Tank_number, Building, Gallons, Unit_cost, Cost) |>
+                                "Cost"))
+
+```
+
+### Step 2: Change Delivery Date
+```{r change_delivery_date}
+fuels <- fuels |>
+select(Delivery_date, Fuel_type, Tank_number, Building, Gallons, Unit_cost, Cost) |>
   filter(Delivery_date != "Delivery Date") |> 
-  mutate(Delivery_date = mdy(Delivery_date)) |>
+  mutate(Delivery_date = mdy(Delivery_date))
+ 
+```
+
+
+### Step 3: Change tank number to integer values
+```{r change_tank_number}
+fuels <- fuels |>  
   mutate(Tank_number = case_when(
-  Tank_number == "Tank 8" ~ "8",
-  Tank_number == "Tank 3" ~ "3",
-  Tank_number == "Tank 24" ~ "24",
-  Tank_number == "Tank 17" ~ "17",
-  TRUE ~ Tank_number
-),
-Tank_number = as.integer(Tank_number)) %>% 
-mutate(Cost = case_when(
-    Cost == "610.12 cr" ~ "-610.12",
+   Tank_number == "Tank 8" ~ "8",
+   Tank_number == "Tank 3" ~ "3",
+   Tank_number == "Tank 24" ~ "24",
+   Tank_number == "Tank 17" ~ "17",
+   TRUE ~ Tank_number
+  ),
+  Tank_number = as.integer(Tank_number))
+```
+
+### Step 4: Change cost to numeric values
+
+```{r change_cost}
+fuels <- fuels |>
+  mutate(Cost = case_when(
+    Cost == "610.12 cr" ~ "-610.12", # the cr denotes a credit/refund, so here it is changed to a negative numeric value
     TRUE ~ Cost
   ),
-  Cost = as.numeric(Cost)) %>% 
-  mutate(Gallons = as.numeric(Gallons)) %>% 
-  mutate(Unit_cost = as.numeric(Unit_cost)) %>% 
+  Cost = as.numeric(Cost))
+```
+
+### Step 5: Standardize fuel type names
+```{r standardize_fuel_type}
+fuels <- fuels |>  
   mutate(Fuel_type = case_when(
     Fuel_type == "#2 HEATING OIL" ~ "Heating Oil",
     Fuel_type == "#2 Heating Oil" ~ "Heating Oil",
@@ -56,9 +78,13 @@ mutate(Cost = case_when(
   ))
 ```
 
-### Step 2: Change Delivery Date
+### Step 6: Change gallons and unit cost to numeric values
 
-### Step 3: Change tank numbers to only numeric
+```{r change_gallons_and_unit_cost}
+fuels <- fuels |>
+  mutate(Gallons = as.numeric(Gallons)) |>
+  mutate(Unit_cost = as.numeric(Unit_cost))
+```
 
 
 ### Step 2: Totals
@@ -240,4 +266,6 @@ ggplot(main_total_fuels, aes(x = "", y = Total_Gallons, fill = Building)) +
   theme_void()
 
 ```
+
+
 
