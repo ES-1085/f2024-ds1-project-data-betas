@@ -19,7 +19,9 @@ library(stringr)
 
 ## Data Clean Up Steps for Overall Data
 
-### Step 1: Load data and change column names
+### Step 1: Load datasets
+
+#### Step 1a: Load fossil fuel data and change column names
 
 ``` r
 fuels <- read_csv("../data/Dead-River.csv",
@@ -29,6 +31,30 @@ fuels <- read_csv("../data/Dead-River.csv",
                                 "Gallons", "Unit_cost",
                                 "Cost"))
 ```
+
+#### Step 1b: Load building area data
+
+``` r
+area <- read_csv("../data/BuildingArea.csv")
+```
+
+    ## Rows: 22 Columns: 2
+    ## ── Column specification ────────────────────────────────────────────────────────
+    ## Delimiter: ","
+    ## chr (1): Building
+    ## num (1): Square feet
+    ## 
+    ## ℹ Use `spec()` to retrieve the full column specification for this data.
+    ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+
+#### Step 1c: Join area data to fuels data
+
+``` r
+fuels <- fuels |>
+left_join(area)
+```
+
+    ## Joining with `by = join_by(Building)`
 
 ### Step 2: Change Delivery Date
 
