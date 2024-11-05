@@ -72,7 +72,8 @@ fuels <- fuels |>
 ### Step 3: Year
 ```{r}
 fuels <- fuels |>
-  mutate(Year = substr(Delivery_date, 1, 4))
+  mutate(Year = substr(Delivery_date, 1, 4)) |>
+  mutate(Month = substr(Delivery_date, 6, 7))
 ```
 
 ### Step 4: Total Gallons per Fuel Type
@@ -87,6 +88,27 @@ fuels <- fuels |>
 fuels |>
   group_by(Year) |>
   mutate(Total_Gallons_per_year = sum(Gallons))
+```
+
+### Step 6: Ignore for now I'm working on it but am confused
+```{r}
+
+main_total_fuels <- data.frame(
+  Building = unique(fuels$Building),
+  Total_Gallons = unique(fuels$Total_Gallons_per_Building)
+)
+
+main_total_fuels |>
+  filter(Building == c("Witchcliff Apartments", "Witchcliff","Studio 5+6","PRF",
+                       "Pottery Studio","Peggy Barn", "Peach House", "Hatchery", "Greenhouse", 
+                       "Davis Carriage", "Cottage", "CHE Generator", "Carriage", 
+                       "BHF New Greenhouse", "BHF Main Bldg/2 Greenhouse", "BHF Farm House", 
+                       "18B Norris Ave", "171 Beech Hill Road", "14 Norris Ave")) |>
+  Other_Gallons = sum(Total_Gallons)
+
+main_total_fuels <- main_total_fuels |>
+  add_row(Building = "Other", Total_Gallons = 0)
+
 ```
 
 
@@ -175,9 +197,10 @@ ggplot(fuels, aes(x = Year, y = Total_Gallons_per_Fuel_Type)) +
        y = "Amount of Fuel")
 ```
 
-```{r gallons_per_fuel_type_per_year}
+```{r gallons_per_fuel_type_per_year_facet_buildings}
 
 fuels |>
+  filter(Year != 2024) |>
   group_by(Year) |>
   mutate(Total_Gallons_per_year = sum(Gallons)) %>% 
   ggplot(aes(x = Year, y = Total_Gallons_per_year, fill = Fuel_type))+
@@ -187,12 +210,29 @@ fuels |>
 
 ```
 
-```{r needs_work}
+```{r testing}
 
 fuels |>
-  filter(Building == "Blair Tyson" & Year > 2022) |>
-  ggplot(aes(x = Delivery_date, y = Gallons)) +
-  geom_point()
+  filter(Building == "Blair Tyson" & Year != 2024) |>
+  group_by(Year) |>
+  #View() |>
+  mutate(Total_Gallons_per_Year = sum(Gallons)) |>
+  ggplot(aes(x = Year, y = Total_Gallons_per_Year)) +
+  geom_col()
+
+```
+
+```{r pie-ugly-rn-but-will-make-better-also-could-change}
+
+# fuels |>
+#   group_by(Building) |>
+#   mutate(Other = sum(Total_Gallons_per_Building)) |>
+#   View()
+
+ggplot(fuels, aes(x = "", y = Total_Gallons_per_Building, fill = Building)) +
+  geom_bar(stat = "identity", width = 1) +
+  coord_polar("y", start = 0) +
+  theme_void()
 
 ```
 
