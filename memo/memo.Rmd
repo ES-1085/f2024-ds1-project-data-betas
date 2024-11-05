@@ -93,21 +93,29 @@ fuels |>
 ### Step 6: Ignore for now I'm working on it but am confused
 ```{r}
 
+# make one big function
+
 main_total_fuels <- data.frame(
   Building = unique(fuels$Building),
   Total_Gallons = unique(fuels$Total_Gallons_per_Building)
 )
 
-main_total_fuels |>
-  filter(Building == c("Witchcliff Apartments", "Witchcliff","Studio 5+6","PRF",
-                       "Pottery Studio","Peggy Barn", "Peach House", "Hatchery", "Greenhouse", 
-                       "Davis Carriage", "Cottage", "CHE Generator", "Carriage", 
-                       "BHF New Greenhouse", "BHF Main Bldg/2 Greenhouse", "BHF Farm House", 
-                       "18B Norris Ave", "171 Beech Hill Road", "14 Norris Ave")) |>
-  Other_Gallons = sum(Total_Gallons)
+# main_total_fuels |>
+#   filter(Building == c("Witchcliff Apartments", "Witchcliff","Studio 5+6","PRF",
+#                        "Pottery Studio","Peggy Barn", "Peach House", "Hatchery", "Greenhouse", 
+#                        "Davis Carriage", "Cottage", "CHE Generator", "Carriage", 
+#                        "BHF New Greenhouse", "BHF Main Bldg/2 Greenhouse", "BHF Farm House", 
+#                        "18B Norris Ave", "171 Beech Hill Road", "14 Norris Ave")) |>
+#   (Other_Gallons <- sum(Total_Gallons))
+
+ with(main_total_fuels, sum(Total_Gallons[Total_Gallons < 9952.2]))
 
 main_total_fuels <- main_total_fuels |>
-  add_row(Building = "Other", Total_Gallons = 0)
+  add_row(Building = "Other", 
+          Total_Gallons = with(main_total_fuels, sum(Total_Gallons[Total_Gallons < 9952.2])))
+
+main_total_fuels <- main_total_fuels |>
+  filter(Total_Gallons >= 9952.2 | Building == "Other")
 
 ```
 
@@ -186,7 +194,7 @@ ggplot(fuels, aes(x = Fuel_type, y = Total_Gallons_per_Fuel_Type)) +
        y = "Amount of Fuel")
 ```
 
-```{r gallons_per_fuel_type}
+```{r gallons_per_year}
 ggplot(fuels, aes(x = Year, y = Total_Gallons_per_Fuel_Type)) +
   geom_col() +
   scale_x_discrete(guide = guide_axis(angle = 45)) +
@@ -213,7 +221,7 @@ fuels |>
 ```{r testing}
 
 fuels |>
-  filter(Building == "Blair Tyson" & Year != 2024) |>
+  filter(Building == "Kaelber" & Year != 2024) |>
   group_by(Year) |>
   #View() |>
   mutate(Total_Gallons_per_Year = sum(Gallons)) |>
@@ -224,13 +232,10 @@ fuels |>
 
 ```{r pie-ugly-rn-but-will-make-better-also-could-change}
 
-# fuels |>
-#   group_by(Building) |>
-#   mutate(Other = sum(Total_Gallons_per_Building)) |>
-#   View()
+# do factor shift thingy
 
-ggplot(fuels, aes(x = "", y = Total_Gallons_per_Building, fill = Building)) +
-  geom_bar(stat = "identity", width = 1) +
+ggplot(main_total_fuels, aes(x = "", y = Total_Gallons, fill = Building)) +
+  geom_bar(stat = "identity", width = 1, color = "white") +
   coord_polar("y", start = 0) +
   theme_void()
 
