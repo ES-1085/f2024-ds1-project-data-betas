@@ -19,7 +19,7 @@ library(stringr)
 
 ## Data Clean Up Steps for Overall Data
 
-### Step 1: \_\_\_\_\_\_\_\_\_
+### Step 1: Change Column Names
 
 ``` r
 fuels <- read_csv("../data/Dead-River.csv",

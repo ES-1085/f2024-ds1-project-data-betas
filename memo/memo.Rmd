@@ -18,7 +18,7 @@ library(stringr)
 
 ## Data Clean Up Steps for Overall Data
 
-### Step 1: _________
+### Step 1: Change Column Names
 
 ``` {r clean_data, message = FALSE, warning = FALSE}
 fuels <- read_csv("../data/Dead-River.csv",
