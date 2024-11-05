@@ -135,9 +135,9 @@ fuels %>%
 
 ```{r total_fuel_per_building}
 
-ggplot(fuels, aes(x = Building, y = Total_Gallons_per_Building)) +
+ggplot(fuels, aes(y = Building, x = Total_Gallons_per_Building)) +
   geom_col() +
-  scale_x_discrete(guide = guide_axis(angle = 45)) +
+  #scale_x_discrete(guide = guide_axis(angle = 45)) +
   theme_minimal() +
   guides(color = FALSE) +
   labs(title = "Total Amount of Fuel per Building",
@@ -169,5 +169,16 @@ ggplot(fuels, aes(x = Year, y = Total_Gallons_per_Fuel_Type)) +
   labs(title = "Total Amount of Fuel per Year",
        x = "Year",
        y = "Amount of Fuel")
+```
+
+```{r gallons_per_fuel_type_per_year}
+
+fuels |>
+  group_by(Year) |>
+  mutate(Total_Gallons_per_year = sum(Gallons)) %>% 
+  ggplot(aes(x = Year, y = Total_Gallons_per_year, fill = Fuel_type))+
+  geom_col() +
+  theme_minimal()
+
 ```
 
