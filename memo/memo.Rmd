@@ -38,6 +38,7 @@ area <- read_csv("../data/BuildingArea.csv",
                  col_names = c("Building", "Square_feet"))
 ```
 
+
 #### Step 1c: Join area data to fuels data
 
 ```{r}
@@ -46,8 +47,8 @@ left_join(area)
 ```
 
 
-### Step 2: Change Delivery Date
-```{r change_delivery_date}
+### Step 2: Change Delivery Date & Remove top extra row
+```{r change_delivery_date_and_remove_top_row}
 fuels <- fuels |>
 select(Delivery_date, Fuel_type, Tank_number, Building, Gallons, Unit_cost, Cost, Square_feet) |>
   filter(Delivery_date != "Delivery Date") |> 
@@ -152,6 +153,7 @@ fuels <- fuels |>
 
 ### Step ?: Ignore for now I'm working on it but am confused
 
+```{r}
 
 # make one big function
 
@@ -176,6 +178,11 @@ fuels <- fuels |>
 
 #main_total_fuels <- main_total_fuels |>
 #  filter(Total_Gallons >= 9952.2 | Building == "Other")
+
+
+```
+
+
 
 
 ## Plots
