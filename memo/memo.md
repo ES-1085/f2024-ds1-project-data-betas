@@ -122,9 +122,9 @@ fuels <- fuels |>
 ### Step 7: Add total gallons per building variable
 
 ``` r
-fuels <- fuels |>
-  group_by(Building) |>
-  mutate(Total_Gallons_per_Building = sum(Gallons))
+# fuels <- fuels |>
+ #  group_by(Building) |>
+ #  mutate(Total_Gallons_per_Building = sum(Gallons))
 ```
 
 ### Step 8: Add year and month variables
@@ -168,8 +168,8 @@ fuels <- fuels |>
 ### Step 12: Add total gallons per square foot
 
 ``` r
-fuels <- fuels |>
-  mutate(total_per_sf = (Total_Gallons_per_Building / Square_feet))
+# fuels <- fuels |>
+ # mutate(total_per_sf = (Total_Gallons_per_Building / Square_feet))
 ```
 
 ### Step ?: Ignore for now I’m working on it but am confused
@@ -261,7 +261,9 @@ fuels %>%
 ### Plot 2: Total Amount of Fuel per Building
 
 ``` r
-ggplot(fuels, aes(y = Building, x = Total_Gallons_per_Building)) +
+fuels |>
+  mutate(Total_Gallons_per_Building = sum(Gallons)) |>
+ggplot(aes(y = Building, x = Total_Gallons_per_Building)) +
   geom_col() +
   #scale_x_discrete(guide = guide_axis(angle = 45)) +
   theme_minimal() +
@@ -647,15 +649,19 @@ fuels |>
 
 ``` r
 fuels |>
-  filter(total_per_sf > 6) |>
+  filter(Year >= 2019, Year <= 2023) |>
   group_by(Building) |>
+  mutate(Total_Gallons_per_Building = sum(Gallons)) |>
+  mutate(total_per_sf = (Total_Gallons_per_Building / Square_feet)) |>
   summarize(total_per_sf = unique(total_per_sf)) |>
+  filter(total_per_sf > 2) |>
   ggplot(aes(x = Building, y = total_per_sf)) +
   geom_col() +
   labs(title = "Total Gallons per Square Foot",
        subtitle = "Highest 6 Buildings",
        y = "Total Gallons per Square Foot") +
-  theme_minimal()
+  theme_minimal() +
+  coord_flip()
 ```
 
 ![](memo_files/figure-gfm/total_gallons_per_sf-1.png)<!-- -->
