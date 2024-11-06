@@ -239,6 +239,23 @@ fuels |>
 
 ![](memo_files/figure-gfm/total_fuel_per_building-1.png)<!-- -->
 
+### Plot 3: BT over time
+
+``` r
+fuels |>
+  filter(Building == "Blair Tyson") |>
+  group_by(Year) |>
+  ggplot(aes(x = Year, y = sum(Gallons))) +
+  geom_col() +
+  theme_minimal() +
+  labs(title = "Blair Tyson",
+       subtitle = "Total Gallons per Year (2014-2024)",
+       y = "Gallons") +
+   scale_x_continuous(breaks = seq(from = 2014, to = 2024, by = 1))
+```
+
+![](memo_files/figure-gfm/BT_over_time-1.png)<!-- -->
+
 ### Plot ?: A bunch that I’ll rename and clean up later
 
 ``` r
