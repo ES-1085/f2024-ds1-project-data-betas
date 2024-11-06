@@ -230,13 +230,18 @@ fuels |>
 fuels |>
   filter(Building == "Blair Tyson") |>
   group_by(Year) |>
-  ggplot(aes(x = Year, y = sum(Gallons))) +
-  geom_col() +
+  mutate(bt_year_sum = sum(Gallons)) |>
+  ggplot(aes(x = Year, y = bt_year_sum)) +
+  geom_point() +
+  geom_line() +
   theme_minimal() +
   labs(title = "Blair Tyson",
        subtitle = "Total Gallons per Year (2014-2024)",
        y = "Gallons") +
-   scale_x_continuous(breaks = seq(from = 2014, to = 2024, by = 1))
+  scale_x_continuous(breaks = seq(from = 2014, to = 2024, by = 1)) +
+  ylim(0, NA) +
+  geom_vline(xintercept = 2022, color = "blue") +
+  geom_text(aes(x = 2019, y = 2500), label = "Heat Pump Water Heating System Installed", colour = "blue")
 ```
 
 
