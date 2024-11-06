@@ -157,16 +157,13 @@ fuels <- fuels |>
 
 ``` r
 fuels <- fuels |>
+  mutate(Square_feet = case_when(
+    Building == "Turrets" ~ "8400",
+    Building == "Turrets Annex" ~ "4200",
+    TRUE ~ Square_feet
+  )) |>
   mutate(Square_feet = as.numeric(Square_feet))
 ```
-
-    ## Warning: There were 11 warnings in `mutate()`.
-    ## The first warning was:
-    ## ℹ In argument: `Square_feet = as.numeric(Square_feet)`.
-    ## ℹ In group 1: `Year = 2014`.
-    ## Caused by warning:
-    ## ! NAs introduced by coercion
-    ## ℹ Run `dplyr::last_dplyr_warnings()` to see the 10 remaining warnings.
 
 ### Step 12: Add total gallons per square foot
 

@@ -138,6 +138,11 @@ fuels <- fuels |>
 
 ```{r change_to_numeric}
 fuels <- fuels |>
+  mutate(Square_feet = case_when(
+    Building == "Turrets" ~ "8400",
+    Building == "Turrets Annex" ~ "4200",
+    TRUE ~ Square_feet
+  )) |>
   mutate(Square_feet = as.numeric(Square_feet))
 ```
 
