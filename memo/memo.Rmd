@@ -38,6 +38,7 @@ area <- read_csv("../data/BuildingArea.csv",
                  col_names = c("Building", "Square_feet"))
 ```
 
+
 #### Step 1c: Join area data to fuels data
 
 ```{r}
@@ -46,8 +47,8 @@ left_join(area)
 ```
 
 
-### Step 2: Change Delivery Date
-```{r change_delivery_date}
+### Step 2: Change Delivery Date & Remove top extra row
+```{r change_delivery_date_and_remove_top_row}
 fuels <- fuels |>
 select(Delivery_date, Fuel_type, Tank_number, Building, Gallons, Unit_cost, Cost, Square_feet) |>
   filter(Delivery_date != "Delivery Date") |> 
@@ -157,6 +158,7 @@ fuels <- fuels |>
 
 ### Step ?: Ignore for now I'm working on it but am confused
 
+```{r}
 
 # make one big function
 
@@ -177,10 +179,15 @@ fuels <- fuels |>
 
 # main_total_fuels <- main_total_fuels |>
 #  add_row(Building = "Other", 
-          Total_Gallons = with(main_total_fuels, sum(Total_Gallons[Total_Gallons < #9952.2])))
+#          Total_Gallons = with(main_total_fuels, sum(Total_Gallons[Total_Gallons < #9952.2])))
 
 #main_total_fuels <- main_total_fuels |>
 #  filter(Total_Gallons >= 9952.2 | Building == "Other")
+
+
+```
+
+
 
 
 ## Plots
@@ -247,7 +254,7 @@ ggplot(aes(y = Building, x = Total_Gallons_per_Building)) +
 
 ### Plot 3: A bunch that I'll rename and clean up later 
 
-```{r gallons_per_type}
+```{r gallons_per_fuel_type}
 ggplot(fuels, aes(x = Fuel_type, y = Total_Gallons_per_Fuel_Type)) +
   geom_col() +
   scale_x_discrete(guide = guide_axis(angle = 45)) +
@@ -259,7 +266,9 @@ ggplot(fuels, aes(x = Fuel_type, y = Total_Gallons_per_Fuel_Type)) +
 ```
 
 ```{r gallons_per_year}
-ggplot(fuels, aes(x = Year, y = Total_Gallons_per_Fuel_Type)) +
+fuels |>
+  filter(Year != 2024) |>
+  ggplot(aes(x = Year, y = Total_Gallons_per_Fuel_Type)) +
   geom_col() +
   scale_x_discrete(guide = guide_axis(angle = 45)) +
   theme_minimal() +
