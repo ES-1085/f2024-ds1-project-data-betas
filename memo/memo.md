@@ -57,7 +57,7 @@ left_join(area)
 
     ## Joining with `by = join_by(Building)`
 
-### Step 2: Change Delivery Date
+### Step 2: Change Delivery Date & Remove top extra row
 
 ``` r
 fuels <- fuels |>
@@ -119,15 +119,7 @@ fuels <- fuels |>
   mutate(Unit_cost = as.numeric(Unit_cost))
 ```
 
-### Step 7: Add total gallons per building variable
-
-``` r
-# fuels <- fuels |>
- #  group_by(Building) |>
- #  mutate(Total_Gallons_per_Building = sum(Gallons))
-```
-
-### Step 8: Add year and month variables
+### Step 7: Add year and month variables
 
 ``` r
 fuels <- fuels |>
@@ -137,23 +129,7 @@ fuels <- fuels |>
   mutate(Month = as.numeric(Month))
 ```
 
-### Step 9: Add total gallons per fuel type variable
-
-``` r
-fuels <- fuels |>
-  group_by(Fuel_type) |>
-  mutate(Total_Gallons_per_Fuel_Type = sum(Gallons))
-```
-
-### Step 10: Add total gallons per year variable
-
-``` r
-fuels <- fuels |>
-  group_by(Year) |>
-  mutate(Total_Gallons_per_year = sum(Gallons))
-```
-
-### Step 11: Change square feet to numeric
+### Step 8: Change square feet to numeric
 
 ``` r
 fuels <- fuels |>
@@ -165,48 +141,33 @@ fuels <- fuels |>
   mutate(Square_feet = as.numeric(Square_feet))
 ```
 
-### Step 12: Add total gallons per square foot
-
-``` r
-# fuels <- fuels |>
- # mutate(total_per_sf = (Total_Gallons_per_Building / Square_feet))
-```
-
 ### Step ?: Ignore for now I’m working on it but am confused
 
+``` r
 # make one big function
 
-# main_total_fuels \<- data.frame(
-
-# Building = unique(fuels$Building),
+# main_total_fuels <- data.frame(
+#  Building = unique(fuels$Building),
 #  Total_Gallons = unique(fuels$Total_Gallons_per_Building)
-
 # )
 
-# main_total_fuels \|\>
+# main_total_fuels |>
+#   filter(Building == c("Witchcliff Apartments", "Witchcliff","Studio 5+6","PRF",
+#                        "Pottery Studio","Peggy Barn", "Peach House", "Hatchery", "Greenhouse", 
+#                        "Davis Carriage", "Cottage", "CHE Generator", "Carriage", 
+#                        "BHF New Greenhouse", "BHF Main Bldg/2 Greenhouse", "BHF Farm House", 
+#                        "18B Norris Ave", "171 Beech Hill Road", "14 Norris Ave")) |>
+#   (Other_Gallons <- sum(Total_Gallons))
 
-# filter(Building == c(“Witchcliff Apartments”, “Witchcliff”,“Studio 5+6”,“PRF”,
+# with(main_total_fuels, sum(Total_Gallons[Total_Gallons < 9952.2]))
 
-# “Pottery Studio”,“Peggy Barn”, “Peach House”, “Hatchery”, “Greenhouse”,
+# main_total_fuels <- main_total_fuels |>
+#  add_row(Building = "Other", 
+#          Total_Gallons = with(main_total_fuels, sum(Total_Gallons[Total_Gallons < #9952.2])))
 
-# “Davis Carriage”, “Cottage”, “CHE Generator”, “Carriage”,
-
-# “BHF New Greenhouse”, “BHF Main Bldg/2 Greenhouse”, “BHF Farm House”,
-
-# “18B Norris Ave”, “171 Beech Hill Road”, “14 Norris Ave”)) \|\>
-
-# (Other_Gallons \<- sum(Total_Gallons))
-
-# with(main_total_fuels, sum(Total_Gallons\[Total_Gallons \< 9952.2\]))
-
-# main_total_fuels \<- main_total_fuels \|\>
-
-# add_row(Building = “Other”,
-
-          Total_Gallons = with(main_total_fuels, sum(Total_Gallons[Total_Gallons < #9952.2])))
-
-\#main_total_fuels \<- main_total_fuels \|\> \# filter(Total_Gallons \>=
-9952.2 \| Building == “Other”)
+#main_total_fuels <- main_total_fuels |>
+#  filter(Total_Gallons >= 9952.2 | Building == "Other")
+```
 
 ## Plots
 
@@ -278,7 +239,10 @@ ggplot(aes(y = Building, x = Total_Gallons_per_Building)) +
 ### Plot 3: A bunch that I’ll rename and clean up later
 
 ``` r
-ggplot(fuels, aes(x = Fuel_type, y = Total_Gallons_per_Fuel_Type)) +
+fuels |>
+  group_by(Fuel_type) |>
+  mutate(Total_Gallons_per_Fuel_Type = sum(Gallons)) |>
+ggplot(aes(x = Fuel_type, y = Total_Gallons_per_Fuel_Type)) +
   geom_col() +
   scale_x_discrete(guide = guide_axis(angle = 45)) +
   theme_minimal() +
@@ -288,10 +252,14 @@ ggplot(fuels, aes(x = Fuel_type, y = Total_Gallons_per_Fuel_Type)) +
        y = "Amount of Fuel")
 ```
 
-![](memo_files/figure-gfm/gallons_per_type-1.png)<!-- -->
+![](memo_files/figure-gfm/gallons_per_fuel_type-1.png)<!-- -->
 
 ``` r
-ggplot(fuels, aes(x = Year, y = Total_Gallons_per_Fuel_Type)) +
+fuels |>
+  group_by(Fuel_type) |>
+  mutate(Total_Gallons_per_Fuel_Type = sum(Gallons)) |>
+  filter(Year != 2024) |>
+  ggplot(aes(x = Year, y = Total_Gallons_per_Fuel_Type)) +
   geom_col() +
   scale_x_discrete(guide = guide_axis(angle = 45)) +
   theme_minimal() +

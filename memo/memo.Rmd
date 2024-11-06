@@ -104,15 +104,7 @@ fuels <- fuels |>
 ```
 
 
-### Step 7: Add total gallons per building variable
-
-```{r add_total_gallons_per_building}
-# fuels <- fuels |>
- #  group_by(Building) |>
- #  mutate(Total_Gallons_per_Building = sum(Gallons))
-```
-
-### Step 8: Add year and month variables
+### Step 7: Add year and month variables
 ```{r add_year_month}
 fuels <- fuels |>
   mutate(Year = substr(Delivery_date, 1, 4)) |>
@@ -121,21 +113,7 @@ fuels <- fuels |>
   mutate(Month = as.numeric(Month))
 ```
 
-### Step 9: Add total gallons per fuel type variable
-```{r add_total_gallons_per_fuel_type}
-fuels <- fuels |>
-  group_by(Fuel_type) |>
-  mutate(Total_Gallons_per_Fuel_Type = sum(Gallons))
-```
-
-### Step 10: Add total gallons per year variable
-```{r add_total_gallons_per_year}
-fuels <- fuels |>
-  group_by(Year) |>
-  mutate(Total_Gallons_per_year = sum(Gallons))
-```
-
-### Step 11: Change square feet to numeric
+### Step 8: Change square feet to numeric
 
 ```{r change_to_numeric}
 fuels <- fuels |>
@@ -145,14 +123,6 @@ fuels <- fuels |>
     TRUE ~ Square_feet
   )) |>
   mutate(Square_feet = as.numeric(Square_feet))
-```
-
-
-### Step 12: Add total gallons per square foot
-
-```{r add_total_gallons_per_square_foot_clean}
-# fuels <- fuels |>
- # mutate(total_per_sf = (Total_Gallons_per_Building / Square_feet))
 ```
 
 
@@ -255,7 +225,10 @@ ggplot(aes(y = Building, x = Total_Gallons_per_Building)) +
 ### Plot 3: A bunch that I'll rename and clean up later 
 
 ```{r gallons_per_fuel_type}
-ggplot(fuels, aes(x = Fuel_type, y = Total_Gallons_per_Fuel_Type)) +
+fuels |>
+  group_by(Fuel_type) |>
+  mutate(Total_Gallons_per_Fuel_Type = sum(Gallons)) |>
+ggplot(aes(x = Fuel_type, y = Total_Gallons_per_Fuel_Type)) +
   geom_col() +
   scale_x_discrete(guide = guide_axis(angle = 45)) +
   theme_minimal() +
@@ -267,6 +240,8 @@ ggplot(fuels, aes(x = Fuel_type, y = Total_Gallons_per_Fuel_Type)) +
 
 ```{r gallons_per_year}
 fuels |>
+  group_by(Fuel_type) |>
+  mutate(Total_Gallons_per_Fuel_Type = sum(Gallons)) |>
   filter(Year != 2024) |>
   ggplot(aes(x = Year, y = Total_Gallons_per_Fuel_Type)) +
   geom_col() +
