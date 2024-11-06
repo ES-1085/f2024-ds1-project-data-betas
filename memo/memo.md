@@ -239,31 +239,28 @@ fuels |>
 
 ![](memo_files/figure-gfm/total_fuel_per_building-1.png)<!-- -->
 
-### Plot 3: BT over time
+### Plot 3: 5 biggest over time
 
 ``` r
 fuels |>
-  filter(Building == "Blair Tyson") |>
-  group_by(Year) |>
-  mutate(bt_year_sum = sum(Gallons)) |>
-  ggplot(aes(x = Year, y = bt_year_sum)) +
+  filter(Building %in% c("Blair Tyson", "Arts & Sci + Gates", "Kaelber", "Dorr NHM", "Seafox"), Year < 2024) |>
+  group_by(Building, Year) |>
+  summarize(year_sum = sum(Gallons), .groups = "drop") |>
+  ggplot(aes(x = Year, y = year_sum, color = Building, group = Building)) +
   geom_point() +
   geom_line() +
   theme_minimal() +
-  labs(title = "Blair Tyson",
-       subtitle = "Total Gallons per Year (2014-2024)",
+  labs(title = "Total Gallons of Fuel per Year (2014-2023)",
+       subtitle = "Blair Tyson, Arts & Sciences + Gates, Kaelber, Dorr NHM, Seafox",
        y = "Gallons") +
   scale_x_continuous(breaks = seq(from = 2014, to = 2024, by = 1)) +
   ylim(0, NA) +
-  geom_vline(xintercept = 2022, color = "blue") +
-  geom_text(aes(x = 2019, y = 2500), label = "Heat Pump Water Heating System Installed", colour = "blue")
+  scale_color_viridis_d() +
+  geom_vline(xintercept = 2020, colour = "red") +
+  geom_text(aes(x = 2019.25, y = 1000), label = "COVID", colour = "red")
 ```
 
-    ## Warning in geom_text(aes(x = 2019, y = 2500), label = "Heat Pump Water Heating System Installed", : All aesthetics have length 1, but the data has 213 rows.
-    ## ℹ Please consider using `annotate()` or provide this layer with data containing
-    ##   a single row.
-
-![](memo_files/figure-gfm/BT_over_time-1.png)<!-- -->
+![](memo_files/figure-gfm/5_biggest_over_time-1.png)<!-- -->
 
 ### Plot ?: A bunch that I’ll rename and clean up later
 
