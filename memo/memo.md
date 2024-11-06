@@ -15,6 +15,7 @@ library(broom)
 library(readr)
 library(lubridate)
 library(stringr)
+library(dplyr)
 ```
 
 ## Data Clean Up Steps for Overall Data
@@ -35,14 +36,14 @@ fuels <- read_csv("../data/Dead-River.csv",
 #### Step 1b: Load building area data
 
 ``` r
-area <- read_csv("../data/BuildingArea.csv")
+area <- read_csv("../data/BuildingArea.csv",
+                 col_names = c("Building", "Square_feet"))
 ```
 
-    ## Rows: 22 Columns: 2
+    ## Rows: 23 Columns: 2
     ## ── Column specification ────────────────────────────────────────────────────────
     ## Delimiter: ","
-    ## chr (1): Building
-    ## num (1): Square feet
+    ## chr (2): Building, Square_feet
     ## 
     ## ℹ Use `spec()` to retrieve the full column specification for this data.
     ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
@@ -60,7 +61,7 @@ left_join(area)
 
 ``` r
 fuels <- fuels |>
-select(Delivery_date, Fuel_type, Tank_number, Building, Gallons, Unit_cost, Cost) |>
+select(Delivery_date, Fuel_type, Tank_number, Building, Gallons, Unit_cost, Cost, Square_feet) |>
   filter(Delivery_date != "Delivery Date") |> 
   mutate(Delivery_date = mdy(Delivery_date))
 ```
@@ -131,7 +132,9 @@ fuels <- fuels |>
 ``` r
 fuels <- fuels |>
   mutate(Year = substr(Delivery_date, 1, 4)) |>
-  mutate(Month = substr(Delivery_date, 6, 7))
+  mutate(Month = substr(Delivery_date, 6, 7)) |>
+  mutate(Year = as.numeric(Year)) |>
+  mutate(Month = as.numeric(Month))
 ```
 
 ### Step 9: Add total gallons per fuel type variable
@@ -150,37 +153,63 @@ fuels <- fuels |>
   mutate(Total_Gallons_per_year = sum(Gallons))
 ```
 
+### Step 11: Change square feet to numeric
+
+``` r
+fuels <- fuels |>
+  mutate(Square_feet = as.numeric(Square_feet))
+```
+
+    ## Warning: There were 11 warnings in `mutate()`.
+    ## The first warning was:
+    ## ℹ In argument: `Square_feet = as.numeric(Square_feet)`.
+    ## ℹ In group 1: `Year = 2014`.
+    ## Caused by warning:
+    ## ! NAs introduced by coercion
+    ## ℹ Run `dplyr::last_dplyr_warnings()` to see the 10 remaining warnings.
+
+### Step 12: Add total gallons per square foot
+
+``` r
+fuels <- fuels |>
+  mutate(total_per_sf = (Total_Gallons_per_Building / Square_feet))
+```
+
 ### Step ?: Ignore for now I’m working on it but am confused
 
-``` r
 # make one big function
 
-main_total_fuels <- data.frame(
-  Building = unique(fuels$Building),
-  Total_Gallons = unique(fuels$Total_Gallons_per_Building)
-)
+# main_total_fuels \<- data.frame(
 
-# main_total_fuels |>
-#   filter(Building == c("Witchcliff Apartments", "Witchcliff","Studio 5+6","PRF",
-#                        "Pottery Studio","Peggy Barn", "Peach House", "Hatchery", "Greenhouse", 
-#                        "Davis Carriage", "Cottage", "CHE Generator", "Carriage", 
-#                        "BHF New Greenhouse", "BHF Main Bldg/2 Greenhouse", "BHF Farm House", 
-#                        "18B Norris Ave", "171 Beech Hill Road", "14 Norris Ave")) |>
-#   (Other_Gallons <- sum(Total_Gallons))
+# Building = unique(fuels$Building),
+#  Total_Gallons = unique(fuels$Total_Gallons_per_Building)
 
- with(main_total_fuels, sum(Total_Gallons[Total_Gallons < 9952.2]))
-```
+# )
 
-    ## [1] 60046.9
+# main_total_fuels \|\>
 
-``` r
-main_total_fuels <- main_total_fuels |>
-  add_row(Building = "Other", 
-          Total_Gallons = with(main_total_fuels, sum(Total_Gallons[Total_Gallons < 9952.2])))
+# filter(Building == c(“Witchcliff Apartments”, “Witchcliff”,“Studio 5+6”,“PRF”,
 
-main_total_fuels <- main_total_fuels |>
-  filter(Total_Gallons >= 9952.2 | Building == "Other")
-```
+# “Pottery Studio”,“Peggy Barn”, “Peach House”, “Hatchery”, “Greenhouse”,
+
+# “Davis Carriage”, “Cottage”, “CHE Generator”, “Carriage”,
+
+# “BHF New Greenhouse”, “BHF Main Bldg/2 Greenhouse”, “BHF Farm House”,
+
+# “18B Norris Ave”, “171 Beech Hill Road”, “14 Norris Ave”)) \|\>
+
+# (Other_Gallons \<- sum(Total_Gallons))
+
+# with(main_total_fuels, sum(Total_Gallons\[Total_Gallons \< 9952.2\]))
+
+# main_total_fuels \<- main_total_fuels \|\>
+
+# add_row(Building = “Other”,
+
+          Total_Gallons = with(main_total_fuels, sum(Total_Gallons[Total_Gallons < #9952.2])))
+
+\#main_total_fuels \<- main_total_fuels \|\> \# filter(Total_Gallons \>=
+9952.2 \| Building == “Other”)
 
 ## Plots
 
@@ -602,10 +631,29 @@ fuels |>
 ``` r
 # do factor shift thingy
 
-ggplot(main_total_fuels, aes(x = "", y = Total_Gallons, fill = Building)) +
-  geom_bar(stat = "identity", width = 1, color = "white") +
-  coord_polar("y", start = 0) +
-  theme_void()
+# ggplot(main_total_fuels, aes(x = "", y = Total_Gallons, fill = Building)) +
+#  geom_bar(stat = "identity", width = 1, color = "white") +
+#  coord_polar("y", start = 0) +
+#  theme_void()
 ```
 
-![](memo_files/figure-gfm/pie-ugly-rn-but-will-make-better-also-could-change-1.png)<!-- -->
+### Plot ?: Building area
+
+``` r
+fuels |>
+  filter(Square_feet >= 5000) |>
+  ggplot(aes(x = Building, y = Square_feet)) +
+  geom_col()
+```
+
+![](memo_files/figure-gfm/building_area-1.png)<!-- -->
+
+``` r
+fuels |>
+  filter(total_per_sf > 6) |>
+  group_by(Building) |>
+  ggplot(aes(x = Building, y = total_per_sf)) +
+  geom_col()
+```
+
+![](memo_files/figure-gfm/total_gallons_per_sf-1.png)<!-- -->

@@ -14,6 +14,7 @@ library(broom)
 library(readr)
 library(lubridate)
 library(stringr)
+library(dplyr)
 ```
 
 ## Data Clean Up Steps for Overall Data
@@ -33,7 +34,8 @@ fuels <- read_csv("../data/Dead-River.csv",
 
 #### Step 1b: Load building area data
 ```{r}
-area <- read_csv("../data/BuildingArea.csv")
+area <- read_csv("../data/BuildingArea.csv",
+                 col_names = c("Building", "Square_feet"))
 ```
 
 #### Step 1c: Join area data to fuels data
@@ -47,7 +49,7 @@ left_join(area)
 ### Step 2: Change Delivery Date
 ```{r change_delivery_date}
 fuels <- fuels |>
-select(Delivery_date, Fuel_type, Tank_number, Building, Gallons, Unit_cost, Cost) |>
+select(Delivery_date, Fuel_type, Tank_number, Building, Gallons, Unit_cost, Cost, Square_feet) |>
   filter(Delivery_date != "Delivery Date") |> 
   mutate(Delivery_date = mdy(Delivery_date))
  
@@ -113,7 +115,9 @@ fuels <- fuels |>
 ```{r add_year_month}
 fuels <- fuels |>
   mutate(Year = substr(Delivery_date, 1, 4)) |>
-  mutate(Month = substr(Delivery_date, 6, 7))
+  mutate(Month = substr(Delivery_date, 6, 7)) |>
+  mutate(Year = as.numeric(Year)) |>
+  mutate(Month = as.numeric(Month))
 ```
 
 ### Step 9: Add total gallons per fuel type variable
@@ -130,15 +134,31 @@ fuels <- fuels |>
   mutate(Total_Gallons_per_year = sum(Gallons))
 ```
 
+### Step 11: Change square feet to numeric
+
+```{r change_to_numeric}
+fuels <- fuels |>
+  mutate(Square_feet = as.numeric(Square_feet))
+```
+
+
+### Step 12: Add total gallons per square foot
+
+```{r add_total_gallons_per_square_foot_clean}
+fuels <- fuels |>
+  mutate(total_per_sf = (Total_Gallons_per_Building / Square_feet))
+```
+
+
 ### Step ?: Ignore for now I'm working on it but am confused
-```{r}
+
 
 # make one big function
 
-main_total_fuels <- data.frame(
-  Building = unique(fuels$Building),
-  Total_Gallons = unique(fuels$Total_Gallons_per_Building)
-)
+# main_total_fuels <- data.frame(
+#  Building = unique(fuels$Building),
+#  Total_Gallons = unique(fuels$Total_Gallons_per_Building)
+# )
 
 # main_total_fuels |>
 #   filter(Building == c("Witchcliff Apartments", "Witchcliff","Studio 5+6","PRF",
@@ -148,16 +168,14 @@ main_total_fuels <- data.frame(
 #                        "18B Norris Ave", "171 Beech Hill Road", "14 Norris Ave")) |>
 #   (Other_Gallons <- sum(Total_Gallons))
 
- with(main_total_fuels, sum(Total_Gallons[Total_Gallons < 9952.2]))
+# with(main_total_fuels, sum(Total_Gallons[Total_Gallons < 9952.2]))
 
-main_total_fuels <- main_total_fuels |>
-  add_row(Building = "Other", 
-          Total_Gallons = with(main_total_fuels, sum(Total_Gallons[Total_Gallons < 9952.2])))
+# main_total_fuels <- main_total_fuels |>
+#  add_row(Building = "Other", 
+          Total_Gallons = with(main_total_fuels, sum(Total_Gallons[Total_Gallons < #9952.2])))
 
-main_total_fuels <- main_total_fuels |>
-  filter(Total_Gallons >= 9952.2 | Building == "Other")
-
-```
+#main_total_fuels <- main_total_fuels |>
+#  filter(Total_Gallons >= 9952.2 | Building == "Other")
 
 
 ## Plots
@@ -270,16 +288,31 @@ fuels |>
 
 ```
 
-```{r pie-ugly-rn-but-will-make-better-also-could-change}
+```{r ugly_rn_will_make_better}
 
 # do factor shift thingy
 
-ggplot(main_total_fuels, aes(x = "", y = Total_Gallons, fill = Building)) +
-  geom_bar(stat = "identity", width = 1, color = "white") +
-  coord_polar("y", start = 0) +
-  theme_void()
+# ggplot(main_total_fuels, aes(x = "", y = Total_Gallons, fill = Building)) +
+#  geom_bar(stat = "identity", width = 1, color = "white") +
+#  coord_polar("y", start = 0) +
+#  theme_void()
 
 ```
 
 
+### Plot ?: Building area
+```{r building_area}
+fuels |>
+  filter(Square_feet >= 5000) |>
+  ggplot(aes(x = Building, y = Square_feet)) +
+  geom_col()
+```
+
+```{r total_gallons_per_sf}
+fuels |>
+  filter(total_per_sf > 6) |>
+  group_by(Building) |>
+  ggplot(aes(x = Building, y = total_per_sf)) +
+  geom_col()
+```
 
