@@ -157,16 +157,13 @@ fuels <- fuels |>
 
 ``` r
 fuels <- fuels |>
+  mutate(Square_feet = case_when(
+    Building == "Turrets" ~ "8400",
+    Building == "Turrets Annex" ~ "4200",
+    TRUE ~ Square_feet
+  )) |>
   mutate(Square_feet = as.numeric(Square_feet))
 ```
-
-    ## Warning: There were 11 warnings in `mutate()`.
-    ## The first warning was:
-    ## ℹ In argument: `Square_feet = as.numeric(Square_feet)`.
-    ## ℹ In group 1: `Year = 2014`.
-    ## Caused by warning:
-    ## ! NAs introduced by coercion
-    ## ℹ Run `dplyr::last_dplyr_warnings()` to see the 10 remaining warnings.
 
 ### Step 12: Add total gallons per square foot
 
@@ -652,8 +649,13 @@ fuels |>
 fuels |>
   filter(total_per_sf > 6) |>
   group_by(Building) |>
+  summarize(total_per_sf = unique(total_per_sf)) |>
   ggplot(aes(x = Building, y = total_per_sf)) +
-  geom_col()
+  geom_col() +
+  labs(title = "Total Gallons per Square Foot",
+       subtitle = "Highest 6 Buildings",
+       y = "Total Gallons per Square Foot") +
+  theme_minimal()
 ```
 
 ![](memo_files/figure-gfm/total_gallons_per_sf-1.png)<!-- -->
