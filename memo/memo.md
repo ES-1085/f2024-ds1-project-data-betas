@@ -652,8 +652,13 @@ fuels |>
 fuels |>
   filter(total_per_sf > 6) |>
   group_by(Building) |>
+  summarize(total_per_sf = unique(total_per_sf)) |>
   ggplot(aes(x = Building, y = total_per_sf)) +
-  geom_col()
+  geom_col() +
+  labs(title = "Total Gallons per Square Foot",
+       subtitle = "Highest 6 Buildings",
+       y = "Total Gallons per Square Foot") +
+  theme_minimal()
 ```
 
 ![](memo_files/figure-gfm/total_gallons_per_sf-1.png)<!-- -->
