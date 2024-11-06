@@ -223,20 +223,23 @@ fuels %>%
 
 ``` r
 fuels |>
-  mutate(Total_Gallons_per_Building = sum(Gallons)) |>
-ggplot(aes(y = Building, x = Total_Gallons_per_Building)) +
+  group_by(Building) |>
+  summarize(Total_Gallons_per_Building = sum(Gallons), .groups = "drop") |>
+  slice_max(order_by = Total_Gallons_per_Building, n = 5) |>
+  slice_max(Total_Gallons_per_Building, n = 5) |>
+  ggplot(aes(y = fct_reorder(Building, Total_Gallons_per_Building), x = Total_Gallons_per_Building)) +
   geom_col() +
-  #scale_x_discrete(guide = guide_axis(angle = 45)) +
   theme_minimal() +
   guides(color = FALSE) +
   labs(title = "Total Amount of Fuel per Building",
+       subtitle = "2014 - 2024",
        x = "Building",
        y = "Amount of Fuel")
 ```
 
 ![](memo_files/figure-gfm/total_fuel_per_building-1.png)<!-- -->
 
-### Plot 3: A bunch that I’ll rename and clean up later
+### Plot ?: A bunch that I’ll rename and clean up later
 
 ``` r
 fuels |>
@@ -614,6 +617,8 @@ fuels |>
 ```
 
 ![](memo_files/figure-gfm/building_area-1.png)<!-- -->
+
+### Plot ?: Gallons per square foot
 
 ``` r
 fuels |>
