@@ -209,18 +209,22 @@ fuels %>%
 
 ```{r total_fuel_per_building}
 fuels |>
-  group_by(Building) |>
+  group_by(Building, Fuel_type) |>
   summarize(Total_Gallons_per_Building = sum(Gallons), .groups = "drop") |>
   slice_max(order_by = Total_Gallons_per_Building, n = 5) |>
   slice_max(Total_Gallons_per_Building, n = 5) |>
-  ggplot(aes(y = fct_reorder(Building, Total_Gallons_per_Building), x = Total_Gallons_per_Building)) +
+  ggplot(aes(y = fct_reorder(Building, Total_Gallons_per_Building), x = Total_Gallons_per_Building, fill = Fuel_type)) +
   geom_col() +
   theme_minimal() +
+  scale_fill_viridis_d() +
   guides(color = FALSE) +
-  labs(title = "Total Amount of Fuel per Building",
+  labs(title = "Buildings Using the Most Amount of Fuel",
        subtitle = "2014 - 2024",
        x = "Building",
-       y = "Amount of Fuel")
+       y = "Total Amount of Fuel",
+       fill = "Fuel Type")
+
+ggsave("Buildings-Using-Most-Fuel.png")
 
 ```
 
@@ -228,21 +232,26 @@ fuels |>
 
 ```{r 5_biggest_over_time}
 fuels |>
-  filter(Building %in% c("Blair Tyson", "Arts & Sci + Gates", "Kaelber", "Dorr NHM", "Seafox"), Year < 2024) |>
+  filter(Building %in% c("Blair Tyson", "Arts & Sci + Gates", "Kaelber"), Year < 2024) |>
   group_by(Building, Year) |>
   summarize(year_sum = sum(Gallons), .groups = "drop") |>
   ggplot(aes(x = Year, y = year_sum, color = Building, group = Building)) +
   geom_point() +
   geom_line() +
   theme_minimal() +
-  labs(title = "Total Gallons of Fuel per Year (2014-2023)",
-       subtitle = "Blair Tyson, Arts & Sciences + Gates, Kaelber, Dorr NHM, Seafox",
+  labs(title = "Total Gallons of Fuel per Year",
+       subtitle = "2014 - 2023, 3 Biggest Consumers",
        y = "Gallons") +
   scale_x_continuous(breaks = seq(from = 2014, to = 2024, by = 1)) +
   ylim(0, NA) +
   scale_color_viridis_d() +
-  geom_vline(xintercept = 2020, colour = "red") +
-  geom_text(aes(x = 2019.25, y = 1000), label = "COVID", colour = "red")
+  geom_vline(xintercept = 2020, linetype = "dotted", colour = "red") +
+  geom_text(aes(x = 2020.5, y = 16000), label = "COVID", colour = "red") +
+  geom_vline(xintercept = 2022,colour = "black") +
+  geom_text(aes(x = 2018.75, y = 1000), label = "BT heat pump water heating system installed", colour = "black") +
+  geom_text(aes(x = 2019.9, y = 3000), label = "Kaelber heat pumps installed", colour = "black")
+
+ggsave("3-biggest-consumers-over-time.png", width = 8, height = 4)
 ```
 
 
