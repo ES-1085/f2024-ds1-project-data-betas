@@ -234,8 +234,8 @@ fuels |>
   guides(color = FALSE) +
   labs(title = "Buildings Using the Most Amount of Fuel",
        subtitle = "2014 - 2024",
-       x = "Building",
-       y = "Total Amount of Fuel",
+       y = "Building",
+       x = "Total Amount of Fuel",
        fill = "Fuel Type")
 ```
 
