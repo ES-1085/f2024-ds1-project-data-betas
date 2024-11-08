@@ -264,11 +264,12 @@ fuels |>
   scale_x_continuous(breaks = seq(from = 2014, to = 2024, by = 1)) +
   ylim(0, NA) +
   scale_color_viridis_d() +
-  geom_vline(xintercept = 2020, linetype = "dotted", colour = "red") +
-  geom_text(aes(x = 2020.5, y = 16000), label = "COVID", colour = "red") +
-  geom_vline(xintercept = 2022,colour = "black") +
-  geom_text(aes(x = 2018.75, y = 1000), label = "BT heat pump water heating system installed", colour = "black") +
-  geom_text(aes(x = 2019.9, y = 3000), label = "Kaelber heat pumps installed", colour = "black")
+  geom_vline(xintercept = 2020, linetype = "dotted", colour = "blue") +
+  geom_text(aes(x = 2020.5, y = 16000), label = "COVID", colour = "blue") +
+  geom_text(aes(x = 2021.3, y = 8300), label = "BT HPWHs installed", colour = "black", size = 3) +
+  geom_text(aes(x = 2021.7, y = 10900), label = "Kaelber HPs installed", colour = "red", size = 3) +
+  geom_point(aes(x = 2022, y = 10000), color = "red", size = 3, shape = 15) +
+  geom_point(aes(x = 2022, y = 7500), color = "black", size = 3, shape = 15)
 ```
 
 ![](memo_files/figure-gfm/5_biggest_over_time-1.png)<!-- -->
