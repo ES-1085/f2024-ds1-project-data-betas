@@ -104,15 +104,7 @@ fuels <- fuels |>
 ```
 
 
-### Step 7: Add total gallons per building variable
-
-```{r add_total_gallons_per_building}
-fuels <- fuels |>
-  group_by(Building) |>
-  mutate(Total_Gallons_per_Building = sum(Gallons))
-```
-
-### Step 8: Add year and month variables
+### Step 7: Add year and month variables
 ```{r add_year_month}
 fuels <- fuels |>
   mutate(Year = substr(Delivery_date, 1, 4)) |>
@@ -121,21 +113,7 @@ fuels <- fuels |>
   mutate(Month = as.numeric(Month))
 ```
 
-### Step 9: Add total gallons per fuel type variable
-```{r add_total_gallons_per_fuel_type}
-fuels <- fuels |>
-  group_by(Fuel_type) |>
-  mutate(Total_Gallons_per_Fuel_Type = sum(Gallons))
-```
-
-### Step 10: Add total gallons per year variable
-```{r add_total_gallons_per_year}
-fuels <- fuels |>
-  group_by(Year) |>
-  mutate(Total_Gallons_per_year = sum(Gallons))
-```
-
-### Step 11: Change square feet to numeric
+### Step 8: Change square feet to numeric
 
 ```{r change_to_numeric}
 fuels <- fuels |>
@@ -145,14 +123,6 @@ fuels <- fuels |>
     TRUE ~ Square_feet
   )) |>
   mutate(Square_feet = as.numeric(Square_feet))
-```
-
-
-### Step 12: Add total gallons per square foot
-
-```{r add_total_gallons_per_square_foot_clean}
-fuels <- fuels |>
-  mutate(total_per_sf = (Total_Gallons_per_Building / Square_feet))
 ```
 
 
@@ -238,23 +208,64 @@ fuels %>%
 ### Plot 2: Total Amount of Fuel per Building
 
 ```{r total_fuel_per_building}
-
-ggplot(fuels, aes(y = Building, x = Total_Gallons_per_Building)) +
+fuels |>
+  group_by(Building, Fuel_type) |>
+  summarize(Total_Gallons_per_Building = sum(Gallons), .groups = "drop") |>
+  slice_max(order_by = Total_Gallons_per_Building, n = 5) |>
+  slice_max(Total_Gallons_per_Building, n = 5) |>
+  ggplot(aes(y = fct_reorder(Building, Total_Gallons_per_Building), x = Total_Gallons_per_Building, fill = Fuel_type)) +
   geom_col() +
-  #scale_x_discrete(guide = guide_axis(angle = 45)) +
   theme_minimal() +
+  scale_fill_viridis_d() +
   guides(color = FALSE) +
-  labs(title = "Total Amount of Fuel per Building",
-       x = "Building",
-       y = "Amount of Fuel")
+  labs(title = "Buildings Using the Most Amount of Fuel",
+       subtitle = "2014 - 2024",
+       y = "Building",
+       x = "Total Amount of Fuel",
+       fill = "Fuel Type")
+
+ggsave("Buildings-Using-Most-Fuel.png")
 
 ```
 
+### Plot 3: 5 biggest over time
 
-### Plot 3: A bunch that I'll rename and clean up later 
+```{r 5_biggest_over_time}
+fuels |>
+  filter(Building %in% c("Blair Tyson", "Arts & Sci + Gates", "Kaelber"), Year < 2024) |>
+  group_by(Building, Year) |>
+  summarize(year_sum = sum(Gallons), .groups = "drop") |>
+  ggplot(aes(x = Year, y = year_sum, color = Building, group = Building)) +
+  geom_point() +
+  geom_line() +
+  theme_minimal() +
+  labs(title = "Total Gallons of Fuel per Year",
+       subtitle = "2014 - 2023, 3 Biggest Consumers",
+       y = "Gallons",
+       caption = "Blair Tyson and Kaelber have seen a descrese in fossil fuel consumption while the use by Arts & Sciences and Gates has continued to increase") +
+  scale_x_continuous(breaks = seq(from = 2014, to = 2024, by = 1)) +
+  ylim(0, NA) +
+  scale_color_viridis_d() +
+  geom_vline(xintercept = 2020, linetype = "dotted", colour = "blue") +
+  geom_text(aes(x = 2020.5, y = 16000), label = "COVID", colour = "blue") +
+  geom_text(aes(x = 2021.3, y = 8300), label = "BT HPWHs installed", colour = "black", size = 3) +
+  geom_text(aes(x = 2021.7, y = 10900), label = "Kaelber HPs installed", colour = "red", size = 3) +
+  geom_point(aes(x = 2022, y = 10000), color = "red", size = 3, shape = 15) +
+  geom_point(aes(x = 2022, y = 7500), color = "black", size = 3, shape = 15) +
+  geom_line(aes(y = 900), color = "darkgreen") +
+  geom_text(aes(x = 2021.75, y = 1800), label = "Well insulated family house", color = "darkgreen", size = 3)
+
+ggsave("3-biggest-consumers-over-time.png", width = 8, height = 4)
+```
+
+
+### Plot ?: A bunch that I'll rename and clean up later 
 
 ```{r gallons_per_fuel_type}
-ggplot(fuels, aes(x = Fuel_type, y = Total_Gallons_per_Fuel_Type)) +
+fuels |>
+  group_by(Fuel_type) |>
+  mutate(Total_Gallons_per_Fuel_Type = sum(Gallons)) |>
+ggplot(aes(x = Fuel_type, y = Total_Gallons_per_Fuel_Type)) +
   geom_col() +
   scale_x_discrete(guide = guide_axis(angle = 45)) +
   theme_minimal() +
@@ -266,6 +277,8 @@ ggplot(fuels, aes(x = Fuel_type, y = Total_Gallons_per_Fuel_Type)) +
 
 ```{r gallons_per_year}
 fuels |>
+  group_by(Fuel_type) |>
+  mutate(Total_Gallons_per_Fuel_Type = sum(Gallons)) |>
   filter(Year != 2024) |>
   ggplot(aes(x = Year, y = Total_Gallons_per_Fuel_Type)) +
   geom_col() +
@@ -322,17 +335,23 @@ fuels |>
   geom_col()
 ```
 
+### Plot ?: Gallons per square foot
+
 ```{r total_gallons_per_sf}
 fuels |>
-  filter(total_per_sf > 6) |>
+  filter(Year >= 2019, Year <= 2023) |>
   group_by(Building) |>
+  mutate(Total_Gallons_per_Building = sum(Gallons)) |>
+  mutate(total_per_sf = (Total_Gallons_per_Building / Square_feet)) |>
   summarize(total_per_sf = unique(total_per_sf)) |>
+  filter(total_per_sf > 2) |>
   ggplot(aes(x = Building, y = total_per_sf)) +
   geom_col() +
   labs(title = "Total Gallons per Square Foot",
        subtitle = "Highest 6 Buildings",
        y = "Total Gallons per Square Foot") +
-  theme_minimal()
+  theme_minimal() +
+  coord_flip()
 ```
 
 ### 
