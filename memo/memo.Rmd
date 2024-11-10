@@ -306,10 +306,10 @@ fuels |>
 
 # do factor shift thingy
 
-# ggplot(main_total_fuels, aes(x = "", y = Total_Gallons, fill = Building)) +
-#  geom_bar(stat = "identity", width = 1, color = "white") +
-#  coord_polar("y", start = 0) +
-#  theme_void()
+ ggplot(main_total_fuels, aes(x = "", y = Total_Gallons, fill = Building)) +
+  geom_bar(stat = "identity", width = 1, color = "white") +
+  coord_polar("y", start = 0) +
+  theme_void()
 
 ```
 
@@ -333,5 +333,21 @@ fuels |>
        subtitle = "Highest 6 Buildings",
        y = "Total Gallons per Square Foot") +
   theme_minimal()
+```
+
+### 
+
+```{r}
+
+fuels |>
+  filter(Building == "Blair Tyson" & Year >= 2019 & Year <= 2023) |>
+  group_by(Month) |>
+  #View() |>
+  mutate(Total_Gallons_per_Month = sum(Gallons)) |>
+  ggplot(aes(x = Month, y = Total_Gallons_per_Month, group = Year, colour = Year)) +
+  geom_line() +
+  geom_point() +
+  facet_wrap(~Year)
+
 ```
 
