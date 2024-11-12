@@ -680,3 +680,21 @@ fuels |>
 ```
 
 ![](memo_files/figure-gfm/total_gallons_per_sf-1.png)<!-- -->
+
+### Plot ?: Fuel usage per month
+
+``` r
+fuels %>% 
+  ggplot(mapping = aes(x = Month, y = Gallons, color = Fuel_type, group = Fuel_type)) +
+  facet_wrap(~ Fuel_type) +
+  geom_point() +
+  geom_line() +
+  scale_color_viridis_d() +
+  theme_minimal() +
+  guides(color = FALSE) +
+  labs(title = "Fuel Usage by Month",
+       x = "Month",
+       y = "Gallons")
+```
+
+![](memo_files/figure-gfm/fuel_per_month-1.png)<!-- -->
