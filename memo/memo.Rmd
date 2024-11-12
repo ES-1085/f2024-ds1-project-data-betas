@@ -128,14 +128,11 @@ fuels <- fuels |>
 
 ### Step ?: Ignore for now I'm working on it but am confused
 
-```{r}
+```{r pie-data}
 
 # make one big function
 
-# main_total_fuels <- data.frame(
-#  Building = unique(fuels$Building),
-#  Total_Gallons = unique(fuels$Total_Gallons_per_Building)
-# )
+
 
 # main_total_fuels |>
 #   filter(Building == c("Witchcliff Apartments", "Witchcliff","Studio 5+6","PRF",
@@ -145,14 +142,19 @@ fuels <- fuels |>
 #                        "18B Norris Ave", "171 Beech Hill Road", "14 Norris Ave")) |>
 #   (Other_Gallons <- sum(Total_Gallons))
 
-# with(main_total_fuels, sum(Total_Gallons[Total_Gallons < 9952.2]))
+ main_total_fuels <- data.frame(
+  Building = unique(fuels$Building),
+  Total_Gallons = unique(fuels$Total_Gallons_per_Building)
+ )
 
-# main_total_fuels <- main_total_fuels |>
-#  add_row(Building = "Other", 
-#          Total_Gallons = with(main_total_fuels, sum(Total_Gallons[Total_Gallons < #9952.2])))
+ # with(main_total_fuels, sum(Total_Gallons[Total_Gallons < 9952.2]))
 
-#main_total_fuels <- main_total_fuels |>
-#  filter(Total_Gallons >= 9952.2 | Building == "Other")
+ main_total_fuels <- main_total_fuels |>
+   add_row(Building = "Other",
+          Total_Gallons = with(main_total_fuels, sum(Total_Gallons[Total_Gallons < 41871.1])))
+
+main_total_fuels <- main_total_fuels |>
+  filter(Total_Gallons >= 41871.1 | Building == "Other")
 
 
 ```
@@ -315,7 +317,7 @@ fuels |>
 
 ```
 
-```{r ugly_rn_will_make_better}
+```{r pie-total-gallons}
 
 # do factor shift thingy
 
@@ -323,6 +325,9 @@ fuels |>
   geom_bar(stat = "identity", width = 1, color = "white") +
   coord_polar("y", start = 0) +
   theme_void()
+
+ggplot(main_total_fuels, aes(y = Building, x = Total_Gallons)) +
+  geom_col()
 
 ```
 
@@ -354,19 +359,34 @@ fuels |>
   coord_flip()
 ```
 
-### 
+### Plot showing gallons per month before and after heat pump - Not useful in the end
 
-```{r}
+```{r before-and-after-heat-pump}
 
 fuels |>
-  filter(Building == "Blair Tyson" & Year >= 2019 & Year <= 2023) |>
-  group_by(Month) |>
-  #View() |>
+  filter(Building == "Kaelber" & Year >= 2019 & Year <= 2023) |>
+  group_by(Year, Month) |>
   mutate(Total_Gallons_per_Month = sum(Gallons)) |>
+  #View() |>
+  group_by(Year) |>
   ggplot(aes(x = Month, y = Total_Gallons_per_Month, group = Year, colour = Year)) +
   geom_line() +
   geom_point() +
   facet_wrap(~Year)
+
+```
+
+```{r}
+
+fuels|>
+  filter(Year != 2024) |>
+  group_by(Year, Fuel_type) |>
+  mutate(Total_Gallons_per_Year = sum(Gallons)) |>
+  ggplot(aes(x = Year, y = Total_Gallons_per_Year, colour = Fuel_type)) +
+  geom_line() +
+  facet_wrap(~Fuel_type) +
+  theme_minimal() +
+  theme(legend.position = "none")
 
 ```
 
