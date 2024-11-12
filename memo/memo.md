@@ -235,11 +235,11 @@ fuels |>
   labs(title = "Buildings Using the Most Amount of Fuel",
        subtitle = "2014 - 2024",
        y = "Building",
-       x = "Total Amount of Fuel",
+       x = "Total Amount of Fuel in Gallons",
        fill = "Fuel Type")
 ```
 
-![](memo_files/figure-gfm/total_fuel_per_building-1.png)<!-- -->
+<img src="memo_files/figure-gfm/total_fuel_per_building-1.png" alt="Horizontal bar graph showing the building on the y-axis and the total amount of gallons of fuel used by those buildings between 2014 and 2024. The fill color of the graph indicates whether the building uses heating oil or propane. The graph shows the 5 buildings that consumed the most amount of fuel in this time span: Arts &amp; Science + Gates, Kaelber, Blair Tyson, Dorr Natural History Museum and Seafox. The graph also shows that Arts &amp; Science + Gates, the biggest consumer with more than 150000 gallons of fuel, uses propane, while the other 4 buildings use heating oil. Seafox, the smallest consumer out of the 5 used around 45000 gallons."  />
 
 ``` r
 ggsave("Buildings-Using-Most-Fuel.png")
