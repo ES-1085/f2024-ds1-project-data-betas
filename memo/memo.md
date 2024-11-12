@@ -235,11 +235,11 @@ fuels |>
   labs(title = "Buildings Using the Most Amount of Fuel",
        subtitle = "2014 - 2024",
        y = "Building",
-       x = "Total Amount of Fuel",
+       x = "Total Amount of Fuel in Gallons",
        fill = "Fuel Type")
 ```
 
-![](memo_files/figure-gfm/total_fuel_per_building-1.png)<!-- -->
+<img src="memo_files/figure-gfm/total_fuel_per_building-1.png" alt="Horizontal bar graph showing the building on the y-axis and the total amount of gallons of fuel used by those buildings between 2014 and 2024. The fill color of the graph indicates whether the building uses heating oil or propane. The graph shows the 5 buildings that consumed the most amount of fuel in this time span: Arts &amp; Science + Gates, Kaelber, Blair Tyson, Dorr Natural History Museum and Seafox. The graph also shows that Arts &amp; Science + Gates, the biggest consumer with more than 150000 gallons of fuel, uses propane, while the other 4 buildings use heating oil. Seafox, the smallest consumer out of the 5 used around 45000 gallons."  />
 
 ``` r
 ggsave("Buildings-Using-Most-Fuel.png")
@@ -261,18 +261,18 @@ fuels |>
   labs(title = "Total Gallons of Fuel per Year",
        subtitle = "2014 - 2023, 3 Biggest Consumers",
        y = "Gallons",
-       caption = "Blair Tyson and Kaelber have seen a descrese in fossil fuel consumption while the use by Arts & Sciences and Gates has continued to increase") +
+       caption = "HP = heat pumps (for heating and cooling), HPWH = heat pump water heating system") +
   scale_x_continuous(breaks = seq(from = 2014, to = 2024, by = 1)) +
   ylim(0, NA) +
   scale_color_viridis_d() +
   geom_vline(xintercept = 2020, linetype = "dotted", colour = "blue") +
   geom_text(aes(x = 2020.5, y = 16000), label = "COVID", colour = "blue") +
   geom_text(aes(x = 2021.3, y = 8300), label = "BT HPWHs installed", colour = "black", size = 3) +
-  geom_text(aes(x = 2021.7, y = 10900), label = "Kaelber HPs installed", colour = "red", size = 3) +
-  geom_point(aes(x = 2022, y = 10000), color = "red", size = 3, shape = 15) +
+  geom_text(aes(x = 2017.7, y = 14300), label = "Kaelber HPs installed", colour = "red", size = 3) +
+  geom_point(aes(x = 2019, y = 14250), color = "red", size = 3, shape = 15) +
   geom_point(aes(x = 2022, y = 7500), color = "black", size = 3, shape = 15) +
   geom_line(aes(y = 900), color = "darkgreen") +
-  geom_text(aes(x = 2021.75, y = 1800), label = "Well insulated family house", color = "darkgreen", size = 3)
+  geom_text(aes(x = 2021.75, y = 1500), label = "Well insulated family house", color = "darkgreen", size = 3)
 ```
 
 ![](memo_files/figure-gfm/5_biggest_over_time-1.png)<!-- -->
@@ -680,3 +680,21 @@ fuels |>
 ```
 
 ![](memo_files/figure-gfm/total_gallons_per_sf-1.png)<!-- -->
+
+### Plot ?: Fuel usage per month
+
+``` r
+fuels %>% 
+  ggplot(mapping = aes(x = Month, y = Gallons, color = Fuel_type, group = Fuel_type)) +
+  facet_wrap(~ Fuel_type) +
+  geom_point() +
+  geom_line() +
+  scale_color_viridis_d() +
+  theme_minimal() +
+  guides(color = FALSE) +
+  labs(title = "Fuel Usage by Month",
+       x = "Month",
+       y = "Gallons")
+```
+
+![](memo_files/figure-gfm/fuel_per_month-1.png)<!-- -->
