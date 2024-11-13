@@ -134,7 +134,7 @@ fuels <- fuels |>
 
 ### Step ?: Ignore for now I'm working on it but am confused
 
-```{r pie-data}
+```{r pie_data}
 
 # make one big function
 
@@ -148,19 +148,19 @@ fuels <- fuels |>
 #                        "18B Norris Ave", "171 Beech Hill Road", "14 Norris Ave")) |>
 #   (Other_Gallons <- sum(Total_Gallons))
 
- main_total_fuels <- data.frame(
-  Building = unique(fuels$Building),
-  Total_Gallons = unique(fuels$Total_Gallons_per_Building)
- )
+ #main_total_fuels <- data.frame(
+#  Building = unique(fuels$Building),
+#  Total_Gallons = unique(fuels$Total_Gallons_per_Building)
+# )
 
  # with(main_total_fuels, sum(Total_Gallons[Total_Gallons < 9952.2]))
 
- main_total_fuels <- main_total_fuels |>
-   add_row(Building = "Other",
-          Total_Gallons = with(main_total_fuels, sum(Total_Gallons[Total_Gallons < 41871.1])))
+# main_total_fuels <- main_total_fuels |>
+#   add_row(Building = "Other",
+#          Total_Gallons = with(main_total_fuels, sum(Total_Gallons[Total_Gallons # < 41871.1])))
 
-main_total_fuels <- main_total_fuels |>
-  filter(Total_Gallons >= 41871.1 | Building == "Other")
+#main_total_fuels <- main_total_fuels |>
+#  filter(Total_Gallons >= 41871.1 | Building == "Other")
 
 
 ```
@@ -344,13 +344,13 @@ fuels |>
 
 # do factor shift thingy
 
- ggplot(main_total_fuels, aes(x = "", y = Total_Gallons, fill = Building)) +
-  geom_bar(stat = "identity", width = 1, color = "white") +
-  coord_polar("y", start = 0) +
-  theme_void()
+# ggplot(main_total_fuels, aes(x = "", y = Total_Gallons, fill = Building)) +
+#  geom_bar(stat = "identity", width = 1, color = "white") +
+#  coord_polar("y", start = 0) +
+#  theme_void()
 
-ggplot(main_total_fuels, aes(y = Building, x = Total_Gallons)) +
-  geom_col()
+#ggplot(main_total_fuels, aes(y = Building, x = Total_Gallons)) +
+#  geom_col()
 
 ```
 
@@ -414,7 +414,7 @@ fuels|>
 ```
 
 ### Plot ?: Fuel usage per month
-```{r fuel_per_month}
+```{r fuel_per_month_not_usable}
 fuels %>% 
   ggplot(mapping = aes(x = Month, y = Gallons, color = Fuel_type, group = Fuel_type)) +
   facet_wrap(~ Fuel_type) +
@@ -534,11 +534,15 @@ ggsave("top-5-fuel-area-plot.png", width = 4, height = 4)
 ```
 
 ```{r}
-fuels |>
+library(gghighlight)  # Make sure this is loaded
+
+fuels |> 
   filter(Year > 2022) |>
   group_by(Building) |>
-  mutate(Total_Gallons_per_Buildings = sum(Gallons)) |>
-  ggplot(aes(x = Total_Gallons_per_Buildings, y =  fct_reorder(Building, Total_Gallons_per_Building), fill = Building)) +
+  summarize(Total_Gallons_per_Buildings = sum(Gallons), .groups = "drop") |>
+  ggplot(aes(x = Total_Gallons_per_Buildings, 
+             y = fct_reorder(Building, Total_Gallons_per_Buildings), 
+             fill = Building)) +
   geom_col() +
   gghighlight(Building %in% 
                 c("Blair Tyson", "Arts & Sci + Gates", "Kaelber", "Seafox", "Dorr NHM")) +
@@ -551,13 +555,14 @@ fuels |>
     panel.grid = element_blank(),
     axis.text.x = element_text(color="black", size=10),
     panel.background = element_rect(fill = "white", colour = "white", 
-                                   linetype = "solid", linewidth = 0.5),
-    legend.position = "none",
+                                    linetype = "solid", linewidth = 0.5),
+    legend.position = "none"
   ) +
   labs(title = "Use of Fuel Across COA Buildings",
        subtitle = "2022 - 2024",
        y = "",
        x = "Total Amount of Fuel in Gallons")
+
 
 ggsave("top-5-fuel-bar-plot.png", width = 4, height = 4)
 
