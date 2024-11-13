@@ -255,7 +255,7 @@ ggsave("Buildings-Using-Most-Fuel.png")
 
     ## Saving 7 x 5 in image
 
-### Plot 3: 5 biggest over time
+### Plot 3: 3 biggest over time
 
 ``` r
 fuels |>
@@ -267,24 +267,30 @@ fuels |>
   geom_line() +
   theme_minimal() +
   labs(title = "Total Gallons of Fuel per Year",
-       subtitle = "2014 - 2023, 3 Biggest Consumers",
-       y = "Gallons",
-       caption = "HPWH = electric heat pump water heating system") +
+       subtitle = "2014 - 2023, 3 biggest consumers",
+       y = "Total Gallons",
+       caption = "HP = heat pumps (library stacks and archives), HPWH = heat pump water heating system") +
   scale_x_continuous(breaks = seq(from = 2014, to = 2024, by = 1)) +
   ylim(0, NA) +
+  scale_y_continuous(labels = scales::comma) +
   scale_color_viridis_d() +
   geom_vline(xintercept = 2020, linetype = "dotted", colour = "blue") +
   geom_text(aes(x = 2020.5, y = 16000), label = "COVID", colour = "blue") +
   geom_text(aes(x = 2021.3, y = 8300), label = "BT HPWH installed", colour = "black", size = 3) +
   geom_point(aes(x = 2022, y = 7500), color = "black", size = 3, shape = 15) +
+  geom_text(aes(x = 2017, y = 8800), color = "red", label = "Kaelber HPs installed", size = 3) +
+  geom_point(aes(x = 2017, y = 9550), color = "red", size = 3, shape = 15) +
   geom_line(aes(y = 900), color = "darkgreen") +
   geom_text(aes(x = 2021.75, y = 1500), label = "Well insulated family house", color = "darkgreen", size = 3)
 ```
 
-![](memo_files/figure-gfm/5_biggest_over_time-1.png)<!-- -->
+    ## Scale for y is already present.
+    ## Adding another scale for y, which will replace the existing scale.
+
+![](memo_files/figure-gfm/3_biggest_over_time-1.png)<!-- -->
 
 ``` r
-ggsave("3-biggest-consumers-over-time.png", width = 8, height = 4)
+ggsave("3-biggest-consumers.png", width = 8, height = 4)
 ```
 
 ### Plot 4: Fuel usage per month
@@ -745,123 +751,108 @@ fuels|>
 
 ![](memo_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
 
-### Plot ?: Fuel usage per month
+### Plot ?:
 
-``` r
-fuels %>% 
-  ggplot(mapping = aes(x = Month, y = Gallons, color = Fuel_type, group = Fuel_type)) +
-  facet_wrap(~ Fuel_type) +
-  geom_point() +
-  geom_line() +
-  scale_color_viridis_d() +
-  theme_minimal() +
-  guides(color = FALSE) +
-  labs(title = "Fuel Usage by Month",
-       x = "Month",
-       y = "Gallons")
-```
 
-![](memo_files/figure-gfm/fuel_per_month_not_usable-1.png)<!-- -->
 
-``` r
-pal=c("#003f5c",
-      "#2f4b7c",
-      "#665191",
-      "#a05195",
-      "#d45087",
-      "#f95d6a",
-      "#ff7c43",
-      "#ffa600")
+    ``` r
+    pal=c("#003f5c",
+          "#2f4b7c",
+          "#665191",
+          "#a05195",
+          "#d45087",
+          "#f95d6a",
+          "#ff7c43",
+          "#ffa600")
 
-order <- c("Seafox", "Dorr NHM", "Blair Tyson", "Kaelber", "Arts & Sci + Gates")
+    order <- c("Seafox", "Dorr NHM", "Blair Tyson", "Kaelber", "Arts & Sci + Gates")
 
-# 
-# 
-# test <- fuels |>
-#   filter(Building %in% c("Blair Tyson", "Arts & Sci + Gates", "Kaelber", "Seafox", "Dorr NHM"), 
-#          Year != 2024) |>
-#   group_by(Year, Building) |>
-#   mutate(Total_Gallons_per_years = sum(Gallons))
-# 
-# length(test) <- length(fuels)
-# 
-# class(test$Building)
+    # 
+    # 
+    # test <- fuels |>
+    #   filter(Building %in% c("Blair Tyson", "Arts & Sci + Gates", "Kaelber", "Seafox", "Dorr NHM"), 
+    #          Year != 2024) |>
+    #   group_by(Year, Building) |>
+    #   mutate(Total_Gallons_per_years = sum(Gallons))
+    # 
+    # length(test) <- length(fuels)
+    # 
+    # class(test$Building)
 
-fuels |>
-  filter(Building %in% c("Blair Tyson", "Arts & Sci + Gates", "Kaelber", "Seafox", "Dorr NHM"), 
-         Year != 2024) |>
-  group_by(Year, Building) |>
-  mutate(Total_Gallons_per_years = sum(Gallons)) |>
-  mutate(Building = factor(Building, levels=order)) |>
-  ggplot(aes(Year, Total_Gallons_per_years, fill = Building, label = Building, color = Building)) +
-  geom_area() +
-  
-  scale_fill_manual(values=pal) +
-  scale_color_manual(values = pal) +
-  
-  theme(
-    axis.line.x = element_line(linewidth = .75),
-    panel.grid = element_blank(),
-    axis.text.y = element_blank(),
-    axis.text.x = element_text(color="black", size=10),
-    plot.margin = margin(10,50,10,10),
-    panel.background = element_rect(fill = "white", colour = "white", 
-                                   linetype = "solid", linewidth = 0.5),
-    legend.position = "none",
-  ) +
-  labs(title = "Progression of the Top Five Fuel Consumers",
-       subtitle = "2014 - 2023",
-       y = "",
-       x = "Year") +
-  
-  annotate("text", x = 2023.1, y = 32000,
-           label = "Seafox",
-           hjust=0,
-           size=3,
-           lineheight=.8,
-           fontface="bold",
-           color=pal[1]) +
-  
-  annotate("text", x = 2023.1, y = 27500,
-           label = "Dorr NHM",
-           hjust=0,
-           size=3,
-           lineheight=.8,
-           fontface="bold",
-           color=pal[2]) +
-  
-  annotate("text", x = 2023.1, y = 23000,
-           label = "Blair Tyson",
-           hjust=0,
-           size=3,
-           lineheight=.8,
-           fontface="bold",
-           color=pal[3]) +
-  
-  annotate("text", x = 2023.1, y = 18000,
-           label = "Kaelber",
-           hjust=0,
-           size=3,
-           lineheight=.8,
-           fontface="bold",
-           color=pal[4]) +
-  
-  annotate("text", x = 2023.1, y = 10000,
-           label = "Arts & Sci + Gates",
-           hjust=0,
-           size=3,
-           lineheight=.8,
-           fontface="bold",
-           color=pal[5]) +
-  
-  annotate("text", x = 2025, y = 27500,
-           label = "",
-           hjust=0,
-           size=3,
-           lineheight=.8,
-           fontface="bold",
-           color=pal[2])
-```
+    fuels |>
+      filter(Building %in% c("Blair Tyson", "Arts & Sci + Gates", "Kaelber", "Seafox", "Dorr NHM"), 
+             Year != 2024) |>
+      group_by(Year, Building) |>
+      mutate(Total_Gallons_per_years = sum(Gallons)) |>
+      mutate(Building = factor(Building, levels=order)) |>
+      ggplot(aes(Year, Total_Gallons_per_years, fill = Building, label = Building, color = Building)) +
+      geom_area() +
+      
+      scale_fill_manual(values=pal) +
+      scale_color_manual(values = pal) +
+      
+      theme(
+        axis.line.x = element_line(linewidth = .75),
+        panel.grid = element_blank(),
+        axis.text.y = element_blank(),
+        axis.text.x = element_text(color="black", size=10),
+        plot.margin = margin(10,50,10,10),
+        panel.background = element_rect(fill = "white", colour = "white", 
+                                       linetype = "solid", linewidth = 0.5),
+        legend.position = "none",
+      ) +
+      labs(title = "Progression of the Top Five Fuel Consumers",
+           subtitle = "2014 - 2023",
+           y = "",
+           x = "Year") +
+      
+      annotate("text", x = 2023.1, y = 32000,
+               label = "Seafox",
+               hjust=0,
+               size=3,
+               lineheight=.8,
+               fontface="bold",
+               color=pal[1]) +
+      
+      annotate("text", x = 2023.1, y = 27500,
+               label = "Dorr NHM",
+               hjust=0,
+               size=3,
+               lineheight=.8,
+               fontface="bold",
+               color=pal[2]) +
+      
+      annotate("text", x = 2023.1, y = 23000,
+               label = "Blair Tyson",
+               hjust=0,
+               size=3,
+               lineheight=.8,
+               fontface="bold",
+               color=pal[3]) +
+      
+      annotate("text", x = 2023.1, y = 18000,
+               label = "Kaelber",
+               hjust=0,
+               size=3,
+               lineheight=.8,
+               fontface="bold",
+               color=pal[4]) +
+      
+      annotate("text", x = 2023.1, y = 10000,
+               label = "Arts & Sci + Gates",
+               hjust=0,
+               size=3,
+               lineheight=.8,
+               fontface="bold",
+               color=pal[5]) +
+      
+      annotate("text", x = 2025, y = 27500,
+               label = "",
+               hjust=0,
+               size=3,
+               lineheight=.8,
+               fontface="bold",
+               color=pal[2])
 
 ![](memo_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
 
