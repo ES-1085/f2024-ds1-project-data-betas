@@ -255,7 +255,7 @@ ggsave("Buildings-Using-Most-Fuel.png")
 
     ## Saving 7 x 5 in image
 
-### Plot 3: 3 biggest over time
+### Plot 3: 3 biggest consumers over time
 
 ``` r
 fuels |>
@@ -293,25 +293,42 @@ fuels |>
 ggsave("3-biggest-consumers.png", width = 8, height = 4)
 ```
 
-### Plot 4: Fuel usage per month
+### Plot 4: Total fuel usage by month
 
 ``` r
 fuels |> 
-  filter(Year < 2024) |>
+  filter(Year < 2024, Fuel_type %in% c("Heating Oil", "Propane")) |>
   group_by(Month, Fuel_type) |>
   summarize(month_sum = sum(Gallons), .groups = "drop") |>
   ggplot(aes(x = Month, y = month_sum, fill = Fuel_type)) +
   geom_col() +
-  labs(title = "Fuel Usage per Month",
+  geom_col(data = . %>% filter(Month == 12), color = "red", size = 1, show.legend = FALSE) +
+  scale_y_continuous(labels = scales::comma) +
+  ylim(0, 63000) +
+  scale_x_continuous(breaks = 1:12, labels = month.abb) +
+ facet_wrap(~ Fuel_type, ncol = 1) +    geom_text(aes(x = Month, y = month_sum, label = scales::comma(month_sum)), 
+            vjust = -0.5, 
+            size = 2.2) +
+  labs(title = "Total Fuel Usage per Month",
        subtitle = "2014 - 2023, all campus-owned buildings",
        y = "Total Gallons",
-       fill = "Fuel Type") +
+       fill = "Fuel Type",
+       caption = "Coastal biodiesel and kerosene are excluded from this graph as they are no longer used.") +
   theme_minimal() +
-  scale_x_continuous(breaks = 1:12, labels = month.abb) +
+  theme(strip.text = element_blank()) +
   scale_fill_viridis_d()
 ```
 
-![](memo_files/figure-gfm/fuel_per_month-1.png)<!-- -->
+    ## Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+    ## ℹ Please use `linewidth` instead.
+    ## This warning is displayed once every 8 hours.
+    ## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+    ## generated.
+
+    ## Scale for y is already present.
+    ## Adding another scale for y, which will replace the existing scale.
+
+![](memo_files/figure-gfm/fuel_by_month-1.png)<!-- -->
 
 ``` r
 ggsave("fuel_usage_per_month.png", width = 8, height = 4)
