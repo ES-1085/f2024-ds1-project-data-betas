@@ -279,6 +279,29 @@ fuels |>
 ggsave("3-biggest-consumers-over-time.png", width = 8, height = 4)
 ```
 
+### Plot 4: Fuel usage per month
+
+``` r
+fuels |> 
+  filter(Year < 2024) |>
+  group_by(Month, Fuel_type) |>
+  summarize(month_sum = sum(Gallons), .groups = "drop") |>
+  ggplot(aes(x = Month, y = month_sum, fill = Fuel_type)) +
+  geom_col() +
+  labs(title = "Fuel Usage per Month",
+       subtitle = "2014 - 2023",
+       y = "Total Gallons") +
+  theme_minimal() +
+  scale_x_continuous(breaks = 1:12, labels = month.abb) +
+  scale_fill_viridis_d()
+```
+
+![](memo_files/figure-gfm/fuel_per_month-1.png)<!-- -->
+
+``` r
+ggsave("fuel_usage_per_month.png", width = 8, height = 4)
+```
+
 ### Plot ?: A bunch that I’ll rename and clean up later
 
 ``` r
@@ -678,21 +701,3 @@ fuels |>
 ```
 
 ![](memo_files/figure-gfm/total_gallons_per_sf-1.png)<!-- -->
-
-### Plot ?: Fuel usage per month
-
-``` r
-fuels %>% 
-  ggplot(mapping = aes(x = Month, y = Gallons, color = Fuel_type, group = Fuel_type)) +
-  facet_wrap(~ Fuel_type) +
-  geom_point() +
-  geom_line() +
-  scale_color_viridis_d() +
-  theme_minimal() +
-  guides(color = FALSE) +
-  labs(title = "Fuel Usage by Month",
-       x = "Month",
-       y = "Gallons")
-```
-
-![](memo_files/figure-gfm/fuel_per_month-1.png)<!-- -->
