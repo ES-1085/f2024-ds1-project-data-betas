@@ -261,15 +261,13 @@ fuels |>
   labs(title = "Total Gallons of Fuel per Year",
        subtitle = "2014 - 2023, 3 Biggest Consumers",
        y = "Gallons",
-       caption = "HP = heat pumps (for heating and cooling), HPWH = heat pump water heating system") +
+       caption = "HPWH = electric heat pump water heating system") +
   scale_x_continuous(breaks = seq(from = 2014, to = 2024, by = 1)) +
   ylim(0, NA) +
   scale_color_viridis_d() +
   geom_vline(xintercept = 2020, linetype = "dotted", colour = "blue") +
   geom_text(aes(x = 2020.5, y = 16000), label = "COVID", colour = "blue") +
-  geom_text(aes(x = 2021.3, y = 8300), label = "BT HPWHs installed", colour = "black", size = 3) +
-  geom_text(aes(x = 2017.7, y = 14300), label = "Kaelber HPs installed", colour = "red", size = 3) +
-  geom_point(aes(x = 2019, y = 14250), color = "red", size = 3, shape = 15) +
+  geom_text(aes(x = 2021.3, y = 8300), label = "BT HPWH installed", colour = "black", size = 3) +
   geom_point(aes(x = 2022, y = 7500), color = "black", size = 3, shape = 15) +
   geom_line(aes(y = 900), color = "darkgreen") +
   geom_text(aes(x = 2021.75, y = 1500), label = "Well insulated family house", color = "darkgreen", size = 3)
@@ -279,6 +277,30 @@ fuels |>
 
 ``` r
 ggsave("3-biggest-consumers-over-time.png", width = 8, height = 4)
+```
+
+### Plot 4: Fuel usage per month
+
+``` r
+fuels |> 
+  filter(Year < 2024) |>
+  group_by(Month, Fuel_type) |>
+  summarize(month_sum = sum(Gallons), .groups = "drop") |>
+  ggplot(aes(x = Month, y = month_sum, fill = Fuel_type)) +
+  geom_col() +
+  labs(title = "Fuel Usage per Month",
+       subtitle = "2014 - 2023, all campus-owned buildings",
+       y = "Total Gallons",
+       fill = "Fuel Type") +
+  theme_minimal() +
+  scale_x_continuous(breaks = 1:12, labels = month.abb) +
+  scale_fill_viridis_d()
+```
+
+![](memo_files/figure-gfm/fuel_per_month-1.png)<!-- -->
+
+``` r
+ggsave("fuel_usage_per_month.png", width = 8, height = 4)
 ```
 
 ### Plot ?: A bunch that I’ll rename and clean up later
@@ -680,21 +702,3 @@ fuels |>
 ```
 
 ![](memo_files/figure-gfm/total_gallons_per_sf-1.png)<!-- -->
-
-### Plot ?: Fuel usage per month
-
-``` r
-fuels %>% 
-  ggplot(mapping = aes(x = Month, y = Gallons, color = Fuel_type, group = Fuel_type)) +
-  facet_wrap(~ Fuel_type) +
-  geom_point() +
-  geom_line() +
-  scale_color_viridis_d() +
-  theme_minimal() +
-  guides(color = FALSE) +
-  labs(title = "Fuel Usage by Month",
-       x = "Month",
-       y = "Gallons")
-```
-
-![](memo_files/figure-gfm/fuel_per_month-1.png)<!-- -->
