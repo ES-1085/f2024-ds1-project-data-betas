@@ -266,8 +266,9 @@ fuels |>
   ggplot(aes(x = Month, y = month_sum, fill = Fuel_type)) +
   geom_col() +
   labs(title = "Fuel Usage per Month",
-       subtitle = "2014 - 2023",
-       y = "Total Gallons") +
+       subtitle = "2014 - 2023, all campus-owned buildings",
+       y = "Total Gallons",
+       fill = "Fuel Type") +
   theme_minimal() +
   scale_x_continuous(breaks = 1:12, labels = month.abb) +
   scale_fill_viridis_d()
