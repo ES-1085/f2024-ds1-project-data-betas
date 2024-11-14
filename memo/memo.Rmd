@@ -148,19 +148,19 @@ fuels <- fuels |>
 #                        "18B Norris Ave", "171 Beech Hill Road", "14 Norris Ave")) |>
 #   (Other_Gallons <- sum(Total_Gallons))
 
- main_total_fuels <- data.frame(
-  Building = unique(fuels$Building),
-  Total_Gallons = unique(fuels$Total_Gallons_per_Building)
- )
+ # main_total_fuels <- data.frame(
+ #  Building = unique(fuels$Building),
+ #  Total_Gallons = unique(fuels$Total_Gallons_per_Building)
+ # )
 
  # with(main_total_fuels, sum(Total_Gallons[Total_Gallons < 9952.2]))
 
- main_total_fuels <- main_total_fuels |>
-   add_row(Building = "Other",
-          Total_Gallons = with(main_total_fuels, sum(Total_Gallons[Total_Gallons < 41871.1])))
-
-main_total_fuels <- main_total_fuels |>
-  filter(Total_Gallons >= 41871.1 | Building == "Other")
+#  main_total_fuels <- main_total_fuels |>
+#    add_row(Building = "Other",
+#           Total_Gallons = with(main_total_fuels, sum(Total_Gallons[Total_Gallons < 41871.1])))
+# 
+# main_total_fuels <- main_total_fuels |>
+#   filter(Total_Gallons >= 41871.1 | Building == "Other")
 
 
 ```
@@ -344,13 +344,13 @@ fuels |>
 
 # do factor shift thingy
 
- ggplot(main_total_fuels, aes(x = "", y = Total_Gallons, fill = Building)) +
-  geom_bar(stat = "identity", width = 1, color = "white") +
-  coord_polar("y", start = 0) +
-  theme_void()
-
-ggplot(main_total_fuels, aes(y = Building, x = Total_Gallons)) +
-  geom_col()
+#  ggplot(main_total_fuels, aes(x = "", y = Total_Gallons, fill = Building)) +
+#   geom_bar(stat = "identity", width = 1, color = "white") +
+#   coord_polar("y", start = 0) +
+#   theme_void()
+# 
+# ggplot(main_total_fuels, aes(y = Building, x = Total_Gallons)) +
+#   geom_col()
 
 ```
 
@@ -399,7 +399,7 @@ fuels |>
 
 ```
 
-```{r}
+```{r fuel-type-per-month}
 
 fuels|>
   filter(Year != 2024) |>
@@ -414,7 +414,7 @@ fuels|>
 ```
 
 ### Plot ?: Fuel usage per month
-```{r fuel_per_month}
+```{r fuel_per_month_unused}
 fuels %>% 
   ggplot(mapping = aes(x = Month, y = Gallons, color = Fuel_type, group = Fuel_type)) +
   facet_wrap(~ Fuel_type) +
@@ -428,7 +428,7 @@ fuels %>%
        y = "Gallons")
 ```
 
-```{r}
+```{r plot}
 
 pal=c("#003f5c",
       "#2f4b7c",
@@ -454,16 +454,19 @@ order <- c("Seafox", "Dorr NHM", "Blair Tyson", "Kaelber", "Arts & Sci + Gates")
 # class(test$Building)
 
 fuels |>
-  filter(Building %in% c("Blair Tyson", "Arts & Sci + Gates", "Kaelber", "Seafox", "Dorr NHM"), 
+  filter(#Building %in% c("Blair Tyson", "Arts & Sci + Gates", "Kaelber", "Seafox", "Dorr NHM"), 
          Year != 2024) |>
   group_by(Year, Building) |>
-  mutate(Total_Gallons_per_years = sum(Gallons)) |>
-  mutate(Building = factor(Building, levels=order)) |>
-  ggplot(aes(Year, Total_Gallons_per_years, fill = Building, label = Building, color = Building)) +
+  summarize(Total_Gallons_per_years = sum(Gallons)) |>
+  filter(Total_Gallons_per_years != "NA") %>% 
+  #mutate(Building = factor(Building, levels=order)) |>
+  ggplot(aes(Year, Total_Gallons_per_years, fill = Building)) +
   geom_area() +
   
   scale_fill_manual(values=pal) +
   scale_color_manual(values = pal) +
+  gghighlight(Building %in% 
+                c("Blair Tyson", "Arts & Sci + Gates", "Kaelber", "Seafox", "Dorr NHM")) +
   
   theme(
     axis.line.x = element_line(linewidth = .75),
@@ -480,6 +483,7 @@ fuels |>
        y = "",
        x = "Year") +
   
+# Labels
   annotate("text", x = 2023.1, y = 32000,
            label = "Seafox",
            hjust=0,
@@ -534,11 +538,13 @@ ggsave("top-5-fuel-area-plot.png", width = 4, height = 4)
 ```
 
 ```{r}
+
+
 fuels |>
   filter(Year > 2022) |>
   group_by(Building) |>
   mutate(Total_Gallons_per_Buildings = sum(Gallons)) |>
-  ggplot(aes(x = Total_Gallons_per_Buildings, y =  fct_reorder(Building, Total_Gallons_per_Building), fill = Building)) +
+  ggplot(aes(x = Total_Gallons_per_Buildings, y =  fct_reorder(Building, Total_Gallons_per_Buildings, .fun = sum), fill = Building)) +
   geom_col() +
   gghighlight(Building %in% 
                 c("Blair Tyson", "Arts & Sci + Gates", "Kaelber", "Seafox", "Dorr NHM")) +
@@ -565,11 +571,6 @@ ggsave("top-5-fuel-bar-plot.png", width = 4, height = 4)
 ```
 
 ```{r}
-
-
-
-
-
 
 
 fuels |>
