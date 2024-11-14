@@ -134,7 +134,7 @@ fuels <- fuels |>
 
 ### Step ?: Ignore for now I'm working on it but am confused
 
-```{r pie-data}
+```{r pie_data}
 
 # make one big function
 
@@ -161,6 +161,19 @@ fuels <- fuels |>
 # 
 # main_total_fuels <- main_total_fuels |>
 #   filter(Total_Gallons >= 41871.1 | Building == "Other")
+ #main_total_fuels <- data.frame(
+#  Building = unique(fuels$Building),
+#  Total_Gallons = unique(fuels$Total_Gallons_per_Building)
+# )
+
+ # with(main_total_fuels, sum(Total_Gallons[Total_Gallons < 9952.2]))
+
+# main_total_fuels <- main_total_fuels |>
+#   add_row(Building = "Other",
+#          Total_Gallons = with(main_total_fuels, sum(Total_Gallons[Total_Gallons # < 41871.1])))
+
+#main_total_fuels <- main_total_fuels |>
+#  filter(Total_Gallons >= 41871.1 | Building == "Other")
 
 
 ```
@@ -237,9 +250,9 @@ ggsave("Buildings-Using-Most-Fuel.png")
 
 ```
 
-### Plot 3: 5 biggest over time
+### Plot 3: 3 biggest consumers over time
 
-```{r 5_biggest_over_time}
+```{r 3_biggest_over_time}
 fuels |>
   filter(Building %in% c("Blair Tyson", "Arts & Sci + Gates", "Kaelber"), Year < 2024) |>
   group_by(Building, Year) |>
@@ -249,37 +262,49 @@ fuels |>
   geom_line() +
   theme_minimal() +
   labs(title = "Total Gallons of Fuel per Year",
-       subtitle = "2014 - 2023, 3 Biggest Consumers",
-       y = "Gallons",
-       caption = "HPWH = electric heat pump water heating system") +
+       subtitle = "2014 - 2023, 3 biggest consumers",
+       y = "Total Gallons",
+       caption = "HP = heat pumps (library stacks and archives), HPWH = heat pump water heating system") +
   scale_x_continuous(breaks = seq(from = 2014, to = 2024, by = 1)) +
   ylim(0, NA) +
+  scale_y_continuous(labels = scales::comma) +
   scale_color_viridis_d() +
   geom_vline(xintercept = 2020, linetype = "dotted", colour = "blue") +
   geom_text(aes(x = 2020.5, y = 16000), label = "COVID", colour = "blue") +
   geom_text(aes(x = 2021.3, y = 8300), label = "BT HPWH installed", colour = "black", size = 3) +
   geom_point(aes(x = 2022, y = 7500), color = "black", size = 3, shape = 15) +
+  geom_text(aes(x = 2017, y = 8800), color = "red", label = "Kaelber HPs installed", size = 3) +
+  geom_point(aes(x = 2017, y = 9550), color = "red", size = 3, shape = 15) +
   geom_line(aes(y = 900), color = "darkgreen") +
   geom_text(aes(x = 2021.75, y = 1500), label = "Well insulated family house", color = "darkgreen", size = 3)
 
-ggsave("3-biggest-consumers-over-time.png", width = 8, height = 4)
+ggsave("3-biggest-consumers.png", width = 8, height = 4)
 ```
 
-### Plot 4: Fuel usage per month
-```{r fuel_per_month}
+### Plot 4: Total fuel usage by month
+```{r fuel_by_month}
 fuels |> 
-  filter(Year < 2024) |>
+  filter(Year < 2024, Fuel_type %in% c("Heating Oil", "Propane")) |>
   group_by(Month, Fuel_type) |>
   summarize(month_sum = sum(Gallons), .groups = "drop") |>
   ggplot(aes(x = Month, y = month_sum, fill = Fuel_type)) +
   geom_col() +
-  labs(title = "Fuel Usage per Month",
+  geom_col(data = . %>% filter(Month == 12), color = "red", size = 1, show.legend = FALSE) +
+  scale_y_continuous(labels = scales::comma) +
+  ylim(0, 63000) +
+  scale_x_continuous(breaks = 1:12, labels = month.abb) +
+ facet_wrap(~ Fuel_type, ncol = 1) +    geom_text(aes(x = Month, y = month_sum, label = scales::comma(month_sum)), 
+            vjust = -0.5, 
+            size = 2.2) +
+  labs(title = "Total Fuel Usage per Month",
        subtitle = "2014 - 2023, all campus-owned buildings",
        y = "Total Gallons",
-       fill = "Fuel Type") +
+       fill = "Fuel Type",
+       caption = "Coastal biodiesel and kerosene are excluded from this graph as they are no longer used.") +
   theme_minimal() +
-  scale_x_continuous(breaks = 1:12, labels = month.abb) +
+  theme(strip.text = element_blank()) +
   scale_fill_viridis_d()
+
 
 ggsave("fuel_usage_per_month.png", width = 8, height = 4)
 ```
@@ -351,6 +376,13 @@ fuels |>
 # 
 # ggplot(main_total_fuels, aes(y = Building, x = Total_Gallons)) +
 #   geom_col()
+# ggplot(main_total_fuels, aes(x = "", y = Total_Gallons, fill = Building)) +
+#  geom_bar(stat = "identity", width = 1, color = "white") +
+#  coord_polar("y", start = 0) +
+#  theme_void()
+
+#ggplot(main_total_fuels, aes(y = Building, x = Total_Gallons)) +
+#  geom_col()
 
 ```
 
@@ -426,6 +458,7 @@ fuels %>%
   labs(title = "Fuel Usage by Month",
        x = "Month",
        y = "Gallons")
+### Plot ?:
 ```
 
 ```{r plot}
@@ -538,6 +571,7 @@ ggsave("top-5-fuel-area-plot.png", width = 4, height = 4)
 ```
 
 ```{r}
+<<<<<<< HEAD
 
 
 fuels |>
@@ -545,6 +579,15 @@ fuels |>
   group_by(Building) |>
   mutate(Total_Gallons_per_Buildings = sum(Gallons)) |>
   ggplot(aes(x = Total_Gallons_per_Buildings, y =  fct_reorder(Building, Total_Gallons_per_Buildings, .fun = sum), fill = Building)) +
+library(gghighlight)  # Make sure this is loaded
+
+fuels |> 
+  filter(Year > 2022) |>
+  group_by(Building) |>
+  summarize(Total_Gallons_per_Buildings = sum(Gallons), .groups = "drop") |>
+  ggplot(aes(x = Total_Gallons_per_Buildings, 
+             y = fct_reorder(Building, Total_Gallons_per_Buildings), 
+             fill = Building)) +
   geom_col() +
   gghighlight(Building %in% 
                 c("Blair Tyson", "Arts & Sci + Gates", "Kaelber", "Seafox", "Dorr NHM")) +
@@ -557,13 +600,14 @@ fuels |>
     panel.grid = element_blank(),
     axis.text.x = element_text(color="black", size=10),
     panel.background = element_rect(fill = "white", colour = "white", 
-                                   linetype = "solid", linewidth = 0.5),
-    legend.position = "none",
+                                    linetype = "solid", linewidth = 0.5),
+    legend.position = "none"
   ) +
   labs(title = "Use of Fuel Across COA Buildings",
        subtitle = "2022 - 2024",
        y = "",
        x = "Total Amount of Fuel in Gallons")
+
 
 ggsave("top-5-fuel-bar-plot.png", width = 4, height = 4)
 
