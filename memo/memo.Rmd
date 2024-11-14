@@ -132,56 +132,7 @@ fuels <- fuels |>
 ```
 
 
-### Step ?: Ignore for now I'm working on it but am confused
-
-```{r pie_data}
-
-# make one big function
-
-
-
-# main_total_fuels |>
-#   filter(Building == c("Witchcliff Apartments", "Witchcliff","Studio 5+6","PRF",
-#                        "Pottery Studio","Peggy Barn", "Peach House", "Hatchery", "Greenhouse", 
-#                        "Davis Carriage", "Cottage", "CHE Generator", "Carriage", 
-#                        "BHF New Greenhouse", "BHF Main Bldg/2 Greenhouse", "BHF Farm House", 
-#                        "18B Norris Ave", "171 Beech Hill Road", "14 Norris Ave")) |>
-#   (Other_Gallons <- sum(Total_Gallons))
-
- # main_total_fuels <- data.frame(
- #  Building = unique(fuels$Building),
- #  Total_Gallons = unique(fuels$Total_Gallons_per_Building)
- # )
-
- # with(main_total_fuels, sum(Total_Gallons[Total_Gallons < 9952.2]))
-
-#  main_total_fuels <- main_total_fuels |>
-#    add_row(Building = "Other",
-#           Total_Gallons = with(main_total_fuels, sum(Total_Gallons[Total_Gallons < 41871.1])))
-# 
-# main_total_fuels <- main_total_fuels |>
-#   filter(Total_Gallons >= 41871.1 | Building == "Other")
- #main_total_fuels <- data.frame(
-#  Building = unique(fuels$Building),
-#  Total_Gallons = unique(fuels$Total_Gallons_per_Building)
-# )
-
- # with(main_total_fuels, sum(Total_Gallons[Total_Gallons < 9952.2]))
-
-# main_total_fuels <- main_total_fuels |>
-#   add_row(Building = "Other",
-#          Total_Gallons = with(main_total_fuels, sum(Total_Gallons[Total_Gallons # < 41871.1])))
-
-#main_total_fuels <- main_total_fuels |>
-#  filter(Total_Gallons >= 41871.1 | Building == "Other")
-
-
-```
-
-
-
-
-## Plots
+## Actual Plots
 
 ### ggsave example for saving plots
 
@@ -309,6 +260,8 @@ fuels |>
 ggsave("fuel_usage_per_month.png", width = 8, height = 4)
 ```
 
+# Plot Graveyard
+
 ### Plot ?: A bunch that I'll rename and clean up later 
 
 ```{r gallons_per_fuel_type}
@@ -348,7 +301,7 @@ fuels |>
   mutate(Total_Gallons_per_years = sum(Gallons)) %>%
   ggplot(aes(x = Year, y = Total_Gallons_per_years, fill = Fuel_type))+
   geom_col() +
-  facet_wrap(~Building)
+  facet_wrap(~Building) +
   theme_minimal()
 
 ```
@@ -364,6 +317,52 @@ fuels |>
   geom_col()
 
 ```
+
+
+```{r pie_data}
+
+# make one big function
+
+
+
+# main_total_fuels |>
+#   filter(Building == c("Witchcliff Apartments", "Witchcliff","Studio 5+6","PRF",
+#                        "Pottery Studio","Peggy Barn", "Peach House", "Hatchery", "Greenhouse", 
+#                        "Davis Carriage", "Cottage", "CHE Generator", "Carriage", 
+#                        "BHF New Greenhouse", "BHF Main Bldg/2 Greenhouse", "BHF Farm House", 
+#                        "18B Norris Ave", "171 Beech Hill Road", "14 Norris Ave")) |>
+#   (Other_Gallons <- sum(Total_Gallons))
+
+ # main_total_fuels <- data.frame(
+ #  Building = unique(fuels$Building),
+ #  Total_Gallons = unique(fuels$Total_Gallons_per_Building)
+ # )
+
+ # with(main_total_fuels, sum(Total_Gallons[Total_Gallons < 9952.2]))
+
+#  main_total_fuels <- main_total_fuels |>
+#    add_row(Building = "Other",
+#           Total_Gallons = with(main_total_fuels, sum(Total_Gallons[Total_Gallons < 41871.1])))
+# 
+# main_total_fuels <- main_total_fuels |>
+#   filter(Total_Gallons >= 41871.1 | Building == "Other")
+ #main_total_fuels <- data.frame(
+#  Building = unique(fuels$Building),
+#  Total_Gallons = unique(fuels$Total_Gallons_per_Building)
+# )
+
+ # with(main_total_fuels, sum(Total_Gallons[Total_Gallons < 9952.2]))
+
+# main_total_fuels <- main_total_fuels |>
+#   add_row(Building = "Other",
+#          Total_Gallons = with(main_total_fuels, sum(Total_Gallons[Total_Gallons # < 41871.1])))
+
+#main_total_fuels <- main_total_fuels |>
+#  filter(Total_Gallons >= 41871.1 | Building == "Other")
+
+
+```
+
 
 ```{r pie-total-gallons}
 
@@ -463,6 +462,7 @@ fuels %>%
 
 ```{r plot}
 
+# Colour Palette
 pal=c("#003f5c",
       "#2f4b7c",
       "#665191",
@@ -470,36 +470,50 @@ pal=c("#003f5c",
       "#d45087",
       "#f95d6a",
       "#ff7c43",
-      "#ffa600")
+      #"#ffa600",
+      "grey",
+      "grey",
+      "grey",
+      "grey",
+      "grey",
+      "grey",
+      "grey",
+      "grey",
+      "grey",
+      "grey",
+      "grey",
+      "grey",
+      "grey",
+      "grey",
+      "grey",
+      "grey",
+      "grey",
+      "grey",
+      "grey",
+      "grey",
+      "grey",
+      "grey")
 
-order <- c("Seafox", "Dorr NHM", "Blair Tyson", "Kaelber", "Arts & Sci + Gates")
+# Order of buildings for the fill
+order <- c( "Davis Center", "Davis Village", "Dorr NHM", "Seafox", "Blair Tyson", "Kaelber", "Arts & Sci + Gates", "Studio 5+6", "Pottery Studio", "Peach House", "Hatchery", "Greenhouse", "Carriage", "BHF New Greenhouse", "BHF Main Bldg/2 Greenhouses", "BHF Farm House", "18B Norris Ave", "171 Beech Hill Road", "14 Norris Ave", "Turrets", "Turrets Annex", "B&G")
 
-# 
-# 
-# test <- fuels |>
-#   filter(Building %in% c("Blair Tyson", "Arts & Sci + Gates", "Kaelber", "Seafox", "Dorr NHM"), 
-#          Year != 2024) |>
-#   group_by(Year, Building) |>
-#   mutate(Total_Gallons_per_years = sum(Gallons))
-# 
-# length(test) <- length(fuels)
-# 
-# class(test$Building)
 
 fuels |>
   filter(#Building %in% c("Blair Tyson", "Arts & Sci + Gates", "Kaelber", "Seafox", "Dorr NHM"), 
          Year != 2024) |>
   group_by(Year, Building) |>
-  summarize(Total_Gallons_per_years = sum(Gallons)) |>
-  filter(Total_Gallons_per_years != "NA") %>% 
-  #mutate(Building = factor(Building, levels=order)) |>
+  mutate(Total_Gallons_per_years = sum(Gallons)) |>
+  mutate(Building = factor(Building, levels=order)) |>
+  filter(!is.na(Building)) |> #why do we need this?
   ggplot(aes(Year, Total_Gallons_per_years, fill = Building)) +
   geom_area() +
   
-  scale_fill_manual(values=pal) +
+  scale_fill_manual(values = pal) +
   scale_color_manual(values = pal) +
-  gghighlight(Building %in% 
-                c("Blair Tyson", "Arts & Sci + Gates", "Kaelber", "Seafox", "Dorr NHM")) +
+  # gghighlight(Building %in% 
+  #               c("Blair Tyson", "Arts & Sci + Gates", "Kaelber", "Seafox", "Dorr NHM", 
+  #                 "Davis Village", "Davis Center"),
+  #             unhighlighted_params = list(fill = "grey"))
   
   theme(
     axis.line.x = element_line(linewidth = .75),
@@ -570,31 +584,24 @@ ggsave("top-5-fuel-area-plot.png", width = 4, height = 4)
 
 ```
 
-```{r}
-<<<<<<< HEAD
+```{r use-of-fuel-across-all-COA-buildings}
 
-
-fuels |>
-  filter(Year > 2022) |>
-  group_by(Building) |>
-  mutate(Total_Gallons_per_Buildings = sum(Gallons)) |>
-  ggplot(aes(x = Total_Gallons_per_Buildings, y =  fct_reorder(Building, Total_Gallons_per_Buildings, .fun = sum), fill = Building)) +
 library(gghighlight)  # Make sure this is loaded
 
 fuels |> 
   filter(Year > 2022) |>
   group_by(Building) |>
-  summarize(Total_Gallons_per_Buildings = sum(Gallons), .groups = "drop") |>
+  summarize(Total_Gallons_per_Buildings = sum(Gallons)) |>
+  mutate(Building = factor(Building, levels=order)) |>
   ggplot(aes(x = Total_Gallons_per_Buildings, 
-             y = fct_reorder(Building, Total_Gallons_per_Buildings), 
+             y = fct_reorder(Building, Total_Gallons_per_Buildings, .fun = sum), 
              fill = Building)) +
   geom_col() +
-  gghighlight(Building %in% 
-                c("Blair Tyson", "Arts & Sci + Gates", "Kaelber", "Seafox", "Dorr NHM")) +
+  # gghighlight(Building %in% 
+  #               c("Davis Center", "Davis Village", "Blair Tyson", "Arts & Sci + Gates", "Seafox", "Dorr NHM", "Kaelber")) +
   
   scale_fill_manual(values = pal) +
-  scale_color_manual(values = pal) +
-  
+
   theme(
     axis.line.x = element_line(linewidth = .75),
     panel.grid = element_blank(),
@@ -611,33 +618,5 @@ fuels |>
 
 ggsave("top-5-fuel-bar-plot.png", width = 4, height = 4)
 
-
-```
-
-```{r}
-
-
-fuels |>
-  group_by(Year, Building) |>
-  mutate(Total_Gallons_per_years = sum(Gallons)) |>
-  mutate(fuel_per_sf = (Total_Gallons_per_years/Square_feet)) |>
-  filter(Building %in% c("B&G", "Davis Centre", "Dorr NHM", "Hatchery", "Seafox")) |>
-
-  # summarize(total_per_sf = unique(total_per_sf)) |>
-  ggplot(aes(Year, fuel_per_sf, fill = Building, label = Building, color = Building)) +
-  geom_area() +
-  
-  scale_fill_manual(values=pal) +
-  scale_color_manual(values = pal) +
-  
-  theme(
-    axis.line.x = element_line(linewidth = .75),
-    panel.grid = element_blank(),
-    axis.text.y = element_blank(),
-    axis.text.x = element_text(color="black", size=10),
-    panel.background = element_rect(fill = "white", colour = "white", 
-                                   linetype = "solid", linewidth = 0.5),
-    legend.position = "none",
-  )
 
 ```

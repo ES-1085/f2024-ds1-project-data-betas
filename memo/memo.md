@@ -147,53 +147,7 @@ fuels <- fuels |>
   mutate(Square_feet = as.numeric(Square_feet))
 ```
 
-### Step ?: Ignore for now I’m working on it but am confused
-
-``` r
-# make one big function
-
-
-
-# main_total_fuels |>
-#   filter(Building == c("Witchcliff Apartments", "Witchcliff","Studio 5+6","PRF",
-#                        "Pottery Studio","Peggy Barn", "Peach House", "Hatchery", "Greenhouse", 
-#                        "Davis Carriage", "Cottage", "CHE Generator", "Carriage", 
-#                        "BHF New Greenhouse", "BHF Main Bldg/2 Greenhouse", "BHF Farm House", 
-#                        "18B Norris Ave", "171 Beech Hill Road", "14 Norris Ave")) |>
-#   (Other_Gallons <- sum(Total_Gallons))
-
-<<<<<<< HEAD
- # main_total_fuels <- data.frame(
- #  Building = unique(fuels$Building),
- #  Total_Gallons = unique(fuels$Total_Gallons_per_Building)
- # )
-
- # with(main_total_fuels, sum(Total_Gallons[Total_Gallons < 9952.2]))
-
-#  main_total_fuels <- main_total_fuels |>
-#    add_row(Building = "Other",
-#           Total_Gallons = with(main_total_fuels, sum(Total_Gallons[Total_Gallons < 41871.1])))
-# 
-# main_total_fuels <- main_total_fuels |>
-#   filter(Total_Gallons >= 41871.1 | Building == "Other")
-=======
- #main_total_fuels <- data.frame(
-#  Building = unique(fuels$Building),
-#  Total_Gallons = unique(fuels$Total_Gallons_per_Building)
-# )
-
- # with(main_total_fuels, sum(Total_Gallons[Total_Gallons < 9952.2]))
-
-# main_total_fuels <- main_total_fuels |>
-#   add_row(Building = "Other",
-#          Total_Gallons = with(main_total_fuels, sum(Total_Gallons[Total_Gallons # < 41871.1])))
-
-#main_total_fuels <- main_total_fuels |>
-#  filter(Total_Gallons >= 41871.1 | Building == "Other")
->>>>>>> 4ed4cdfb5108662da71d5912c3a979c78b8824cb
-```
-
-## Plots
+## Actual Plots
 
 ### ggsave example for saving plots
 
@@ -350,6 +304,8 @@ fuels |>
 ggsave("fuel_usage_per_month.png", width = 8, height = 4)
 ```
 
+# Plot Graveyard
+
 ### Plot ?: A bunch that I’ll rename and clean up later
 
 ``` r
@@ -392,310 +348,11 @@ fuels |>
   mutate(Total_Gallons_per_years = sum(Gallons)) %>%
   ggplot(aes(x = Year, y = Total_Gallons_per_years, fill = Fuel_type))+
   geom_col() +
-  facet_wrap(~Building)
-```
-
-![](memo_files/figure-gfm/gallons_per_fuel_type_per_year_facet_buildings-1.png)<!-- -->
-
-``` r
+  facet_wrap(~Building) +
   theme_minimal()
 ```
 
-    ## List of 136
-    ##  $ line                            :List of 6
-    ##   ..$ colour       : chr "black"
-    ##   ..$ linewidth    : num 0.5
-    ##   ..$ linetype     : num 1
-    ##   ..$ lineend      : chr "butt"
-    ##   ..$ arrow        : logi FALSE
-    ##   ..$ inherit.blank: logi TRUE
-    ##   ..- attr(*, "class")= chr [1:2] "element_line" "element"
-    ##  $ rect                            :List of 5
-    ##   ..$ fill         : chr "white"
-    ##   ..$ colour       : chr "black"
-    ##   ..$ linewidth    : num 0.5
-    ##   ..$ linetype     : num 1
-    ##   ..$ inherit.blank: logi TRUE
-    ##   ..- attr(*, "class")= chr [1:2] "element_rect" "element"
-    ##  $ text                            :List of 11
-    ##   ..$ family       : chr ""
-    ##   ..$ face         : chr "plain"
-    ##   ..$ colour       : chr "black"
-    ##   ..$ size         : num 11
-    ##   ..$ hjust        : num 0.5
-    ##   ..$ vjust        : num 0.5
-    ##   ..$ angle        : num 0
-    ##   ..$ lineheight   : num 0.9
-    ##   ..$ margin       : 'margin' num [1:4] 0points 0points 0points 0points
-    ##   .. ..- attr(*, "unit")= int 8
-    ##   ..$ debug        : logi FALSE
-    ##   ..$ inherit.blank: logi TRUE
-    ##   ..- attr(*, "class")= chr [1:2] "element_text" "element"
-    ##  $ title                           : NULL
-    ##  $ aspect.ratio                    : NULL
-    ##  $ axis.title                      : NULL
-    ##  $ axis.title.x                    :List of 11
-    ##   ..$ family       : NULL
-    ##   ..$ face         : NULL
-    ##   ..$ colour       : NULL
-    ##   ..$ size         : NULL
-    ##   ..$ hjust        : NULL
-    ##   ..$ vjust        : num 1
-    ##   ..$ angle        : NULL
-    ##   ..$ lineheight   : NULL
-    ##   ..$ margin       : 'margin' num [1:4] 2.75points 0points 0points 0points
-    ##   .. ..- attr(*, "unit")= int 8
-    ##   ..$ debug        : NULL
-    ##   ..$ inherit.blank: logi TRUE
-    ##   ..- attr(*, "class")= chr [1:2] "element_text" "element"
-    ##  $ axis.title.x.top                :List of 11
-    ##   ..$ family       : NULL
-    ##   ..$ face         : NULL
-    ##   ..$ colour       : NULL
-    ##   ..$ size         : NULL
-    ##   ..$ hjust        : NULL
-    ##   ..$ vjust        : num 0
-    ##   ..$ angle        : NULL
-    ##   ..$ lineheight   : NULL
-    ##   ..$ margin       : 'margin' num [1:4] 0points 0points 2.75points 0points
-    ##   .. ..- attr(*, "unit")= int 8
-    ##   ..$ debug        : NULL
-    ##   ..$ inherit.blank: logi TRUE
-    ##   ..- attr(*, "class")= chr [1:2] "element_text" "element"
-    ##  $ axis.title.x.bottom             : NULL
-    ##  $ axis.title.y                    :List of 11
-    ##   ..$ family       : NULL
-    ##   ..$ face         : NULL
-    ##   ..$ colour       : NULL
-    ##   ..$ size         : NULL
-    ##   ..$ hjust        : NULL
-    ##   ..$ vjust        : num 1
-    ##   ..$ angle        : num 90
-    ##   ..$ lineheight   : NULL
-    ##   ..$ margin       : 'margin' num [1:4] 0points 2.75points 0points 0points
-    ##   .. ..- attr(*, "unit")= int 8
-    ##   ..$ debug        : NULL
-    ##   ..$ inherit.blank: logi TRUE
-    ##   ..- attr(*, "class")= chr [1:2] "element_text" "element"
-    ##  $ axis.title.y.left               : NULL
-    ##  $ axis.title.y.right              :List of 11
-    ##   ..$ family       : NULL
-    ##   ..$ face         : NULL
-    ##   ..$ colour       : NULL
-    ##   ..$ size         : NULL
-    ##   ..$ hjust        : NULL
-    ##   ..$ vjust        : num 1
-    ##   ..$ angle        : num -90
-    ##   ..$ lineheight   : NULL
-    ##   ..$ margin       : 'margin' num [1:4] 0points 0points 0points 2.75points
-    ##   .. ..- attr(*, "unit")= int 8
-    ##   ..$ debug        : NULL
-    ##   ..$ inherit.blank: logi TRUE
-    ##   ..- attr(*, "class")= chr [1:2] "element_text" "element"
-    ##  $ axis.text                       :List of 11
-    ##   ..$ family       : NULL
-    ##   ..$ face         : NULL
-    ##   ..$ colour       : chr "grey30"
-    ##   ..$ size         : 'rel' num 0.8
-    ##   ..$ hjust        : NULL
-    ##   ..$ vjust        : NULL
-    ##   ..$ angle        : NULL
-    ##   ..$ lineheight   : NULL
-    ##   ..$ margin       : NULL
-    ##   ..$ debug        : NULL
-    ##   ..$ inherit.blank: logi TRUE
-    ##   ..- attr(*, "class")= chr [1:2] "element_text" "element"
-    ##  $ axis.text.x                     :List of 11
-    ##   ..$ family       : NULL
-    ##   ..$ face         : NULL
-    ##   ..$ colour       : NULL
-    ##   ..$ size         : NULL
-    ##   ..$ hjust        : NULL
-    ##   ..$ vjust        : num 1
-    ##   ..$ angle        : NULL
-    ##   ..$ lineheight   : NULL
-    ##   ..$ margin       : 'margin' num [1:4] 2.2points 0points 0points 0points
-    ##   .. ..- attr(*, "unit")= int 8
-    ##   ..$ debug        : NULL
-    ##   ..$ inherit.blank: logi TRUE
-    ##   ..- attr(*, "class")= chr [1:2] "element_text" "element"
-    ##  $ axis.text.x.top                 :List of 11
-    ##   ..$ family       : NULL
-    ##   ..$ face         : NULL
-    ##   ..$ colour       : NULL
-    ##   ..$ size         : NULL
-    ##   ..$ hjust        : NULL
-    ##   ..$ vjust        : num 0
-    ##   ..$ angle        : NULL
-    ##   ..$ lineheight   : NULL
-    ##   ..$ margin       : 'margin' num [1:4] 0points 0points 2.2points 0points
-    ##   .. ..- attr(*, "unit")= int 8
-    ##   ..$ debug        : NULL
-    ##   ..$ inherit.blank: logi TRUE
-    ##   ..- attr(*, "class")= chr [1:2] "element_text" "element"
-    ##  $ axis.text.x.bottom              : NULL
-    ##  $ axis.text.y                     :List of 11
-    ##   ..$ family       : NULL
-    ##   ..$ face         : NULL
-    ##   ..$ colour       : NULL
-    ##   ..$ size         : NULL
-    ##   ..$ hjust        : num 1
-    ##   ..$ vjust        : NULL
-    ##   ..$ angle        : NULL
-    ##   ..$ lineheight   : NULL
-    ##   ..$ margin       : 'margin' num [1:4] 0points 2.2points 0points 0points
-    ##   .. ..- attr(*, "unit")= int 8
-    ##   ..$ debug        : NULL
-    ##   ..$ inherit.blank: logi TRUE
-    ##   ..- attr(*, "class")= chr [1:2] "element_text" "element"
-    ##  $ axis.text.y.left                : NULL
-    ##  $ axis.text.y.right               :List of 11
-    ##   ..$ family       : NULL
-    ##   ..$ face         : NULL
-    ##   ..$ colour       : NULL
-    ##   ..$ size         : NULL
-    ##   ..$ hjust        : num 0
-    ##   ..$ vjust        : NULL
-    ##   ..$ angle        : NULL
-    ##   ..$ lineheight   : NULL
-    ##   ..$ margin       : 'margin' num [1:4] 0points 0points 0points 2.2points
-    ##   .. ..- attr(*, "unit")= int 8
-    ##   ..$ debug        : NULL
-    ##   ..$ inherit.blank: logi TRUE
-    ##   ..- attr(*, "class")= chr [1:2] "element_text" "element"
-    ##  $ axis.text.theta                 : NULL
-    ##  $ axis.text.r                     :List of 11
-    ##   ..$ family       : NULL
-    ##   ..$ face         : NULL
-    ##   ..$ colour       : NULL
-    ##   ..$ size         : NULL
-    ##   ..$ hjust        : num 0.5
-    ##   ..$ vjust        : NULL
-    ##   ..$ angle        : NULL
-    ##   ..$ lineheight   : NULL
-    ##   ..$ margin       : 'margin' num [1:4] 0points 2.2points 0points 2.2points
-    ##   .. ..- attr(*, "unit")= int 8
-    ##   ..$ debug        : NULL
-    ##   ..$ inherit.blank: logi TRUE
-    ##   ..- attr(*, "class")= chr [1:2] "element_text" "element"
-    ##  $ axis.ticks                      : list()
-    ##   ..- attr(*, "class")= chr [1:2] "element_blank" "element"
-    ##  $ axis.ticks.x                    : NULL
-    ##  $ axis.ticks.x.top                : NULL
-    ##  $ axis.ticks.x.bottom             : NULL
-    ##  $ axis.ticks.y                    : NULL
-    ##  $ axis.ticks.y.left               : NULL
-    ##  $ axis.ticks.y.right              : NULL
-    ##  $ axis.ticks.theta                : NULL
-    ##  $ axis.ticks.r                    : NULL
-    ##  $ axis.minor.ticks.x.top          : NULL
-    ##  $ axis.minor.ticks.x.bottom       : NULL
-    ##  $ axis.minor.ticks.y.left         : NULL
-    ##  $ axis.minor.ticks.y.right        : NULL
-    ##  $ axis.minor.ticks.theta          : NULL
-    ##  $ axis.minor.ticks.r              : NULL
-    ##  $ axis.ticks.length               : 'simpleUnit' num 2.75points
-    ##   ..- attr(*, "unit")= int 8
-    ##  $ axis.ticks.length.x             : NULL
-    ##  $ axis.ticks.length.x.top         : NULL
-    ##  $ axis.ticks.length.x.bottom      : NULL
-    ##  $ axis.ticks.length.y             : NULL
-    ##  $ axis.ticks.length.y.left        : NULL
-    ##  $ axis.ticks.length.y.right       : NULL
-    ##  $ axis.ticks.length.theta         : NULL
-    ##  $ axis.ticks.length.r             : NULL
-    ##  $ axis.minor.ticks.length         : 'rel' num 0.75
-    ##  $ axis.minor.ticks.length.x       : NULL
-    ##  $ axis.minor.ticks.length.x.top   : NULL
-    ##  $ axis.minor.ticks.length.x.bottom: NULL
-    ##  $ axis.minor.ticks.length.y       : NULL
-    ##  $ axis.minor.ticks.length.y.left  : NULL
-    ##  $ axis.minor.ticks.length.y.right : NULL
-    ##  $ axis.minor.ticks.length.theta   : NULL
-    ##  $ axis.minor.ticks.length.r       : NULL
-    ##  $ axis.line                       : list()
-    ##   ..- attr(*, "class")= chr [1:2] "element_blank" "element"
-    ##  $ axis.line.x                     : NULL
-    ##  $ axis.line.x.top                 : NULL
-    ##  $ axis.line.x.bottom              : NULL
-    ##  $ axis.line.y                     : NULL
-    ##  $ axis.line.y.left                : NULL
-    ##  $ axis.line.y.right               : NULL
-    ##  $ axis.line.theta                 : NULL
-    ##  $ axis.line.r                     : NULL
-    ##  $ legend.background               : list()
-    ##   ..- attr(*, "class")= chr [1:2] "element_blank" "element"
-    ##  $ legend.margin                   : 'margin' num [1:4] 5.5points 5.5points 5.5points 5.5points
-    ##   ..- attr(*, "unit")= int 8
-    ##  $ legend.spacing                  : 'simpleUnit' num 11points
-    ##   ..- attr(*, "unit")= int 8
-    ##  $ legend.spacing.x                : NULL
-    ##  $ legend.spacing.y                : NULL
-    ##  $ legend.key                      : list()
-    ##   ..- attr(*, "class")= chr [1:2] "element_blank" "element"
-    ##  $ legend.key.size                 : 'simpleUnit' num 1.2lines
-    ##   ..- attr(*, "unit")= int 3
-    ##  $ legend.key.height               : NULL
-    ##  $ legend.key.width                : NULL
-    ##  $ legend.key.spacing              : 'simpleUnit' num 5.5points
-    ##   ..- attr(*, "unit")= int 8
-    ##  $ legend.key.spacing.x            : NULL
-    ##  $ legend.key.spacing.y            : NULL
-    ##  $ legend.frame                    : NULL
-    ##  $ legend.ticks                    : NULL
-    ##  $ legend.ticks.length             : 'rel' num 0.2
-    ##  $ legend.axis.line                : NULL
-    ##  $ legend.text                     :List of 11
-    ##   ..$ family       : NULL
-    ##   ..$ face         : NULL
-    ##   ..$ colour       : NULL
-    ##   ..$ size         : 'rel' num 0.8
-    ##   ..$ hjust        : NULL
-    ##   ..$ vjust        : NULL
-    ##   ..$ angle        : NULL
-    ##   ..$ lineheight   : NULL
-    ##   ..$ margin       : NULL
-    ##   ..$ debug        : NULL
-    ##   ..$ inherit.blank: logi TRUE
-    ##   ..- attr(*, "class")= chr [1:2] "element_text" "element"
-    ##  $ legend.text.position            : NULL
-    ##  $ legend.title                    :List of 11
-    ##   ..$ family       : NULL
-    ##   ..$ face         : NULL
-    ##   ..$ colour       : NULL
-    ##   ..$ size         : NULL
-    ##   ..$ hjust        : num 0
-    ##   ..$ vjust        : NULL
-    ##   ..$ angle        : NULL
-    ##   ..$ lineheight   : NULL
-    ##   ..$ margin       : NULL
-    ##   ..$ debug        : NULL
-    ##   ..$ inherit.blank: logi TRUE
-    ##   ..- attr(*, "class")= chr [1:2] "element_text" "element"
-    ##  $ legend.title.position           : NULL
-    ##  $ legend.position                 : chr "right"
-    ##  $ legend.position.inside          : NULL
-    ##  $ legend.direction                : NULL
-    ##  $ legend.byrow                    : NULL
-    ##  $ legend.justification            : chr "center"
-    ##  $ legend.justification.top        : NULL
-    ##  $ legend.justification.bottom     : NULL
-    ##  $ legend.justification.left       : NULL
-    ##  $ legend.justification.right      : NULL
-    ##  $ legend.justification.inside     : NULL
-    ##  $ legend.location                 : NULL
-    ##  $ legend.box                      : NULL
-    ##  $ legend.box.just                 : NULL
-    ##  $ legend.box.margin               : 'margin' num [1:4] 0cm 0cm 0cm 0cm
-    ##   ..- attr(*, "unit")= int 1
-    ##  $ legend.box.background           : list()
-    ##   ..- attr(*, "class")= chr [1:2] "element_blank" "element"
-    ##  $ legend.box.spacing              : 'simpleUnit' num 11points
-    ##   ..- attr(*, "unit")= int 8
-    ##   [list output truncated]
-    ##  - attr(*, "class")= chr [1:2] "theme" "gg"
-    ##  - attr(*, "complete")= logi TRUE
-    ##  - attr(*, "validate")= logi TRUE
+![](memo_files/figure-gfm/gallons_per_fuel_type_per_year_facet_buildings-1.png)<!-- -->
 
 ``` r
 fuels |>
@@ -710,9 +367,49 @@ fuels |>
 ![](memo_files/figure-gfm/testing-1.png)<!-- -->
 
 ``` r
+# make one big function
+
+
+
+# main_total_fuels |>
+#   filter(Building == c("Witchcliff Apartments", "Witchcliff","Studio 5+6","PRF",
+#                        "Pottery Studio","Peggy Barn", "Peach House", "Hatchery", "Greenhouse", 
+#                        "Davis Carriage", "Cottage", "CHE Generator", "Carriage", 
+#                        "BHF New Greenhouse", "BHF Main Bldg/2 Greenhouse", "BHF Farm House", 
+#                        "18B Norris Ave", "171 Beech Hill Road", "14 Norris Ave")) |>
+#   (Other_Gallons <- sum(Total_Gallons))
+
+ # main_total_fuels <- data.frame(
+ #  Building = unique(fuels$Building),
+ #  Total_Gallons = unique(fuels$Total_Gallons_per_Building)
+ # )
+
+ # with(main_total_fuels, sum(Total_Gallons[Total_Gallons < 9952.2]))
+
+#  main_total_fuels <- main_total_fuels |>
+#    add_row(Building = "Other",
+#           Total_Gallons = with(main_total_fuels, sum(Total_Gallons[Total_Gallons < 41871.1])))
+# 
+# main_total_fuels <- main_total_fuels |>
+#   filter(Total_Gallons >= 41871.1 | Building == "Other")
+ #main_total_fuels <- data.frame(
+#  Building = unique(fuels$Building),
+#  Total_Gallons = unique(fuels$Total_Gallons_per_Building)
+# )
+
+ # with(main_total_fuels, sum(Total_Gallons[Total_Gallons < 9952.2]))
+
+# main_total_fuels <- main_total_fuels |>
+#   add_row(Building = "Other",
+#          Total_Gallons = with(main_total_fuels, sum(Total_Gallons[Total_Gallons # < 41871.1])))
+
+#main_total_fuels <- main_total_fuels |>
+#  filter(Total_Gallons >= 41871.1 | Building == "Other")
+```
+
+``` r
 # do factor shift thingy
 
-<<<<<<< HEAD
 #  ggplot(main_total_fuels, aes(x = "", y = Total_Gallons, fill = Building)) +
 #   geom_bar(stat = "identity", width = 1, color = "white") +
 #   coord_polar("y", start = 0) +
@@ -720,7 +417,6 @@ fuels |>
 # 
 # ggplot(main_total_fuels, aes(y = Building, x = Total_Gallons)) +
 #   geom_col()
-=======
 # ggplot(main_total_fuels, aes(x = "", y = Total_Gallons, fill = Building)) +
 #  geom_bar(stat = "identity", width = 1, color = "white") +
 #  coord_polar("y", start = 0) +
@@ -728,7 +424,6 @@ fuels |>
 
 #ggplot(main_total_fuels, aes(y = Building, x = Total_Gallons)) +
 #  geom_col()
->>>>>>> 4ed4cdfb5108662da71d5912c3a979c78b8824cb
 ```
 
 ### Plot ?: Building area
@@ -792,7 +487,6 @@ fuels|>
   theme(legend.position = "none")
 ```
 
-<<<<<<< HEAD
 ![](memo_files/figure-gfm/fuel-type-per-month-1.png)<!-- -->
 
 ### Plot ?: Fuel usage per month
@@ -814,6 +508,11 @@ fuels %>%
 ![](memo_files/figure-gfm/fuel_per_month_unused-1.png)<!-- -->
 
 ``` r
+### Plot ?:
+```
+
+``` r
+# Colour Palette
 pal=c("#003f5c",
       "#2f4b7c",
       "#665191",
@@ -821,36 +520,50 @@ pal=c("#003f5c",
       "#d45087",
       "#f95d6a",
       "#ff7c43",
-      "#ffa600")
+      #"#ffa600",
+      "grey",
+      "grey",
+      "grey",
+      "grey",
+      "grey",
+      "grey",
+      "grey",
+      "grey",
+      "grey",
+      "grey",
+      "grey",
+      "grey",
+      "grey",
+      "grey",
+      "grey",
+      "grey",
+      "grey",
+      "grey",
+      "grey",
+      "grey",
+      "grey",
+      "grey")
 
-order <- c("Seafox", "Dorr NHM", "Blair Tyson", "Kaelber", "Arts & Sci + Gates")
+# Order of buildings for the fill
+order <- c( "Davis Center", "Davis Village", "Dorr NHM", "Seafox", "Blair Tyson", "Kaelber", "Arts & Sci + Gates", "Studio 5+6", "Pottery Studio", "Peach House", "Hatchery", "Greenhouse", "Carriage", "BHF New Greenhouse", "BHF Main Bldg/2 Greenhouses", "BHF Farm House", "18B Norris Ave", "171 Beech Hill Road", "14 Norris Ave", "Turrets", "Turrets Annex", "B&G")
 
-# 
-# 
-# test <- fuels |>
-#   filter(Building %in% c("Blair Tyson", "Arts & Sci + Gates", "Kaelber", "Seafox", "Dorr NHM"), 
-#          Year != 2024) |>
-#   group_by(Year, Building) |>
-#   mutate(Total_Gallons_per_years = sum(Gallons))
-# 
-# length(test) <- length(fuels)
-# 
-# class(test$Building)
 
 fuels |>
   filter(#Building %in% c("Blair Tyson", "Arts & Sci + Gates", "Kaelber", "Seafox", "Dorr NHM"), 
          Year != 2024) |>
   group_by(Year, Building) |>
-  summarize(Total_Gallons_per_years = sum(Gallons)) |>
-  filter(Total_Gallons_per_years != "NA") %>% 
-  #mutate(Building = factor(Building, levels=order)) |>
+  mutate(Total_Gallons_per_years = sum(Gallons)) |>
+  mutate(Building = factor(Building, levels=order)) |>
+  filter(!is.na(Building)) |> #why do we need this?
   ggplot(aes(Year, Total_Gallons_per_years, fill = Building)) +
   geom_area() +
   
-  scale_fill_manual(values=pal) +
+  scale_fill_manual(values = pal) +
   scale_color_manual(values = pal) +
-  gghighlight(Building %in% 
-                c("Blair Tyson", "Arts & Sci + Gates", "Kaelber", "Seafox", "Dorr NHM")) +
+  # gghighlight(Building %in% 
+  #               c("Blair Tyson", "Arts & Sci + Gates", "Kaelber", "Seafox", "Dorr NHM", 
+  #                 "Davis Village", "Davis Center"),
+  #             unhighlighted_params = list(fill = "grey"))
   
   theme(
     axis.line.x = element_line(linewidth = .75),
@@ -917,163 +630,36 @@ fuels |>
            color=pal[2])
 ```
 
-    ## `summarise()` has grouped output by 'Year'. You can override using the
-    ## `.groups` argument.
-
-    ## Warning: Tried to calculate with group_by(), but the calculation failed.
-    ## Falling back to ungrouped filter operation...
-
 ![](memo_files/figure-gfm/plot-1.png)<!-- -->
-=======
-![](memo_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
-
-### Plot ?:
-
-
-
-    ``` r
-    pal=c("#003f5c",
-          "#2f4b7c",
-          "#665191",
-          "#a05195",
-          "#d45087",
-          "#f95d6a",
-          "#ff7c43",
-          "#ffa600")
-
-    order <- c("Seafox", "Dorr NHM", "Blair Tyson", "Kaelber", "Arts & Sci + Gates")
-
-    # 
-    # 
-    # test <- fuels |>
-    #   filter(Building %in% c("Blair Tyson", "Arts & Sci + Gates", "Kaelber", "Seafox", "Dorr NHM"), 
-    #          Year != 2024) |>
-    #   group_by(Year, Building) |>
-    #   mutate(Total_Gallons_per_years = sum(Gallons))
-    # 
-    # length(test) <- length(fuels)
-    # 
-    # class(test$Building)
-
-    fuels |>
-      filter(Building %in% c("Blair Tyson", "Arts & Sci + Gates", "Kaelber", "Seafox", "Dorr NHM"), 
-             Year != 2024) |>
-      group_by(Year, Building) |>
-      mutate(Total_Gallons_per_years = sum(Gallons)) |>
-      mutate(Building = factor(Building, levels=order)) |>
-      ggplot(aes(Year, Total_Gallons_per_years, fill = Building, label = Building, color = Building)) +
-      geom_area() +
-      
-      scale_fill_manual(values=pal) +
-      scale_color_manual(values = pal) +
-      
-      theme(
-        axis.line.x = element_line(linewidth = .75),
-        panel.grid = element_blank(),
-        axis.text.y = element_blank(),
-        axis.text.x = element_text(color="black", size=10),
-        plot.margin = margin(10,50,10,10),
-        panel.background = element_rect(fill = "white", colour = "white", 
-                                       linetype = "solid", linewidth = 0.5),
-        legend.position = "none",
-      ) +
-      labs(title = "Progression of the Top Five Fuel Consumers",
-           subtitle = "2014 - 2023",
-           y = "",
-           x = "Year") +
-      
-      annotate("text", x = 2023.1, y = 32000,
-               label = "Seafox",
-               hjust=0,
-               size=3,
-               lineheight=.8,
-               fontface="bold",
-               color=pal[1]) +
-      
-      annotate("text", x = 2023.1, y = 27500,
-               label = "Dorr NHM",
-               hjust=0,
-               size=3,
-               lineheight=.8,
-               fontface="bold",
-               color=pal[2]) +
-      
-      annotate("text", x = 2023.1, y = 23000,
-               label = "Blair Tyson",
-               hjust=0,
-               size=3,
-               lineheight=.8,
-               fontface="bold",
-               color=pal[3]) +
-      
-      annotate("text", x = 2023.1, y = 18000,
-               label = "Kaelber",
-               hjust=0,
-               size=3,
-               lineheight=.8,
-               fontface="bold",
-               color=pal[4]) +
-      
-      annotate("text", x = 2023.1, y = 10000,
-               label = "Arts & Sci + Gates",
-               hjust=0,
-               size=3,
-               lineheight=.8,
-               fontface="bold",
-               color=pal[5]) +
-      
-      annotate("text", x = 2025, y = 27500,
-               label = "",
-               hjust=0,
-               size=3,
-               lineheight=.8,
-               fontface="bold",
-               color=pal[2])
-
-![](memo_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
->>>>>>> 4ed4cdfb5108662da71d5912c3a979c78b8824cb
 
 ``` r
 ggsave("top-5-fuel-area-plot.png", width = 4, height = 4)
 ```
 
 ``` r
-<<<<<<< HEAD
-fuels |>
-  filter(Year > 2022) |>
-  group_by(Building) |>
-  mutate(Total_Gallons_per_Buildings = sum(Gallons)) |>
-  ggplot(aes(x = Total_Gallons_per_Buildings, y =  fct_reorder(Building, Total_Gallons_per_Buildings, .fun = sum), fill = Building)) +
-=======
 library(gghighlight)  # Make sure this is loaded
 
 fuels |> 
   filter(Year > 2022) |>
   group_by(Building) |>
-  summarize(Total_Gallons_per_Buildings = sum(Gallons), .groups = "drop") |>
+  summarize(Total_Gallons_per_Buildings = sum(Gallons)) |>
+  mutate(Building = factor(Building, levels=order)) |>
   ggplot(aes(x = Total_Gallons_per_Buildings, 
-             y = fct_reorder(Building, Total_Gallons_per_Buildings), 
+             y = fct_reorder(Building, Total_Gallons_per_Buildings, .fun = sum), 
              fill = Building)) +
->>>>>>> 4ed4cdfb5108662da71d5912c3a979c78b8824cb
   geom_col() +
-  gghighlight(Building %in% 
-                c("Blair Tyson", "Arts & Sci + Gates", "Kaelber", "Seafox", "Dorr NHM")) +
+  # gghighlight(Building %in% 
+  #               c("Davis Center", "Davis Village", "Blair Tyson", "Arts & Sci + Gates", "Seafox", "Dorr NHM", "Kaelber")) +
   
   scale_fill_manual(values = pal) +
-  scale_color_manual(values = pal) +
-  
+
   theme(
     axis.line.x = element_line(linewidth = .75),
     panel.grid = element_blank(),
     axis.text.x = element_text(color="black", size=10),
     panel.background = element_rect(fill = "white", colour = "white", 
-<<<<<<< HEAD
-                                   linetype = "solid", linewidth = 0.5),
-    legend.position = "none",
-=======
                                     linetype = "solid", linewidth = 0.5),
     legend.position = "none"
->>>>>>> 4ed4cdfb5108662da71d5912c3a979c78b8824cb
   ) +
   labs(title = "Use of Fuel Across COA Buildings",
        subtitle = "2022 - 2024",
@@ -1081,46 +667,8 @@ fuels |>
        x = "Total Amount of Fuel in Gallons")
 ```
 
-<<<<<<< HEAD
-    ## Warning: Tried to calculate with group_by(), but the calculation failed.
-    ## Falling back to ungrouped filter operation...
-
-![](memo_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
-=======
-![](memo_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
->>>>>>> 4ed4cdfb5108662da71d5912c3a979c78b8824cb
+![](memo_files/figure-gfm/use-of-fuel-across-all-COA-buildings-1.png)<!-- -->
 
 ``` r
 ggsave("top-5-fuel-bar-plot.png", width = 4, height = 4)
 ```
-
-``` r
-fuels |>
-  group_by(Year, Building) |>
-  mutate(Total_Gallons_per_years = sum(Gallons)) |>
-  mutate(fuel_per_sf = (Total_Gallons_per_years/Square_feet)) |>
-  filter(Building %in% c("B&G", "Davis Centre", "Dorr NHM", "Hatchery", "Seafox")) |>
-
-  # summarize(total_per_sf = unique(total_per_sf)) |>
-  ggplot(aes(Year, fuel_per_sf, fill = Building, label = Building, color = Building)) +
-  geom_area() +
-  
-  scale_fill_manual(values=pal) +
-  scale_color_manual(values = pal) +
-  
-  theme(
-    axis.line.x = element_line(linewidth = .75),
-    panel.grid = element_blank(),
-    axis.text.y = element_blank(),
-    axis.text.x = element_text(color="black", size=10),
-    panel.background = element_rect(fill = "white", colour = "white", 
-                                   linetype = "solid", linewidth = 0.5),
-    legend.position = "none",
-  )
-```
-
-<<<<<<< HEAD
-![](memo_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
-=======
-![](memo_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
->>>>>>> 4ed4cdfb5108662da71d5912c3a979c78b8824cb
