@@ -545,51 +545,51 @@ pal=c("#003f5c",
       "grey")
 
 # Order of buildings for the fill
-order <- c( "Davis Center", "Davis Village", "Dorr NHM", "Seafox", "Blair Tyson", "Kaelber", "Arts & Sci + Gates", "Studio 5+6", "Pottery Studio", "Peach House", "Hatchery", "Greenhouse", "Carriage", "BHF New Greenhouse", "BHF Main Bldg/2 Greenhouses", "BHF Farm House", "18B Norris Ave", "171 Beech Hill Road", "14 Norris Ave", "Turrets", "Turrets Annex", "B&G")
+order <- c( "Davis Center", "Dorr NHM", "Seafox", "Davis Village", "Blair Tyson", "Kaelber", "Arts & Sci + Gates", "Studio 5+6", "Pottery Studio", "Peach House", "Hatchery", "Greenhouse", "Carriage", "BHF New Greenhouse", "BHF Main Bldg/2 Greenhouses", "BHF Farm House", "18B Norris Ave", "171 Beech Hill Road", "14 Norris Ave", "Turrets", "Turrets Annex", "B&G", "Witchcliff Apartments", "Witchcliff", "PRF", "Cottage", "Peggy Barn", "Davis Carriage", "CHE Generator")
 
 
 fuels |>
   filter(#Building %in% c("Blair Tyson", "Arts & Sci + Gates", "Kaelber", "Seafox", "Dorr NHM"), 
          Year != 2024) |>
   group_by(Year, Building) |>
-  mutate(Total_Gallons_per_years = sum(Gallons)) |>
+  summarise(Total_Gallons_per_years = sum(Gallons)) |>
   mutate(Building = factor(Building, levels=order)) |>
   filter(!is.na(Building)) |> #why do we need this?
   ggplot(aes(Year, Total_Gallons_per_years, fill = Building)) +
   geom_area() +
   
-  scale_fill_manual(values = pal) +
+  scale_fill_manual(values = pal) + #get rid of lines
   scale_color_manual(values = pal) +
-  # gghighlight(Building %in% 
-  #               c("Blair Tyson", "Arts & Sci + Gates", "Kaelber", "Seafox", "Dorr NHM", 
-  #                 "Davis Village", "Davis Center"),
-  #             unhighlighted_params = list(fill = "grey"))
+  scale_x_continuous(breaks=c(2014,2017,2020,2023),labels = c("2014","2017","2020","2023")) + 
+  scale_y_continuous(expand = c(0,0)) +
   
+  coord_cartesian(clip = "off", xlim = c(2014,2023)) +
+
   theme(
     axis.line.x = element_line(linewidth = .75),
     panel.grid = element_blank(),
     axis.text.y = element_blank(),
-    axis.text.x = element_text(color="black", size=10),
-    plot.margin = margin(10,50,10,10),
+    axis.text.x = element_text(color="black", size=10, margin = margin(5,0,0,0)),
+    plot.margin = margin(10,70,10,10),
     panel.background = element_rect(fill = "white", colour = "white", 
                                    linetype = "solid", linewidth = 0.5),
     legend.position = "none",
   ) +
-  labs(title = "Progression of the Top Five Fuel Consumers",
+  labs(title = "Progression of Fuel Consumption",
        subtitle = "2014 - 2023",
-       y = "",
+       y = "Fuel Consumed per Year",
        x = "Year") +
   
 # Labels
-  annotate("text", x = 2023.1, y = 32000,
-           label = "Seafox",
+  annotate("text", x = 2023.1, y = 47000,
+           label = "Davis Center",
            hjust=0,
            size=3,
            lineheight=.8,
            fontface="bold",
            color=pal[1]) +
   
-  annotate("text", x = 2023.1, y = 27500,
+    annotate("text", x = 2023.1, y = 42000,
            label = "Dorr NHM",
            hjust=0,
            size=3,
@@ -597,29 +597,53 @@ fuels |>
            fontface="bold",
            color=pal[2]) +
   
-  annotate("text", x = 2023.1, y = 23000,
-           label = "Blair Tyson",
+    annotate("text", x = 2023.1, y = 37000,
+           label = "Seafox",
            hjust=0,
            size=3,
            lineheight=.8,
            fontface="bold",
            color=pal[3]) +
   
-  annotate("text", x = 2023.1, y = 18000,
-           label = "Kaelber",
+    annotate("text", x = 2023.1, y = 34500,
+           label = "Davis Village",
            hjust=0,
            size=3,
            lineheight=.8,
            fontface="bold",
            color=pal[4]) +
   
-  annotate("text", x = 2023.1, y = 10000,
-           label = "Arts & Sci + Gates",
+  annotate("text", x = 2023.1, y = 29000,
+           label = "Blair Tyson",
            hjust=0,
            size=3,
            lineheight=.8,
            fontface="bold",
            color=pal[5]) +
+  
+  annotate("text", x = 2023.1, y = 23000,
+           label = "Kaelber",
+           hjust=0,
+           size=3,
+           lineheight=.8,
+           fontface="bold",
+           color=pal[6]) +
+  
+  annotate("text", x = 2023.1, y = 13000,
+           label = "Arts & Sci + Gates",
+           hjust=0,
+           size=3,
+           lineheight=.8,
+           fontface="bold",
+           color=pal[7]) +
+  
+  annotate("text", x = 2023.1, y = 4000,
+           label = "Other",
+           hjust=0,
+           size=3,
+           lineheight=.8,
+           fontface="bold",
+           color=pal[8]) +
   
   annotate("text", x = 2025, y = 27500,
            label = "",
@@ -627,29 +651,64 @@ fuels |>
            size=3,
            lineheight=.8,
            fontface="bold",
-           color=pal[2])
+           color=pal[2]) +
+  
+  # Fuel Lines
+  geom_segment(aes(x = 2014, y = 0, xend = 2014, yend = 60000+10000),color="black") +
+  geom_point(aes(x = 2014, y = 60000+10000),color="black") +
+  annotate("text", x = 2014, y = 60000+20000,
+           label = "$117,844B",
+           hjust=0.5,
+           size=3,
+           lineheight=.8,
+           fontface="bold",
+           color="black") +
+  
+  geom_segment(aes(x = 2019, y = 0, xend = 2019, yend = 70000+10000),color="black") +
+  geom_point(aes(x = 2019, y = 70000+10000),color="black") +
+  annotate("text", x = 2019, y = 70000+20000,
+           label = "$182,350B",
+           hjust=0.5,
+           size=3,
+           lineheight=.8,
+           fontface="bold",
+           color="black") +
+  
+  geom_segment(aes(x = 2023, y = 0, xend = 2023, yend = 50000+10000),color="black") +
+  geom_point(aes(x = 2023, y = 50000+10000),color="black") +
+  annotate("text", x = 2023, y = 50000+20000,
+           label = "$251,885B",
+           hjust=0.5,
+           size=3,
+           lineheight=.8,
+           fontface="bold",
+           color="black")
 ```
 
-![](memo_files/figure-gfm/plot-1.png)<!-- -->
+    ## `summarise()` has grouped output by 'Year'. You can override using the
+    ## `.groups` argument.
+
+<img src="memo_files/figure-gfm/fuel-consumption-area-1.png" alt="Area graph showing the progression of total fuel consumption on campus between 2014 and 2023. The fill color of the graph indicates the building, highlighting the top 7 consumers: Arts &amp; Science + Gates, Kaelber, Blair Tyson, Davis Village, Seafox, Dorr Natural History Museum and Davis Center. Fuel consumption started at just over 60,000 in 2014, and is down to around 50,000 in 2023, with a peak in 2019 at around 70,000."  />
 
 ``` r
-ggsave("top-5-fuel-area-plot.png", width = 4, height = 4)
+ggsave("fuel-consumption-area-plot.png", width = 6, height = 4)
 ```
 
 ``` r
-library(gghighlight)  # Make sure this is loaded
+# library(gghighlight)  # Make sure this is loaded
+
+# Why is the last one negative???? what to do about this?
 
 fuels |> 
-  filter(Year > 2022) |>
+  filter(Year == 2023) |>
   group_by(Building) |>
   summarize(Total_Gallons_per_Buildings = sum(Gallons)) |>
+  filter(!is.na(Building)) |> # WTF
   mutate(Building = factor(Building, levels=order)) |>
   ggplot(aes(x = Total_Gallons_per_Buildings, 
              y = fct_reorder(Building, Total_Gallons_per_Buildings, .fun = sum), 
              fill = Building)) +
   geom_col() +
-  # gghighlight(Building %in% 
-  #               c("Davis Center", "Davis Village", "Blair Tyson", "Arts & Sci + Gates", "Seafox", "Dorr NHM", "Kaelber")) +
   
   scale_fill_manual(values = pal) +
 
@@ -662,13 +721,79 @@ fuels |>
     legend.position = "none"
   ) +
   labs(title = "Use of Fuel Across COA Buildings",
-       subtitle = "2022 - 2024",
+       subtitle = "2023",
        y = "",
        x = "Total Amount of Fuel in Gallons")
 ```
 
-![](memo_files/figure-gfm/use-of-fuel-across-all-COA-buildings-1.png)<!-- -->
+<img src="memo_files/figure-gfm/use-of-fuel-across-all-COA-buildings-1.png" alt="Horizontal bar graph showing the building on the y-axis and the total amount of gallons of fuel used by those buildings in 2023. The fill color of the graph indicates the top 7 buildings with the most fuel consumption in order: Arts &amp; Science + Gates, Kaelber, Blair Tyson, Davis Village, Seafox, Dorr Natural History Museum and Davis Center. Arts &amp; Science + Gates is the greatest consumer by far at around 15,000(?) gallons with Kaelber in second place at around 7000. Davis Center, the smallest consumer out of the 7 used around 3000 gallons. The smallest of all the buildings is ... (idk man)"  />
 
 ``` r
-ggsave("top-5-fuel-bar-plot.png", width = 4, height = 4)
+ggsave("fuel-consumption-bar-plot.png", width = 6, height = 4)
 ```
+
+``` r
+fuels |>
+  filter(Year == 2023) |>
+  group_by(Building) |>
+  mutate(Total_Gallons_per_Buildings = sum(Gallons)) |>
+  mutate(total_per_sf = (Total_Gallons_per_Buildings / Square_feet)) |>
+  summarize(total_per_sf = unique(total_per_sf)) |>
+  filter(!is.na(total_per_sf)) |>
+  mutate(Building = factor(Building, levels=order)) |>
+  #filter(total_per_sf > 1.2) |>
+  ggplot(aes(y = fct_reorder(Building, total_per_sf), x = total_per_sf, fill = Building)) +
+  geom_col() +
+  labs(title = "Total Gallons per Square Foot",
+       subtitle = "2023",
+       x = "Total Gallons per Square Foot",
+       y = "") +
+  scale_fill_manual(values = pal) +
+  theme(legend.position = "none")
+```
+
+<img src="memo_files/figure-gfm/total_gallons_per_sf_updated-1.png" alt="Horizontal bar graph showing the building on the y-axis and the total gallons of fuel per square foot used by those buildings in 2023. The top 7 buildings in order are B&amp;G, Davis Center, Dorr Natural Hidtory Museum, Seafox, Turrets Annex, Kaelber, and Arts &amp; Sci + Gates. The fill color of the graph indicates the top 7 buildings with the most total fuel consumption (disregarding square foot) in order: Arts &amp; Science + Gates, Kaelber, Blair Tyson, Davis Village, Seafox, Dorr Natural History Museum and Davis Center. B&amp;G consumed almost 1 gallon per square foot, and Davis Center is second at around 0.8. The lowest of the 7 is Arts &amp; Science + Gates at around 0.3, and the lowest on campus is Carriage at near 0."  />
+
+``` r
+ggsave("fuel-consumption-per-sf-bar-plot.png", width = 6, height = 4)
+```
+
+``` r
+fuels |>
+  filter(Building %in% c("Blair Tyson", "Arts & Sci + Gates", "Kaelber"), Year < 2024) |>
+  group_by(Building, Year) |>
+  summarize(year_sum = sum(Gallons), .groups = "drop") |>
+  ggplot(aes(x = Year, y = year_sum, color = Building, group = Building)) +
+  #geom_point() +
+  geom_line(linewidth = 1) +
+  theme_minimal() +
+  labs(title = "Total Gallons of Fuel per Year",
+       subtitle = "2014 - 2023, 3 biggest consumers",
+       y = "Total Gallons",
+       caption = "HP = heat pumps (library stacks and archives), HPWH = heat pump water heating system") +
+  scale_x_continuous(breaks = seq(from = 2014, to = 2024, by = 1)) +
+  scale_color_manual(values = c("#ff7c43", "#d45087", "#f95d6a")) +
+  ylim(0, NA) +
+  scale_y_continuous(labels = scales::comma) +
+  #scale_color_viridis_d() +
+  theme(legend.position = "none",
+        plot.margin = margin(0,50,0,0),) +
+  coord_cartesian(clip = "off") +
+  geom_vline(xintercept = 2020, linetype = "dotted", linewidth = 1, colour = "black") +
+  geom_text(aes(x = 2020.5, y = 16000), label = "COVID", colour = "black") +
+  geom_text(aes(x = 2021.3, y = 8300), label = "BT HPWH installed", colour = "black", size = 3) +
+  geom_point(aes(x = 2022, y = 7500), color = "black", size = 3, shape = 15) +
+  geom_text(aes(x = 2017, y = 8800), color = "black", label = "Kaelber HPs installed", size = 3) +
+  geom_point(aes(x = 2017, y = 9550), color = "black", size = 3, shape = 15) +
+  geom_line(aes(y = 900), color = "darkgreen") +
+  geom_text(aes(x = 2021.75, y = 1500), label = "Well insulated family house", 
+            color = "darkgreen", size = 3) +
+  geom_text(aes(x = 2024, y = 14000), label = "Arts & Sci + Gates", colour = "#ff7c43", size = 3) +
+  geom_text(aes(x = 2024, y = 11000), label = "Kaelber", colour = "#f95d6a", size = 3) +
+  geom_text(aes(x = 2024, y = 7000), label = "Blair Tyson", colour = "#d45087", size = 3)
+```
+
+    ## Scale for y is already present.
+    ## Adding another scale for y, which will replace the existing scale.
+
+![](memo_files/figure-gfm/top-3-over-time-potential-colours-1.png)<!-- -->
