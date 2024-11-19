@@ -159,10 +159,10 @@ fuels |>
   ggplot(aes(x = Month, y = month_sum, fill = Fuel_type)) +
   geom_col() +
   geom_col(data = . %>% filter(Month == 12), color = "red", size = 1, show.legend = FALSE) +
-  scale_y_continuous(labels = scales::comma) +
-  ylim(0, 63000) +
+  scale_y_continuous(limits = c(0, 65000), labels = scales::comma) +
   scale_x_continuous(breaks = 1:12, labels = month.abb) +
- facet_wrap(~ Fuel_type, ncol = 1) +    geom_text(aes(x = Month, y = month_sum, label = scales::comma(month_sum)), 
+ facet_wrap(~ Fuel_type, ncol = 1) +    
+  geom_text(aes(x = Month, y = month_sum, label = scales::comma(month_sum)), 
             vjust = -0.5, 
             size = 2.2) +
   labs(title = "Total Fuel Usage per Month",
@@ -180,9 +180,6 @@ fuels |>
     ## This warning is displayed once every 8 hours.
     ## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
     ## generated.
-
-    ## Scale for y is already present.
-    ## Adding another scale for y, which will replace the existing scale.
 
 <img src="memo_files/figure-gfm/fuel_by_month-1.png" alt="A bar graph showin the total ful usage per month for all campus owned buildings from 2014 to 2023. Months are shown on the x-axis and gallons on the y-axis. The data is split into two graphs showing the usage of different fuel types, with heating oil on top in navy blue and propane on bottom in pink. January has the highest fuel usage for both fuel types and July and August have the least. The bar for December is outlined in red on both graphs. A not is made at the bottom reading: 'Coastal biodiesel and kerosene are excluded from this graph as they are no longer used.'"  />
 
@@ -380,26 +377,48 @@ ggsave("progression.png", width = 12, height = 6)
 ``` r
 # library(gghighlight)  # Make sure this is loaded
 
-fuels |> 
+library(dplyr)
+library(ggplot2)
+library(forcats)
+library(scales)
+```
+
+    ## 
+    ## Attaching package: 'scales'
+
+    ## The following object is masked from 'package:purrr':
+    ## 
+    ##     discard
+
+    ## The following object is masked from 'package:readr':
+    ## 
+    ##     col_factor
+
+``` r
+fuels |>
   filter(Year == 2023 & Building != "BHF Main Bldg/2 Greenhouses") |>
   group_by(Building) |>
   summarize(Total_Gallons_per_Buildings = sum(Gallons)) |>
-  filter(!is.na(Building)) |> # WTF
-  mutate(Building = factor(Building, levels=order)) |>
+  filter(!is.na(Building)) |>
+  arrange(desc(Total_Gallons_per_Buildings)) |>
+  mutate(Building = factor(Building, levels = order),
+         label_color = ifelse(row_number() <= 9, "white", "black"),
+         hjust_pos = ifelse(row_number() <= 9, 1.1, -0.1)) |>
   ggplot(aes(x = Total_Gallons_per_Buildings, 
              y = fct_reorder(Building, Total_Gallons_per_Buildings, .fun = sum), 
              fill = Building)) +
   geom_col() +
-  
+  scale_x_continuous(labels = scales::comma) +
+  geom_text(aes(x = Total_Gallons_per_Buildings, 
+                y = Building, 
+                label = scales::comma(round(Total_Gallons_per_Buildings)),
+                color = label_color,
+                hjust = hjust_pos),
+            size = 2.7) +
   scale_fill_manual(values = pal) +
-  
+  scale_color_identity() +
   theme_minimal() +
   theme(
-    # axis.line.x = element_line(linewidth = .75),
-    # panel.grid = element_blank(),
-    # axis.text.x = element_text(color="black", size=10),
-    # panel.background = element_rect(fill = "white", colour = "white", 
-    #                                 linetype = "solid", linewidth = 0.5),
     legend.position = "none"
   ) +
   labs(title = "Use of Fuel Across COA Buildings",
@@ -425,9 +444,15 @@ fuels |>
   summarize(total_per_sf = unique(total_per_sf)) |>
   filter(!is.na(total_per_sf)) |>
   mutate(Building = factor(Building, levels=order)) |>
-  #filter(total_per_sf > 1.2) |>
   ggplot(aes(y = fct_reorder(Building, total_per_sf), x = total_per_sf, fill = Building)) +
   geom_col() +
+  scale_x_continuous(limits = c(0, 1.05)) +
+  geom_text(aes(x = total_per_sf, 
+                y = Building, 
+                label = scales::comma(round(total_per_sf, 2))),
+                color = "black",
+                hjust = -0.2,
+            size = 2.7) +
   labs(title = "Total Gallons per Square Foot",
        subtitle = "2023",
        x = "Total Gallons per Square Foot",
