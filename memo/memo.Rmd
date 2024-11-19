@@ -30,7 +30,7 @@ options(scipen = 999)
 #### Step 1a: Load fossil fuel data and change column names
 
 ``` {r clean_data, message = FALSE, warning = FALSE}
-fuels <- read_csv("../data/Dead-River.csv",
+fuels <- read_csv(".../data/Dead-River.csv",
                   col_names = c("X1", "X2", 
                                 "Delivery_date", "Fuel_type",
                                 "Tank_number", "Building",
@@ -40,7 +40,7 @@ fuels <- read_csv("../data/Dead-River.csv",
 
 #### Step 1b: Load building area data
 ```{r}
-area <- read_csv("../data/BuildingArea.csv",
+area <- read_csv(".../data/BuildingArea.csv",
                  col_names = c("Building", "Square_feet"))
 ```
 
@@ -157,27 +157,7 @@ ggsave("example-starwars-wide.png", width = 6, height = 4)
 ```
 
 
-
-### Plot 1: Fuel Prices Over Time
-
-#### Final Plot 1
-
-```{r prices_over_time}
-fuels %>% 
-  ggplot(mapping = aes(x = Delivery_date, y = Unit_cost, color = Fuel_type)) +
-  geom_line() +
-  facet_wrap(~ Fuel_type) +
-  scale_color_viridis_d() +
-  theme_minimal() +
-  guides(color = FALSE) +
-  labs(title = "Fuel Prices Over Time",
-       subtitle = "2014 - 2024",
-       x = "Delivery date",
-       y = "Cost per gallon in USD")
-
-```
-
-### Plot 2: Total Amount of Fuel per Building
+### Plot 1: Total Amount of Fuel per Building
 
 ```{r total_fuel_per_building, fig.alt = "Horizontal bar graph showing the building on the y-axis and the total amount of gallons of fuel used by those buildings between 2014 and 2024. The fill color of the graph indicates whether the building uses heating oil or propane. The graph shows the 5 buildings that consumed the most amount of fuel in this time span: Arts & Science + Gates, Kaelber, Blair Tyson, Dorr Natural History Museum and Seafox. The graph also shows that Arts & Science + Gates, the biggest consumer with more than 150000 gallons of fuel, uses propane, while the other 4 buildings use heating oil. Seafox, the smallest consumer out of the 5 used around 45000 gallons."}
 
@@ -201,9 +181,9 @@ ggsave("Buildings-Using-Most-Fuel.png")
 
 ```
 
-### Plot 3: 3 biggest consumers over time
+### Plot 2: 3 biggest consumers over time
 
-```{r 3_biggest_over_time}
+```{r 3_biggest_over_time, fig.alt = "A line graph showing the total gallons of fuel used by three biggest fuel consuming buildings, Arts & Sciences + Gates, Kaebler, and Blair Tyson, from the years 2014 to 2023. The lines have dots showing each year. There is also a line to show the average fuel consumption of a well insulated family home, which consumes much less fuel than either of the three buildings depicted. A dotted vertical line on 2020 marks where COVID affected fuel useage. A dot on Kaebler's line in 2017 shows when the heating pump was installed and a similar dot on Blair Tyston's line in 2022 shows when its heating pump was installed. Arts & Sciences + Gates used the most fuel on average, while Blair Tyson used the least."}
 fuels |>
   filter(Building %in% c("Blair Tyson", "Arts & Sci + Gates", "Kaelber"), Year < 2024) |>
   group_by(Building, Year) |>
@@ -233,7 +213,7 @@ ggsave("3-biggest-consumers.png", width = 8, height = 4)
 ```
 
 ### Plot 4: Total fuel usage by month
-```{r fuel_by_month}
+```{r fuel_by_month, fig.alt = "A bar graph showin the total ful usage per month for all campus owned buildings from 2014 to 2023. Months are shown on the x-axis and gallons on the y-axis. The data is split into two graphs showing the usage of different fuel types, with heating oil on top in navy blue and propane on bottom in pink. January has the highest fuel usage for both fuel types and July and August have the least. The bar for December is outlined in red on both graphs. A not is made at the bottom reading: 'Coastal biodiesel and kerosene are excluded from this graph as they are no longer used.'"}
 fuels |> 
   filter(Year < 2024, Fuel_type %in% c("Heating Oil", "Propane")) |>
   group_by(Month, Fuel_type) |>
@@ -260,205 +240,7 @@ fuels |>
 ggsave("fuel_usage_per_month.png", width = 8, height = 4)
 ```
 
-# Plot Graveyard
-
-### Plot ?: A bunch that I'll rename and clean up later 
-
-```{r gallons_per_fuel_type}
-fuels |>
-  group_by(Fuel_type) |>
-  mutate(Total_Gallons_per_Fuel_Type = sum(Gallons)) |>
-ggplot(aes(x = Fuel_type, y = Total_Gallons_per_Fuel_Type)) +
-  geom_col() +
-  scale_x_discrete(guide = guide_axis(angle = 45)) +
-  theme_minimal() +
-  guides(color = FALSE) +
-  labs(title = "Total Amount of Fuel per Fuel Type",
-       x = "Fuel Type",
-       y = "Amount of Fuel")
-```
-
-```{r gallons_per_year}
-fuels |>
-  group_by(Fuel_type) |>
-  mutate(Total_Gallons_per_Fuel_Type = sum(Gallons)) |>
-  filter(Year != 2024) |>
-  ggplot(aes(x = Year, y = Total_Gallons_per_Fuel_Type)) +
-  geom_col() +
-  scale_x_discrete(guide = guide_axis(angle = 45)) +
-  theme_minimal() +
-  guides(color = FALSE) +
-  labs(title = "Total Amount of Fuel per Year",
-       x = "Year",
-       y = "Amount of Fuel")
-```
-
-```{r gallons_per_fuel_type_per_year_facet_buildings}
-
-fuels |>
-  filter(Year != 2024) |>
-  group_by(Year, Building) |>
-  mutate(Total_Gallons_per_years = sum(Gallons)) %>%
-  ggplot(aes(x = Year, y = Total_Gallons_per_years, fill = Fuel_type))+
-  geom_col() +
-  facet_wrap(~Building) +
-  theme_minimal()
-
-```
-
-```{r testing}
-
-fuels |>
-  filter(Building == "Kaelber" & Year != 2024) |>
-  group_by(Year) |>
-  #View() |>
-  mutate(Total_Gallons_per_Year = sum(Gallons)) |>
-  ggplot(aes(x = Year, y = Total_Gallons_per_Year)) +
-  geom_col()
-
-```
-
-
-```{r pie_data}
-
-# make one big function
-
-
-
-# main_total_fuels |>
-#   filter(Building == c("Witchcliff Apartments", "Witchcliff","Studio 5+6","PRF",
-#                        "Pottery Studio","Peggy Barn", "Peach House", "Hatchery", "Greenhouse", 
-#                        "Davis Carriage", "Cottage", "CHE Generator", "Carriage", 
-#                        "BHF New Greenhouse", "BHF Main Bldg/2 Greenhouse", "BHF Farm House", 
-#                        "18B Norris Ave", "171 Beech Hill Road", "14 Norris Ave")) |>
-#   (Other_Gallons <- sum(Total_Gallons))
-
- # main_total_fuels <- data.frame(
- #  Building = unique(fuels$Building),
- #  Total_Gallons = unique(fuels$Total_Gallons_per_Building)
- # )
-
- # with(main_total_fuels, sum(Total_Gallons[Total_Gallons < 9952.2]))
-
-#  main_total_fuels <- main_total_fuels |>
-#    add_row(Building = "Other",
-#           Total_Gallons = with(main_total_fuels, sum(Total_Gallons[Total_Gallons < 41871.1])))
-# 
-# main_total_fuels <- main_total_fuels |>
-#   filter(Total_Gallons >= 41871.1 | Building == "Other")
- #main_total_fuels <- data.frame(
-#  Building = unique(fuels$Building),
-#  Total_Gallons = unique(fuels$Total_Gallons_per_Building)
-# )
-
- # with(main_total_fuels, sum(Total_Gallons[Total_Gallons < 9952.2]))
-
-# main_total_fuels <- main_total_fuels |>
-#   add_row(Building = "Other",
-#          Total_Gallons = with(main_total_fuels, sum(Total_Gallons[Total_Gallons # < 41871.1])))
-
-#main_total_fuels <- main_total_fuels |>
-#  filter(Total_Gallons >= 41871.1 | Building == "Other")
-
-
-```
-
-
-```{r pie-total-gallons}
-
-# do factor shift thingy
-
-#  ggplot(main_total_fuels, aes(x = "", y = Total_Gallons, fill = Building)) +
-#   geom_bar(stat = "identity", width = 1, color = "white") +
-#   coord_polar("y", start = 0) +
-#   theme_void()
-# 
-# ggplot(main_total_fuels, aes(y = Building, x = Total_Gallons)) +
-#   geom_col()
-# ggplot(main_total_fuels, aes(x = "", y = Total_Gallons, fill = Building)) +
-#  geom_bar(stat = "identity", width = 1, color = "white") +
-#  coord_polar("y", start = 0) +
-#  theme_void()
-
-#ggplot(main_total_fuels, aes(y = Building, x = Total_Gallons)) +
-#  geom_col()
-
-```
-
-
-### Plot ?: Building area
-```{r building_area}
-fuels |>
-  filter(Square_feet >= 5000) |>
-  ggplot(aes(x = Building, y = Square_feet)) +
-  geom_col()
-```
-
-### Plot ?: Gallons per square foot
-
-```{r total_gallons_per_sf}
-fuels |>
-  filter(Year >= 2019, Year <= 2023) |>
-  group_by(Building) |>
-  mutate(Total_Gallons_per_Building = sum(Gallons)) |>
-  mutate(total_per_sf = (Total_Gallons_per_Building / Square_feet)) |>
-  summarize(total_per_sf = unique(total_per_sf)) |>
-  filter(total_per_sf > 2) |>
-  ggplot(aes(x = Building, y = total_per_sf)) +
-  geom_col() +
-  labs(title = "Total Gallons per Square Foot",
-       subtitle = "Highest 6 Buildings",
-       y = "Total Gallons per Square Foot") +
-  theme_minimal() +
-  coord_flip()
-```
-
-### Plot showing gallons per month before and after heat pump - Not useful in the end
-
-```{r before-and-after-heat-pump}
-
-fuels |>
-  filter(Building == "Kaelber" & Year >= 2019 & Year <= 2023) |>
-  group_by(Year, Month) |>
-  mutate(Total_Gallons_per_Month = sum(Gallons)) |>
-  #View() |>
-  group_by(Year) |>
-  ggplot(aes(x = Month, y = Total_Gallons_per_Month, group = Year, colour = Year)) +
-  geom_line() +
-  geom_point() +
-  facet_wrap(~Year)
-
-```
-
-```{r fuel-type-per-month}
-
-fuels|>
-  filter(Year != 2024) |>
-  group_by(Year, Fuel_type) |>
-  mutate(Total_Gallons_per_Year = sum(Gallons)) |>
-  ggplot(aes(x = Year, y = Total_Gallons_per_Year, colour = Fuel_type)) +
-  geom_line() +
-  facet_wrap(~Fuel_type) +
-  theme_minimal() +
-  theme(legend.position = "none")
-
-```
-
-### Plot ?: Fuel usage per month
-```{r fuel_per_month_unused}
-fuels %>% 
-  ggplot(mapping = aes(x = Month, y = Gallons, color = Fuel_type, group = Fuel_type)) +
-  facet_wrap(~ Fuel_type) +
-  geom_point() +
-  geom_line() +
-  scale_color_viridis_d() +
-  theme_minimal() +
-  guides(color = FALSE) +
-  labs(title = "Fuel Usage by Month",
-       x = "Month",
-       y = "Gallons")
-### Plot ?:
-```
+### Plot 5: Fuel consumption progression
 
 ```{r fuel-consumption-area, fig.alt = "Area graph showing the progression of total fuel consumption on campus between 2014 and 2023. The fill color of the graph indicates the building, highlighting the top 7 consumers: Arts & Science + Gates, Kaelber, Blair Tyson, Davis Village, Seafox, Dorr Natural History Museum and Davis Center. Fuel consumption started at just over 60,000 in 2014, and is down to around 50,000 in 2023, with a peak in 2019 at around 70,000."}
 
@@ -639,7 +421,9 @@ ggsave("fuel-consumption-area-plot.png", width = 12, height = 6)
 
 ```
 
-```{r use-of-fuel-across-all-COA-buildings, fig.alt = "Horizontal bar graph showing the building on the y-axis and the total amount of gallons of fuel used by those buildings in 2023. The fill color of the graph indicates the top 7 buildings with the most fuel consumption in order: Arts & Science + Gates, Kaelber, Blair Tyson, Davis Village, Seafox, Dorr Natural History Museum and Davis Center. Arts & Science + Gates is the greatest consumer by far at around 15,000(?) gallons with Kaelber in second place at around 7000. Davis Center, the smallest consumer out of the 7 used around 3000 gallons. The smallest of all the buildings is ... (idk man)"}
+### Plot 6: Total fuel all buildings
+
+```{r use-of-fuel-across-all-COA-buildings, fig.alt = "A horizontal bar graph showing the building on the y-axis and the total amount of gallons of fuel used by those buildings in 2023. The fill color of the graph indicates the top 7 buildings with the most fuel consumption in order: Arts & Science + Gates, Kaelber, Blair Tyson, Davis Village, Seafox, Dorr Natural History Museum and Davis Center. The bars for the other buildings are uncolored. Arts & Science + Gates is the greatest consumer by far at around 15,000 gallons. Kaelber is in second place at around 7000. Davis Center, the smallest consumer out of the 7 used around 3000 gallons."}
 
 # library(gghighlight)  # Make sure this is loaded
 
@@ -675,6 +459,8 @@ ggsave("fuel-consumption-bar-plot.png", width = 6, height = 4)
 
 ```
 
+### Plot 7: Fuel per square foot all buildings
+
 ```{r total_gallons_per_sf_updated, fig.alt = "Horizontal bar graph showing the building on the y-axis and the total gallons of fuel per square foot used by those buildings in 2023. The top 7 buildings in order are B&G, Davis Center, Dorr Natural Hidtory Museum, Seafox, Turrets Annex, Kaelber, and Arts & Sci + Gates. The fill color of the graph indicates the top 7 buildings with the most total fuel consumption (disregarding square foot) in order: Arts & Science + Gates, Kaelber, Blair Tyson, Davis Village, Seafox, Dorr Natural History Museum and Davis Center. B&G consumed almost 1 gallon per square foot, and Davis Center is second at around 0.8. The lowest of the 7 is Arts & Science + Gates at around 0.3, and the lowest on campus is Carriage at near 0."}
 
 fuels |>
@@ -701,8 +487,9 @@ ggsave("fuel-consumption-per-sf-bar-plot.png", width = 6, height = 4)
 
 ```
 
+### Plot ?:
 
-```{r top-3-over-time-potential-colours}
+```{r top-3-over-time-potential-colours, fig.alt = "A line graph showing the total gallons of fuel used by three biggest fuel consuming buildings, Arts & Sciences + Gates, Kaebler, and Blair Tyson, from the years 2014 to 2023. There is also a line to show the average fuel consumption of a well insulated family home, which consumes much less fuel than either of the three buildings depicted. A dotted vertical line on 2020 marks where COVID affected fuel useage. A dot on Kaebler's line in 2017 shows when the heating pump was installed and a similar dot on Blair Tyston's line in 2022 shows when its heating pump was installed. Arts & Sciences + Gates used the most fuel on average, while Blair Tyson used the least."}
 
 fuels |>
   filter(Building %in% c("Blair Tyson", "Arts & Sci + Gates", "Kaelber"), Year < 2024) |>
