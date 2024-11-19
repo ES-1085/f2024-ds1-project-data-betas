@@ -30,7 +30,7 @@ options(scipen = 999)
 #### Step 1a: Load fossil fuel data and change column names
 
 ``` {r clean_data, message = FALSE, warning = FALSE}
-fuels <- read_csv(".../data/Dead-River.csv",
+fuels <- read_csv("data/Dead-River.csv",
                   col_names = c("X1", "X2", 
                                 "Delivery_date", "Fuel_type",
                                 "Tank_number", "Building",
@@ -40,7 +40,7 @@ fuels <- read_csv(".../data/Dead-River.csv",
 
 #### Step 1b: Load building area data
 ```{r}
-area <- read_csv(".../data/BuildingArea.csv",
+area <- read_csv("data/BuildingArea.csv",
                  col_names = c("Building", "Square_feet"))
 ```
 
@@ -253,28 +253,28 @@ pal=c("#003f5c",
       "#f95d6a",
       "#ff7c43",
       #"#ffa600",
-      "grey",
-      "grey",
-      "grey",
-      "grey",
-      "grey",
-      "grey",
-      "grey",
-      "grey",
-      "grey",
-      "grey",
-      "grey",
-      "grey",
-      "grey",
-      "grey",
-      "grey",
-      "grey",
-      "grey",
-      "grey",
-      "grey",
-      "grey",
-      "grey",
-      "grey")
+      "grey31",
+      "grey31",
+      "grey31",
+      "grey31",
+      "grey31",
+      "grey31",
+      "grey31",
+      "grey31",
+      "grey31",
+      "grey31",
+      "grey31",
+      "grey31",
+      "grey31",
+      "grey31",
+      "grey31",
+      "grey31",
+      "grey31",
+      "grey31",
+      "grey31",
+      "grey31",
+      "grey31",
+      "grey31")
 
 # Order of buildings for the fill
 order <- c( "Davis Center", "Dorr NHM", "Seafox", "Davis Village", "Blair Tyson", "Kaelber", "Arts & Sci + Gates", "Studio 5+6", "Pottery Studio", "Peach House", "Hatchery", "Greenhouse", "Carriage", "BHF New Greenhouse", "BHF Main Bldg/2 Greenhouses", "BHF Farm House", "18B Norris Ave", "171 Beech Hill Road", "14 Norris Ave", "Turrets", "Turrets Annex", "B&G", "Witchcliff Apartments", "Witchcliff", "PRF", "Cottage", "Peggy Barn", "Davis Carriage", "CHE Generator")
