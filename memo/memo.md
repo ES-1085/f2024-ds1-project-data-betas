@@ -286,7 +286,7 @@ fuels |>
        caption = "Coastal biodiesel and kerosene are excluded from this graph as they are no longer used.") +
   theme_minimal() +
   theme(strip.text = element_blank()) +
-  scale_fill_viridis_d()
+  scale_fill_manual(values = c("#003f5c", "#d45087"))
 ```
 
     ## Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
@@ -549,8 +549,7 @@ order <- c( "Davis Center", "Dorr NHM", "Seafox", "Davis Village", "Blair Tyson"
 
 
 fuels |>
-  filter(#Building %in% c("Blair Tyson", "Arts & Sci + Gates", "Kaelber", "Seafox", "Dorr NHM"), 
-         Year != 2024) |>
+  filter(Year != 2024) |>
   group_by(Year, Building) |>
   summarise(Total_Gallons_per_years = sum(Gallons)) |>
   mutate(Building = factor(Building, levels=order)) |>
@@ -564,16 +563,17 @@ fuels |>
   scale_y_continuous(expand = c(0,0)) +
   
   coord_cartesian(clip = "off", xlim = c(2014,2023)) +
-
+  
+  theme_minimal() +
   theme(
     axis.line.x = element_line(linewidth = .75),
-    panel.grid = element_blank(),
+    # panel.grid = element_blank(),
     axis.text.y = element_blank(),
     axis.text.x = element_text(color="black", size=10, margin = margin(5,0,0,0)),
     plot.margin = margin(10,70,10,10),
-    panel.background = element_rect(fill = "white", colour = "white", 
-                                   linetype = "solid", linewidth = 0.5),
-    legend.position = "none",
+    # panel.background = element_rect(fill = "white", colour = "white", 
+    #                                linetype = "solid", linewidth = 0.5),
+    legend.position = "none"
   ) +
   labs(title = "Progression of Fuel Consumption",
        subtitle = "2014 - 2023",
@@ -656,8 +656,8 @@ fuels |>
   # Fuel Lines
   geom_segment(aes(x = 2014, y = 0, xend = 2014, yend = 60000+10000),color="black") +
   geom_point(aes(x = 2014, y = 60000+10000),color="black") +
-  annotate("text", x = 2014, y = 60000+20000,
-           label = "$117,844B",
+  annotate("text", x = 2014, y = 60000+15000,
+           label = "63,443",
            hjust=0.5,
            size=3,
            lineheight=.8,
@@ -666,8 +666,8 @@ fuels |>
   
   geom_segment(aes(x = 2019, y = 0, xend = 2019, yend = 70000+10000),color="black") +
   geom_point(aes(x = 2019, y = 70000+10000),color="black") +
-  annotate("text", x = 2019, y = 70000+20000,
-           label = "$182,350B",
+  annotate("text", x = 2019, y = 70000+15000,
+           label = "70,333",
            hjust=0.5,
            size=3,
            lineheight=.8,
@@ -676,8 +676,8 @@ fuels |>
   
   geom_segment(aes(x = 2023, y = 0, xend = 2023, yend = 50000+10000),color="black") +
   geom_point(aes(x = 2023, y = 50000+10000),color="black") +
-  annotate("text", x = 2023, y = 50000+20000,
-           label = "$251,885B",
+  annotate("text", x = 2023, y = 50000+15000,
+           label = "22,938",
            hjust=0.5,
            size=3,
            lineheight=.8,
@@ -691,16 +691,14 @@ fuels |>
 <img src="memo_files/figure-gfm/fuel-consumption-area-1.png" alt="Area graph showing the progression of total fuel consumption on campus between 2014 and 2023. The fill color of the graph indicates the building, highlighting the top 7 consumers: Arts &amp; Science + Gates, Kaelber, Blair Tyson, Davis Village, Seafox, Dorr Natural History Museum and Davis Center. Fuel consumption started at just over 60,000 in 2014, and is down to around 50,000 in 2023, with a peak in 2019 at around 70,000."  />
 
 ``` r
-ggsave("fuel-consumption-area-plot.png", width = 6, height = 4)
+ggsave("fuel-consumption-area-plot.png", width = 12, height = 6)
 ```
 
 ``` r
 # library(gghighlight)  # Make sure this is loaded
 
-# Why is the last one negative???? what to do about this?
-
 fuels |> 
-  filter(Year == 2023) |>
+  filter(Year == 2023 & Building != "BHF Main Bldg/2 Greenhouses") |>
   group_by(Building) |>
   summarize(Total_Gallons_per_Buildings = sum(Gallons)) |>
   filter(!is.na(Building)) |> # WTF
@@ -711,13 +709,14 @@ fuels |>
   geom_col() +
   
   scale_fill_manual(values = pal) +
-
+  
+  theme_minimal() +
   theme(
-    axis.line.x = element_line(linewidth = .75),
-    panel.grid = element_blank(),
-    axis.text.x = element_text(color="black", size=10),
-    panel.background = element_rect(fill = "white", colour = "white", 
-                                    linetype = "solid", linewidth = 0.5),
+    # axis.line.x = element_line(linewidth = .75),
+    # panel.grid = element_blank(),
+    # axis.text.x = element_text(color="black", size=10),
+    # panel.background = element_rect(fill = "white", colour = "white", 
+    #                                 linetype = "solid", linewidth = 0.5),
     legend.position = "none"
   ) +
   labs(title = "Use of Fuel Across COA Buildings",
@@ -749,6 +748,7 @@ fuels |>
        x = "Total Gallons per Square Foot",
        y = "") +
   scale_fill_manual(values = pal) +
+  theme_minimal() +
   theme(legend.position = "none")
 ```
 
@@ -766,6 +766,7 @@ fuels |>
   ggplot(aes(x = Year, y = year_sum, color = Building, group = Building)) +
   #geom_point() +
   geom_line(linewidth = 1) +
+  
   theme_minimal() +
   labs(title = "Total Gallons of Fuel per Year",
        subtitle = "2014 - 2023, 3 biggest consumers",
@@ -779,21 +780,26 @@ fuels |>
   theme(legend.position = "none",
         plot.margin = margin(0,50,0,0),) +
   coord_cartesian(clip = "off") +
+  
   geom_vline(xintercept = 2020, linetype = "dotted", linewidth = 1, colour = "black") +
   geom_text(aes(x = 2020.5, y = 16000), label = "COVID", colour = "black") +
   geom_text(aes(x = 2021.3, y = 8300), label = "BT HPWH installed", colour = "black", size = 3) +
-  geom_point(aes(x = 2022, y = 7500), color = "black", size = 3, shape = 15) +
+  geom_point(aes(x = 2022, y = 7500), color = "black", size = 3, shape = 16) +
   geom_text(aes(x = 2017, y = 8800), color = "black", label = "Kaelber HPs installed", size = 3) +
-  geom_point(aes(x = 2017, y = 9550), color = "black", size = 3, shape = 15) +
-  geom_line(aes(y = 900), color = "darkgreen") +
+  geom_point(aes(x = 2017, y = 9550), color = "black", size = 3, shape = 16) +
+  geom_line(aes(y = 900), color = "black") +
   geom_text(aes(x = 2021.75, y = 1500), label = "Well insulated family house", 
-            color = "darkgreen", size = 3) +
-  geom_text(aes(x = 2024, y = 14000), label = "Arts & Sci + Gates", colour = "#ff7c43", size = 3) +
-  geom_text(aes(x = 2024, y = 11000), label = "Kaelber", colour = "#f95d6a", size = 3) +
-  geom_text(aes(x = 2024, y = 7000), label = "Blair Tyson", colour = "#d45087", size = 3)
+            color = "black", size = 3) +
+  geom_text(aes(x = 2015, y = 15000), label = "Arts & Sci + Gates", colour = "#ff7c43", size = 3, fontface = "bold") +
+  geom_text(aes(x = 2015, y = 11000), label = "Kaelber", colour = "#f95d6a", size = 3, fontface = "bold") +
+  geom_text(aes(x = 2015, y = 7000), label = "Blair Tyson", colour = "#d45087", size = 3, fontface = "bold")
 ```
 
     ## Scale for y is already present.
     ## Adding another scale for y, which will replace the existing scale.
 
 ![](memo_files/figure-gfm/top-3-over-time-potential-colours-1.png)<!-- -->
+
+``` r
+ggsave("test.png", width = 8, height = 4)
+```

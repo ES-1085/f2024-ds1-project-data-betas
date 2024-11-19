@@ -499,8 +499,7 @@ order <- c( "Davis Center", "Dorr NHM", "Seafox", "Davis Village", "Blair Tyson"
 
 
 fuels |>
-  filter(#Building %in% c("Blair Tyson", "Arts & Sci + Gates", "Kaelber", "Seafox", "Dorr NHM"), 
-         Year != 2024) |>
+  filter(Year != 2024) |>
   group_by(Year, Building) |>
   summarise(Total_Gallons_per_years = sum(Gallons)) |>
   mutate(Building = factor(Building, levels=order)) |>
@@ -514,16 +513,17 @@ fuels |>
   scale_y_continuous(expand = c(0,0)) +
   
   coord_cartesian(clip = "off", xlim = c(2014,2023)) +
-
+  
+  theme_minimal() +
   theme(
     axis.line.x = element_line(linewidth = .75),
-    panel.grid = element_blank(),
+    # panel.grid = element_blank(),
     axis.text.y = element_blank(),
     axis.text.x = element_text(color="black", size=10, margin = margin(5,0,0,0)),
     plot.margin = margin(10,70,10,10),
-    panel.background = element_rect(fill = "white", colour = "white", 
-                                   linetype = "solid", linewidth = 0.5),
-    legend.position = "none",
+    # panel.background = element_rect(fill = "white", colour = "white", 
+    #                                linetype = "solid", linewidth = 0.5),
+    legend.position = "none"
   ) +
   labs(title = "Progression of Fuel Consumption",
        subtitle = "2014 - 2023",
@@ -606,8 +606,8 @@ fuels |>
   # Fuel Lines
   geom_segment(aes(x = 2014, y = 0, xend = 2014, yend = 60000+10000),color="black") +
   geom_point(aes(x = 2014, y = 60000+10000),color="black") +
-  annotate("text", x = 2014, y = 60000+20000,
-           label = "$117,844B",
+  annotate("text", x = 2014, y = 60000+15000,
+           label = "63,443",
            hjust=0.5,
            size=3,
            lineheight=.8,
@@ -616,8 +616,8 @@ fuels |>
   
   geom_segment(aes(x = 2019, y = 0, xend = 2019, yend = 70000+10000),color="black") +
   geom_point(aes(x = 2019, y = 70000+10000),color="black") +
-  annotate("text", x = 2019, y = 70000+20000,
-           label = "$182,350B",
+  annotate("text", x = 2019, y = 70000+15000,
+           label = "70,333",
            hjust=0.5,
            size=3,
            lineheight=.8,
@@ -626,15 +626,15 @@ fuels |>
   
   geom_segment(aes(x = 2023, y = 0, xend = 2023, yend = 50000+10000),color="black") +
   geom_point(aes(x = 2023, y = 50000+10000),color="black") +
-  annotate("text", x = 2023, y = 50000+20000,
-           label = "$251,885B",
+  annotate("text", x = 2023, y = 50000+15000,
+           label = "22,938",
            hjust=0.5,
            size=3,
            lineheight=.8,
            fontface="bold",
            color="black")
 
-ggsave("fuel-consumption-area-plot.png", width = 6, height = 4)
+ggsave("fuel-consumption-area-plot.png", width = 12, height = 6)
 
 
 ```
@@ -643,10 +643,8 @@ ggsave("fuel-consumption-area-plot.png", width = 6, height = 4)
 
 # library(gghighlight)  # Make sure this is loaded
 
-# Why is the last one negative???? what to do about this?
-
 fuels |> 
-  filter(Year == 2023) |>
+  filter(Year == 2023 & Building != "BHF Main Bldg/2 Greenhouses") |>
   group_by(Building) |>
   summarize(Total_Gallons_per_Buildings = sum(Gallons)) |>
   filter(!is.na(Building)) |> # WTF
@@ -657,13 +655,14 @@ fuels |>
   geom_col() +
   
   scale_fill_manual(values = pal) +
-
+  
+  theme_minimal() +
   theme(
-    axis.line.x = element_line(linewidth = .75),
-    panel.grid = element_blank(),
-    axis.text.x = element_text(color="black", size=10),
-    panel.background = element_rect(fill = "white", colour = "white", 
-                                    linetype = "solid", linewidth = 0.5),
+    # axis.line.x = element_line(linewidth = .75),
+    # panel.grid = element_blank(),
+    # axis.text.x = element_text(color="black", size=10),
+    # panel.background = element_rect(fill = "white", colour = "white", 
+    #                                 linetype = "solid", linewidth = 0.5),
     legend.position = "none"
   ) +
   labs(title = "Use of Fuel Across COA Buildings",
@@ -740,7 +739,7 @@ fuels |>
   geom_text(aes(x = 2015, y = 11000), label = "Kaelber", colour = "#f95d6a", size = 3, fontface = "bold") +
   geom_text(aes(x = 2015, y = 7000), label = "Blair Tyson", colour = "#d45087", size = 3, fontface = "bold")
 
-
+ggsave("test.png", width = 8, height = 4)
 
 ```
 
