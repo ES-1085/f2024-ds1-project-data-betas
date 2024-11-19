@@ -149,101 +149,7 @@ fuels <- fuels |>
 
 ## Actual Plots
 
-### ggsave example for saving plots
-
-``` r
-p1 <- starwars |>
-  filter(mass < 1000, 
-         species %in% c("Human", "Cerean", "Pau'an", "Droid", "Gungan")) |>
-  ggplot() +
-  geom_point(aes(x = mass, 
-                 y = height, 
-                 color = species)) +
-  labs(x = "Weight (kg)", 
-       y = "Height (m)",
-       color = "Species",
-       title = "Weight and Height of Select Starwars Species",
-       caption = paste("This data comes from the starwars api: https://swapi.py43.com"))
-
-
-ggsave("example-starwars.png", width = 4, height = 4)
-
-ggsave("example-starwars-wide.png", width = 6, height = 4)
-```
-
-### Plot 1: Total Amount of Fuel per Building
-
-``` r
-fuels |>
-  group_by(Building, Fuel_type) |>
-  summarize(Total_Gallons_per_Building = sum(Gallons), .groups = "drop") |>
-  slice_max(order_by = Total_Gallons_per_Building, n = 5) |>
-  slice_max(Total_Gallons_per_Building, n = 5) |>
-  ggplot(aes(y = fct_reorder(Building, Total_Gallons_per_Building), x = Total_Gallons_per_Building, fill = Fuel_type)) +
-  geom_col() +
-  theme_minimal() +
-  scale_fill_viridis_d() +
-  guides(color = FALSE) +
-  labs(title = "Buildings Using the Most Amount of Fuel",
-       subtitle = "2014 - 2024",
-       y = "Building",
-       x = "Total Amount of Fuel in Gallons",
-       fill = "Fuel Type")
-```
-
-    ## Warning: The `<scale>` argument of `guides()` cannot be `FALSE`. Use "none" instead as
-    ## of ggplot2 3.3.4.
-    ## This warning is displayed once every 8 hours.
-    ## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
-    ## generated.
-
-<img src="memo_files/figure-gfm/total_fuel_per_building-1.png" alt="Horizontal bar graph showing the building on the y-axis and the total amount of gallons of fuel used by those buildings between 2014 and 2024. The fill color of the graph indicates whether the building uses heating oil or propane. The graph shows the 5 buildings that consumed the most amount of fuel in this time span: Arts &amp; Science + Gates, Kaelber, Blair Tyson, Dorr Natural History Museum and Seafox. The graph also shows that Arts &amp; Science + Gates, the biggest consumer with more than 150000 gallons of fuel, uses propane, while the other 4 buildings use heating oil. Seafox, the smallest consumer out of the 5 used around 45000 gallons."  />
-
-``` r
-ggsave("Buildings-Using-Most-Fuel.png")
-```
-
-    ## Saving 7 x 5 in image
-
-### Plot 2: 3 biggest consumers over time
-
-``` r
-fuels |>
-  filter(Building %in% c("Blair Tyson", "Arts & Sci + Gates", "Kaelber"), Year < 2024) |>
-  group_by(Building, Year) |>
-  summarize(year_sum = sum(Gallons), .groups = "drop") |>
-  ggplot(aes(x = Year, y = year_sum, color = Building, group = Building)) +
-  geom_point() +
-  geom_line() +
-  theme_minimal() +
-  labs(title = "Total Gallons of Fuel per Year",
-       subtitle = "2014 - 2023, 3 biggest consumers",
-       y = "Total Gallons",
-       caption = "HP = heat pumps (library stacks and archives), HPWH = heat pump water heating system") +
-  scale_x_continuous(breaks = seq(from = 2014, to = 2024, by = 1)) +
-  ylim(0, NA) +
-  scale_y_continuous(labels = scales::comma) +
-  scale_color_viridis_d() +
-  geom_vline(xintercept = 2020, linetype = "dotted", colour = "blue") +
-  geom_text(aes(x = 2020.5, y = 16000), label = "COVID", colour = "blue") +
-  geom_text(aes(x = 2021.3, y = 8300), label = "BT HPWH installed", colour = "black", size = 3) +
-  geom_point(aes(x = 2022, y = 7500), color = "black", size = 3, shape = 15) +
-  geom_text(aes(x = 2017, y = 8800), color = "red", label = "Kaelber HPs installed", size = 3) +
-  geom_point(aes(x = 2017, y = 9550), color = "red", size = 3, shape = 15) +
-  geom_line(aes(y = 900), color = "darkgreen") +
-  geom_text(aes(x = 2021.75, y = 1500), label = "Well insulated family house", color = "darkgreen", size = 3)
-```
-
-    ## Scale for y is already present.
-    ## Adding another scale for y, which will replace the existing scale.
-
-<img src="memo_files/figure-gfm/3_biggest_over_time-1.png" alt="A line graph showing the total gallons of fuel used by three biggest fuel consuming buildings, Arts &amp; Sciences + Gates, Kaebler, and Blair Tyson, from the years 2014 to 2023. The lines have dots showing each year. There is also a line to show the average fuel consumption of a well insulated family home, which consumes much less fuel than either of the three buildings depicted. A dotted vertical line on 2020 marks where COVID affected fuel useage. A dot on Kaebler's line in 2017 shows when the heating pump was installed and a similar dot on Blair Tyston's line in 2022 shows when its heating pump was installed. Arts &amp; Sciences + Gates used the most fuel on average, while Blair Tyson used the least."  />
-
-``` r
-ggsave("3-biggest-consumers.png", width = 8, height = 4)
-```
-
-### Plot 4: Total fuel usage by month
+### Plot 1: Total fuel usage by month
 
 ``` r
 fuels |> 
@@ -281,10 +187,10 @@ fuels |>
 <img src="memo_files/figure-gfm/fuel_by_month-1.png" alt="A bar graph showin the total ful usage per month for all campus owned buildings from 2014 to 2023. Months are shown on the x-axis and gallons on the y-axis. The data is split into two graphs showing the usage of different fuel types, with heating oil on top in navy blue and propane on bottom in pink. January has the highest fuel usage for both fuel types and July and August have the least. The bar for December is outlined in red on both graphs. A not is made at the bottom reading: 'Coastal biodiesel and kerosene are excluded from this graph as they are no longer used.'"  />
 
 ``` r
-ggsave("fuel_usage_per_month.png", width = 8, height = 4)
+ggsave("months.png", width = 8, height = 4)
 ```
 
-### Plot 5: Fuel consumption progression
+### Plot 2: Fuel consumption progression
 
 ``` r
 # Colour Palette
@@ -463,13 +369,13 @@ fuels |>
     ## `summarise()` has grouped output by 'Year'. You can override using the
     ## `.groups` argument.
 
-<img src="memo_files/figure-gfm/fuel-consumption-area-1.png" alt="Area graph showing the progression of total fuel consumption on campus between 2014 and 2023. The fill color of the graph indicates the building, highlighting the top 7 consumers: Arts &amp; Science + Gates, Kaelber, Blair Tyson, Davis Village, Seafox, Dorr Natural History Museum and Davis Center. Fuel consumption started at just over 60,000 in 2014, and is down to around 50,000 in 2023, with a peak in 2019 at around 70,000."  />
+<img src="memo_files/figure-gfm/progression-1.png" alt="Area graph showing the progression of total fuel consumption on campus between 2014 and 2023. The fill color of the graph indicates the building, highlighting the top 7 consumers: Arts &amp; Science + Gates, Kaelber, Blair Tyson, Davis Village, Seafox, Dorr Natural History Museum and Davis Center. Fuel consumption started at just over 60,000 in 2014, and is down to around 50,000 in 2023, with a peak in 2019 at around 70,000."  />
 
 ``` r
-ggsave("fuel-consumption-area-plot.png", width = 12, height = 6)
+ggsave("progression.png", width = 12, height = 6)
 ```
 
-### Plot 6: Total fuel all buildings
+### Plot 3: Total fuel all buildings
 
 ``` r
 # library(gghighlight)  # Make sure this is loaded
@@ -505,10 +411,10 @@ fuels |>
 <img src="memo_files/figure-gfm/use-of-fuel-across-all-COA-buildings-1.png" alt="A horizontal bar graph showing the building on the y-axis and the total amount of gallons of fuel used by those buildings in 2023. The fill color of the graph indicates the top 7 buildings with the most fuel consumption in order: Arts &amp; Science + Gates, Kaelber, Blair Tyson, Davis Village, Seafox, Dorr Natural History Museum and Davis Center. The bars for the other buildings are uncolored. Arts &amp; Science + Gates is the greatest consumer by far at around 15,000 gallons. Kaelber is in second place at around 7000. Davis Center, the smallest consumer out of the 7 used around 3000 gallons."  />
 
 ``` r
-ggsave("fuel-consumption-bar-plot.png", width = 6, height = 4)
+ggsave("buildings-total.png", width = 6, height = 4)
 ```
 
-### Plot 7: Fuel per square foot all buildings
+### Plot 4: Fuel per square foot all buildings
 
 ``` r
 fuels |>
@@ -534,10 +440,10 @@ fuels |>
 <img src="memo_files/figure-gfm/total_gallons_per_sf_updated-1.png" alt="Horizontal bar graph showing the building on the y-axis and the total gallons of fuel per square foot used by those buildings in 2023. The top 7 buildings in order are B&amp;G, Davis Center, Dorr Natural Hidtory Museum, Seafox, Turrets Annex, Kaelber, and Arts &amp; Sci + Gates. The fill color of the graph indicates the top 7 buildings with the most total fuel consumption (disregarding square foot) in order: Arts &amp; Science + Gates, Kaelber, Blair Tyson, Davis Village, Seafox, Dorr Natural History Museum and Davis Center. B&amp;G consumed almost 1 gallon per square foot, and Davis Center is second at around 0.8. The lowest of the 7 is Arts &amp; Science + Gates at around 0.3, and the lowest on campus is Carriage at near 0."  />
 
 ``` r
-ggsave("fuel-consumption-per-sf-bar-plot.png", width = 6, height = 4)
+ggsave("buildings-per-sf.png", width = 6, height = 4)
 ```
 
-### Plot ?:
+### Plot 5: Top 3 consumers
 
 ``` r
 fuels |>
@@ -579,8 +485,8 @@ fuels |>
     ## Scale for y is already present.
     ## Adding another scale for y, which will replace the existing scale.
 
-<img src="memo_files/figure-gfm/top-3-over-time-potential-colours-1.png" alt="A line graph showing the total gallons of fuel used by three biggest fuel consuming buildings, Arts &amp; Sciences + Gates, Kaebler, and Blair Tyson, from the years 2014 to 2023. There is also a line to show the average fuel consumption of a well insulated family home, which consumes much less fuel than either of the three buildings depicted. A dotted vertical line on 2020 marks where COVID affected fuel useage. A dot on Kaebler's line in 2017 shows when the heating pump was installed and a similar dot on Blair Tyston's line in 2022 shows when its heating pump was installed. Arts &amp; Sciences + Gates used the most fuel on average, while Blair Tyson used the least."  />
+<img src="memo_files/figure-gfm/top-3-over-time-1.png" alt="A line graph showing the total gallons of fuel used by three biggest fuel consuming buildings, Arts &amp; Sciences + Gates, Kaebler, and Blair Tyson, from the years 2014 to 2023. There is also a line to show the average fuel consumption of a well insulated family home, which consumes much less fuel than either of the three buildings depicted. A dotted vertical line on 2020 marks where COVID affected fuel useage. A dot on Kaebler's line in 2017 shows when the heating pump was installed and a similar dot on Blair Tyston's line in 2022 shows when its heating pump was installed. Arts &amp; Sciences + Gates used the most fuel on average, while Blair Tyson used the least."  />
 
 ``` r
-ggsave("test.png", width = 8, height = 4)
+ggsave("top-3.png", width = 8, height = 4)
 ```
