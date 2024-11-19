@@ -29,8 +29,8 @@ options(scipen = 999)
 
 #### Step 1a: Load fossil fuel data and change column names
 
-``` {r clean_data, message = FALSE, warning = FALSE}
-fuels <- read_csv("data/Dead-River.csv",
+``` {r clean_1, message = FALSE, warning = FALSE}
+fuels <- read_csv(".../data/Dead-River.csv",
                   col_names = c("X1", "X2", 
                                 "Delivery_date", "Fuel_type",
                                 "Tank_number", "Building",
@@ -40,7 +40,7 @@ fuels <- read_csv("data/Dead-River.csv",
 
 #### Step 1b: Load building area data
 ```{r}
-area <- read_csv("data/BuildingArea.csv",
+area <- read_csv(".../data/BuildingArea.csv",
                  col_names = c("Building", "Square_feet"))
 ```
 
