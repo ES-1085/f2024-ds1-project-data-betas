@@ -131,6 +131,49 @@ fuels <- fuels |>
   mutate(Square_feet = as.numeric(Square_feet))
 ```
 
+### Step 9: Load Palette and Factor Order
+
+```{r palette-and-order}
+
+# Colour Palette
+pal=c("#003f5c",
+      "#2f4b7c",
+      "#665191",
+      "#a05195",
+      "#d45087",
+      "#f95d6a",
+      "#ff7c43",
+      #"#ffa600",
+      "#6E6675",
+      "#6E6675",
+      "#6E6675",
+      "#6E6675",
+      "#6E6675",
+      "#6E6675",
+      "#6E6675",
+      "#6E6675",
+      "#6E6675",
+      "#6E6675",
+      "#6E6675",
+      "#6E6675",
+      "#6E6675",
+      "#6E6675",
+      "#6E6675",
+      "#6E6675",
+      "#6E6675",
+      "#6E6675",
+      "#6E6675",
+      "#6E6675",
+      "#6E6675",
+      "#6E6675",
+      #"#92879B"
+      )
+
+# Order of buildings for the fill
+order <- c( "Davis Center", "Dorr NHM", "Seafox", "Davis Village", "Blair Tyson", "Kaelber", "Arts & Sci + Gates", "Studio 5+6", "Pottery Studio", "Peach House", "Hatchery", "Greenhouse", "Carriage", "BHF New Greenhouse", "BHF Main Bldg/2 Greenhouses", "BHF Farm House", "18B Norris Ave", "171 Beech Hill Road", "14 Norris Ave", "Turrets", "Turrets Annex", "B&G", "Witchcliff Apartments", "Witchcliff", "PRF", "Cottage", "Peggy Barn", "Davis Carriage", "CHE Generator")
+
+```
+
 
 ## Actual Plots
 
@@ -175,43 +218,6 @@ ggsave("months.png", width = 8, height = 6)
 ### Plot 2: Fuel consumption progression
 
 ```{r progression, fig.alt = "Area graph showing the progression of total fuel consumption on campus between 2014 and 2023. The fill color of the graph indicates the building, highlighting the top 7 consumers: Arts & Science + Gates, Kaelber, Blair Tyson, Davis Village, Seafox, Dorr Natural History Museum and Davis Center. Fuel consumption started at just over 60,000 in 2014, and is down to around 50,000 in 2023, with a peak in 2019 at around 70,000."}
-
-# Colour Palette
-pal=c("#003f5c",
-      "#2f4b7c",
-      "#665191",
-      "#a05195",
-      "#d45087",
-      "#f95d6a",
-      "#ff7c43",
-      #"#ffa600",
-      "#6E6675",
-      "#6E6675",
-      "#6E6675",
-      "#6E6675",
-      "#6E6675",
-      "#6E6675",
-      "#6E6675",
-      "#6E6675",
-      "#6E6675",
-      "#6E6675",
-      "#6E6675",
-      "#6E6675",
-      "#6E6675",
-      "#6E6675",
-      "#6E6675",
-      "#6E6675",
-      "#6E6675",
-      "#6E6675",
-      "#6E6675",
-      "#6E6675",
-      "#6E6675",
-      "#6E6675",
-      #"#92879B"
-      )
-
-# Order of buildings for the fill
-order <- c( "Davis Center", "Dorr NHM", "Seafox", "Davis Village", "Blair Tyson", "Kaelber", "Arts & Sci + Gates", "Studio 5+6", "Pottery Studio", "Peach House", "Hatchery", "Greenhouse", "Carriage", "BHF New Greenhouse", "BHF Main Bldg/2 Greenhouses", "BHF Farm House", "18B Norris Ave", "171 Beech Hill Road", "14 Norris Ave", "Turrets", "Turrets Annex", "B&G", "Witchcliff Apartments", "Witchcliff", "PRF", "Cottage", "Peggy Barn", "Davis Carriage", "CHE Generator")
 
 
 fuels |>
