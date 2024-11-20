@@ -21,7 +21,6 @@ library(ggstream)
 library(showtext)
 library(ggtext)
 library(gghighlight)
-library(dplyr)
 library(ggplot2)
 library(forcats)
 library(scales)
@@ -50,22 +49,12 @@ area <- read_csv("../data/BuildingArea.csv",
                  col_names = c("Building", "Square_feet"))
 ```
 
-    ## Rows: 23 Columns: 2
-    ## ── Column specification ────────────────────────────────────────────────────────
-    ## Delimiter: ","
-    ## chr (2): Building, Square_feet
-    ## 
-    ## ℹ Use `spec()` to retrieve the full column specification for this data.
-    ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
-
 #### Step 1c: Join area data to fuels data
 
 ``` r
 fuels <- fuels |>
 left_join(area)
 ```
-
-    ## Joining with `by = join_by(Building)`
 
 ### Step 2: Change Delivery Date & Remove top extra row
 
@@ -100,11 +89,6 @@ fuels <- fuels |>
   ),
   Cost = as.numeric(Cost))
 ```
-
-    ## Warning: There was 1 warning in `mutate()`.
-    ## ℹ In argument: `Cost = as.numeric(Cost)`.
-    ## Caused by warning:
-    ## ! NAs introduced by coercion
 
 ### Step 5: Standardize fuel type names
 
@@ -195,6 +179,13 @@ order <- c( "Davis Center", "Dorr NHM", "Seafox", "Davis Village", "Blair Tyson"
 
 ### Plot 1: Total fuel usage by month
 
+This graph excludes coastal biodiesel and kerosene as they are not
+currently being used by COA. The gallons are summed for each month using
+the deliveries from 2014 to 2023 to see if there are any general trends
+in the month by month usage. Deliveries from 2024 are excluded because
+the year has not finished yet and there would be deliveries missing from
+the later months in the year.
+
 ``` r
 fuels |> 
   filter(Year < 2024, Fuel_type %in% c("Heating Oil", "Propane")) |>
@@ -202,7 +193,7 @@ fuels |>
   summarize(month_sum = sum(Gallons), .groups = "drop") |>
   ggplot(aes(x = Month, y = month_sum, fill = Fuel_type)) +
   geom_col() +
-  geom_col(data = . %>% filter(Month == 12), color = "red", size = 1, show.legend = FALSE) +
+  geom_col(data = . %>% filter(Month == 12), color = "red", linewidth = 1, show.legend = FALSE) +
   scale_y_continuous(limits = c(0, 65000), labels = scales::comma) +
   scale_x_continuous(breaks = 1:12, labels = month.abb) +
   facet_wrap(~ Fuel_type, ncol = 1, scales = "free_x") +    
@@ -228,12 +219,6 @@ fuels |>
   
   scale_fill_manual(values = c("#003f5c", "#d45087"))
 ```
-
-    ## Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
-    ## ℹ Please use `linewidth` instead.
-    ## This warning is displayed once every 8 hours.
-    ## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
-    ## generated.
 
 <img src="memo_files/figure-gfm/fuel_by_month-1.png" alt="A bar graph showin the total fuel usage per month for all campus owned buildings from 2014 to 2023. Months are shown on the x-axis and gallons on the y-axis. The data is split into two graphs showing the usage of different fuel types, with heating oil on top in navy blue and propane on bottom in pink. January has the highest fuel usage for both fuel types and July and August have the least. The bar for December is outlined in red on both graphs. A not is made at the bottom reading: 'Coastal biodiesel and kerosene are excluded from this graph as they are no longer used.'"  />
 
@@ -484,25 +469,29 @@ ggsave("buildings-per-sf.png", width = 6, height = 6)
 
 ### Plot 5: Top 3 consumers
 
+The line showing a well insulated family house was set at 900 gallons of
+fuel per year. This number is based off an internal calculation,
+assuming that 4 people are living in the house. This line was added to
+contextualize the amount of fuel that Arts & Science + Gates, Kaelber
+and Blair Tyson are using.
+
 ``` r
 fuels |>
   filter(Building %in% c("Blair Tyson", "Arts & Sci + Gates", "Kaelber"), Year < 2024) |>
   group_by(Building, Year) |>
   summarize(year_sum = sum(Gallons), .groups = "drop") |>
   ggplot(aes(x = Year, y = year_sum, color = Building, group = Building)) +
-  #geom_point() +
   geom_line(linewidth = 2, lineend = "round") +
-  
   labs(title = "Total Gallons of Fuel Consumed per Year",
        subtitle = "by the highest three buildings, from 2014 - 2023",
        x = "",
        y = "Total Gallons",
        caption = "HP = heat pumps (library stacks and archives), HPWH = heat pump water heating system") +
+  
   scale_x_continuous(breaks = seq(from = 2014, to = 2024, by = 1)) +
   scale_color_manual(values = c("#ff7c43", "#d45087", "#f95d6a")) +
-  ylim(0, NA) +
-  scale_y_continuous(labels = scales::comma) +
-
+  scale_y_continuous(limits = c(0, NA), labels = scales::comma) +
+  
   theme(legend.position = "none",
         plot.margin = margin(20,20,20,20),
         panel.background = element_rect(fill = "transparent"), 
@@ -533,9 +522,6 @@ fuels |>
   geom_text(aes(x = 2015, y = 7000), label = "Blair Tyson", 
             colour = "#d45087", size = 3, fontface = "bold")
 ```
-
-    ## Scale for y is already present.
-    ## Adding another scale for y, which will replace the existing scale.
 
 <img src="memo_files/figure-gfm/top-3-over-time-1.png" alt="A line graph showing the total gallons of fuel used by three biggest fuel consuming buildings, Arts &amp; Sciences + Gates, Kaebler, and Blair Tyson, from the years 2014 to 2023. There is also a line to show the average fuel consumption of a well insulated family home, which consumes much less fuel than either of the three buildings depicted. A dotted vertical line on 2020 marks where COVID affected fuel useage. A dot on Kaebler's line in 2017 shows when the heating pump was installed and a similar dot on Blair Tyston's line in 2022 shows when its heating pump was installed. Arts &amp; Sciences + Gates used the most fuel on average, while Blair Tyson used the least."  />
 

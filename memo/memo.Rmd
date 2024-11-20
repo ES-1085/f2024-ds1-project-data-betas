@@ -20,7 +20,6 @@ library(ggstream)
 library(showtext)
 library(ggtext)
 library(gghighlight)
-library(dplyr)
 library(ggplot2)
 library(forcats)
 library(scales)
@@ -33,7 +32,7 @@ options(scipen = 999)
 
 #### Step 1a: Load fossil fuel data and change column names
 
-``` {r clean_1a, message = FALSE, warning = FALSE}
+```{r clean_1a, message = FALSE, warning = FALSE}
 fuels <- read_csv("../data/Dead-River.csv",
                   col_names = c("X1", "X2", 
                                 "Delivery_date", "Fuel_type",
@@ -43,22 +42,22 @@ fuels <- read_csv("../data/Dead-River.csv",
 ```
 
 #### Step 1b: Load building area data
-```{r clean_1b}
+
+```{r clean_1b, message = FALSE, warning = FALSE}
 area <- read_csv("../data/BuildingArea.csv",
                  col_names = c("Building", "Square_feet"))
 ```
 
-
 #### Step 1c: Join area data to fuels data
 
-```{r clean_1c}
+```{r clean_1c, message = FALSE, warning = FALSE}
 fuels <- fuels |>
 left_join(area)
 ```
 
-
 ### Step 2: Change Delivery Date & Remove top extra row
-```{r change_delivery_date_and_remove_top_row}
+
+```{r change_delivery_date_and_remove_top_row, message = FALSE, warning = FALSE}
 fuels <- fuels |>
 select(Delivery_date, Fuel_type, Tank_number, Building, Gallons, Unit_cost, Cost, Square_feet) |>
   filter(Delivery_date != "Delivery Date") |> 
@@ -66,9 +65,9 @@ select(Delivery_date, Fuel_type, Tank_number, Building, Gallons, Unit_cost, Cost
  
 ```
 
-
 ### Step 3: Change tank number to integer values
-```{r change_tank_number}
+
+```{r change_tank_number, message = FALSE, warning = FALSE}
 fuels <- fuels |>  
   mutate(Tank_number = case_when(
    Tank_number == "Tank 8" ~ "8",
@@ -82,7 +81,7 @@ fuels <- fuels |>
 
 ### Step 4: Change cost to numeric values
 
-```{r change_cost}
+```{r change_cost, message = FALSE, warning = FALSE}
 fuels <- fuels |>
   mutate(Cost = case_when(
     Cost == "610.12 cr" ~ "-610.12", # the cr denotes a credit/refund, so here it is changed to a negative numeric value
@@ -92,7 +91,8 @@ fuels <- fuels |>
 ```
 
 ### Step 5: Standardize fuel type names
-```{r standardize_fuel_type}
+
+```{r standardize_fuel_type, message = FALSE, warning = FALSE}
 fuels <- fuels |>  
   mutate(Fuel_type = case_when(
     Fuel_type == "#2 HEATING OIL" ~ "Heating Oil",
@@ -107,15 +107,15 @@ fuels <- fuels |>
 
 ### Step 6: Change gallons and unit cost to numeric values
 
-```{r change_gallons_and_unit_cost}
+```{r change_gallons_and_unit_cost, message = FALSE, warning = FALSE}
 fuels <- fuels |>
   mutate(Gallons = as.numeric(Gallons)) |>
   mutate(Unit_cost = as.numeric(Unit_cost))
 ```
 
-
 ### Step 7: Add year and month variables
-```{r add_year_month}
+
+```{r add_year_month, message = FALSE, warning = FALSE}
 fuels <- fuels |>
   mutate(Year = substr(Delivery_date, 1, 4)) |>
   mutate(Month = substr(Delivery_date, 6, 7)) |>
@@ -125,7 +125,7 @@ fuels <- fuels |>
 
 ### Step 8: Change square feet to numeric
 
-```{r change_to_numeric}
+```{r change_to_numeric, message = FALSE, warning = FALSE}
 fuels <- fuels |>
   mutate(Square_feet = case_when(
     Building == "Turrets" ~ "8400",
@@ -137,7 +137,7 @@ fuels <- fuels |>
 
 ### Step 9: Load Palette and Factor Order
 
-```{r palette-and-order}
+```{r palette-and-order, message = FALSE, warning = FALSE}
 
 # Colour Palette
 pal = c("#003f5c",
@@ -177,10 +177,12 @@ order <- c( "Davis Center", "Dorr NHM", "Seafox", "Davis Village", "Blair Tyson"
 
 ```
 
-
 ## Actual Plots
 
 ### Plot 1: Total fuel usage by month
+
+This graph excludes coastal biodiesel and kerosene as they are not currently being used by COA. The gallons are summed for each month using the deliveries from 2014 to 2023 to see if there are any general trends in the month by month usage. Deliveries from 2024 are excluded because the year has not finished yet and there would be deliveries missing from the later months in the year.
+
 ```{r fuel_by_month, fig.alt = "A bar graph showin the total fuel usage per month for all campus owned buildings from 2014 to 2023. Months are shown on the x-axis and gallons on the y-axis. The data is split into two graphs showing the usage of different fuel types, with heating oil on top in navy blue and propane on bottom in pink. January has the highest fuel usage for both fuel types and July and August have the least. The bar for December is outlined in red on both graphs. A not is made at the bottom reading: 'Coastal biodiesel and kerosene are excluded from this graph as they are no longer used.'"}
 
 fuels |> 
@@ -189,7 +191,7 @@ fuels |>
   summarize(month_sum = sum(Gallons), .groups = "drop") |>
   ggplot(aes(x = Month, y = month_sum, fill = Fuel_type)) +
   geom_col() +
-  geom_col(data = . %>% filter(Month == 12), color = "red", size = 1, show.legend = FALSE) +
+  geom_col(data = . %>% filter(Month == 12), color = "red", linewidth = 1, show.legend = FALSE) +
   scale_y_continuous(limits = c(0, 65000), labels = scales::comma) +
   scale_x_continuous(breaks = 1:12, labels = month.abb) +
   facet_wrap(~ Fuel_type, ncol = 1, scales = "free_x") +    
@@ -456,6 +458,8 @@ ggsave("buildings-per-sf.png", width = 6, height = 6)
 
 ### Plot 5: Top 3 consumers
 
+The line showing a well insulated family house was set at 900 gallons of fuel per year. This number is based off an internal calculation, assuming that 4 people are living in the house. This line was added to contextualize the amount of fuel that Arts & Science + Gates, Kaelber and Blair Tyson are using.
+
 ```{r top-3-over-time, fig.alt = "A line graph showing the total gallons of fuel used by three biggest fuel consuming buildings, Arts & Sciences + Gates, Kaebler, and Blair Tyson, from the years 2014 to 2023. There is also a line to show the average fuel consumption of a well insulated family home, which consumes much less fuel than either of the three buildings depicted. A dotted vertical line on 2020 marks where COVID affected fuel useage. A dot on Kaebler's line in 2017 shows when the heating pump was installed and a similar dot on Blair Tyston's line in 2022 shows when its heating pump was installed. Arts & Sciences + Gates used the most fuel on average, while Blair Tyson used the least."}
 
 fuels |>
@@ -463,19 +467,17 @@ fuels |>
   group_by(Building, Year) |>
   summarize(year_sum = sum(Gallons), .groups = "drop") |>
   ggplot(aes(x = Year, y = year_sum, color = Building, group = Building)) +
-  #geom_point() +
   geom_line(linewidth = 2, lineend = "round") +
-  
   labs(title = "Total Gallons of Fuel Consumed per Year",
        subtitle = "by the highest three buildings, from 2014 - 2023",
        x = "",
        y = "Total Gallons",
        caption = "HP = heat pumps (library stacks and archives), HPWH = heat pump water heating system") +
+  
   scale_x_continuous(breaks = seq(from = 2014, to = 2024, by = 1)) +
   scale_color_manual(values = c("#ff7c43", "#d45087", "#f95d6a")) +
-  ylim(0, NA) +
-  scale_y_continuous(labels = scales::comma) +
-
+  scale_y_continuous(limits = c(0, NA), labels = scales::comma) +
+  
   theme(legend.position = "none",
         plot.margin = margin(20,20,20,20),
         panel.background = element_rect(fill = "transparent"), 
@@ -509,4 +511,3 @@ fuels |>
 ggsave("top-3.png", width = 7, height = 5)
 
 ```
-
