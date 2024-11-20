@@ -1,6 +1,6 @@
 Project memo
 ================
-Team name
+Data Betas
 
 This document should contain a detailed account of the data clean up for
 your data and the design choices you are making for your plots. For
@@ -21,6 +21,10 @@ library(ggstream)
 library(showtext)
 library(ggtext)
 library(gghighlight)
+library(dplyr)
+library(ggplot2)
+library(forcats)
+library(scales)
 options(scipen = 999)
 ```
 
@@ -147,6 +151,46 @@ fuels <- fuels |>
   mutate(Square_feet = as.numeric(Square_feet))
 ```
 
+### Step 9: Load Palette and Factor Order
+
+``` r
+# Colour Palette
+pal = c("#003f5c",
+      "#2f4b7c",
+      "#665191",
+      "#a05195",
+      "#d45087",
+      "#f95d6a",
+      "#ff7c43",
+      "#6E6675",
+      "#6E6675",
+      "#6E6675",
+      "#6E6675",
+      "#6E6675",
+      "#6E6675",
+      "#6E6675",
+      "#6E6675",
+      "#6E6675",
+      "#6E6675",
+      "#6E6675",
+      "#6E6675",
+      "#6E6675",
+      "#6E6675",
+      "#6E6675",
+      "#6E6675",
+      "#6E6675",
+      "#6E6675",
+      "#6E6675",
+      "#6E6675",
+      "#6E6675",
+      "#6E6675",
+      "#92879B"
+      )
+
+# Order of buildings for the fill
+order <- c( "Davis Center", "Dorr NHM", "Seafox", "Davis Village", "Blair Tyson", "Kaelber", "Arts & Sci + Gates", "Studio 5+6", "Pottery Studio", "Peach House", "Hatchery", "Greenhouse", "Carriage", "BHF New Greenhouse", "BHF Main Bldg/2 Greenhouses", "BHF Farm House", "18B Norris Ave", "171 Beech Hill Road", "14 Norris Ave", "Turrets", "Turrets Annex", "B&G", "Witchcliff Apartments", "Witchcliff", "PRF", "Cottage", "Peggy Barn", "Davis Carriage", "CHE Generator")
+```
+
 ## Actual Plots
 
 ### Plot 1: Total fuel usage by month
@@ -161,7 +205,7 @@ fuels |>
   geom_col(data = . %>% filter(Month == 12), color = "red", size = 1, show.legend = FALSE) +
   scale_y_continuous(limits = c(0, 65000), labels = scales::comma) +
   scale_x_continuous(breaks = 1:12, labels = month.abb) +
- facet_wrap(~ Fuel_type, ncol = 1, scales = "free_x") +    
+  facet_wrap(~ Fuel_type, ncol = 1, scales = "free_x") +    
   geom_text(aes(x = Month, y = month_sum, label = scales::comma(month_sum)), 
             vjust = -0.5, 
             size = 2.2) +
@@ -200,52 +244,16 @@ ggsave("months.png", width = 8, height = 6)
 ### Plot 2: Fuel consumption progression
 
 ``` r
-# Colour Palette
-pal=c("#003f5c",
-      "#2f4b7c",
-      "#665191",
-      "#a05195",
-      "#d45087",
-      "#f95d6a",
-      "#ff7c43",
-      #"#ffa600",
-      "#6E6675",
-      "#6E6675",
-      "#6E6675",
-      "#6E6675",
-      "#6E6675",
-      "#6E6675",
-      "#6E6675",
-      "#6E6675",
-      "#6E6675",
-      "#6E6675",
-      "#6E6675",
-      "#6E6675",
-      "#6E6675",
-      "#6E6675",
-      "#6E6675",
-      "#6E6675",
-      "#6E6675",
-      "#6E6675",
-      "#6E6675",
-      "#6E6675",
-      "#6E6675",
-      "#6E6675")
-
-# Order of buildings for the fill
-order <- c( "Davis Center", "Dorr NHM", "Seafox", "Davis Village", "Blair Tyson", "Kaelber", "Arts & Sci + Gates", "Studio 5+6", "Pottery Studio", "Peach House", "Hatchery", "Greenhouse", "Carriage", "BHF New Greenhouse", "BHF Main Bldg/2 Greenhouses", "BHF Farm House", "18B Norris Ave", "171 Beech Hill Road", "14 Norris Ave", "Turrets", "Turrets Annex", "B&G", "Witchcliff Apartments", "Witchcliff", "PRF", "Cottage", "Peggy Barn", "Davis Carriage", "CHE Generator")
-
-
 fuels |>
   filter(Year != 2024) |>
   group_by(Year, Building) |>
   summarise(Total_Gallons_per_years = sum(Gallons)) |>
   mutate(Building = factor(Building, levels=order)) |>
-  filter(!is.na(Building)) |> #why do we need this?
+  filter(!is.na(Building)) |>
   ggplot(aes(Year, Total_Gallons_per_years, fill = Building)) +
   geom_area() +
   
-  scale_fill_manual(values = pal) + #get rid of lines
+  scale_fill_manual(values = pal) +
   scale_color_manual(values = pal) +
   scale_x_continuous(breaks=c(2014,2017,2020,2023),labels = c("2014","2017","2020","2023")) + 
   scale_y_continuous(expand = c(0,0)) +
@@ -269,7 +277,6 @@ fuels |>
        y = "Gallons of Fuel Consumed per Year",
        x = "") +
   
-# Labels
   annotate("text", x = 2023.1, y = 45000,
            label = "Davis Center",
            hjust=0,
@@ -342,7 +349,6 @@ fuels |>
            fontface="bold",
            color=pal[2]) +
   
-  # Fuel Lines
   geom_segment(aes(x = 2014, y = 0, xend = 2014, yend = 63400+8000),color="black") +
   geom_point(aes(x = 2014, y = 63400+8000),color="black") +
   annotate("text", x = 2014, y = 63400+12000,
@@ -384,26 +390,6 @@ ggsave("progression.png", width = 10, height = 6)
 ```
 
 ### Plot 3: Total fuel all buildings
-
-``` r
-# library(gghighlight)  # Make sure this is loaded
-
-library(dplyr)
-library(ggplot2)
-library(forcats)
-library(scales)
-```
-
-    ## 
-    ## Attaching package: 'scales'
-
-    ## The following object is masked from 'package:purrr':
-    ## 
-    ##     discard
-
-    ## The following object is masked from 'package:readr':
-    ## 
-    ##     col_factor
 
 ``` r
 fuels |>
