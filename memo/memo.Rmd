@@ -378,7 +378,8 @@ fuels |>
   scale_color_identity() +
   theme_minimal() +
   theme(
-    legend.position = "none"
+    legend.position = "none",
+    axis.text.y = element_text(color = "black")
   ) +
   labs(title = "Use of Fuel Across COA Buildings",
        subtitle = "2023",
@@ -417,7 +418,8 @@ fuels |>
        y = "") +
   scale_fill_manual(values = pal) +
   theme_minimal() +
-  theme(legend.position = "none")
+  theme(legend.position = "none",
+        axis.text.y = element_text(color = "black"))
 
 ggsave("buildings-per-sf.png", width = 6, height = 4)
 

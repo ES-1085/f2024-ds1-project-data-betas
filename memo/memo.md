@@ -419,7 +419,8 @@ fuels |>
   scale_color_identity() +
   theme_minimal() +
   theme(
-    legend.position = "none"
+    legend.position = "none",
+    axis.text.y = element_text(color = "black")
   ) +
   labs(title = "Use of Fuel Across COA Buildings",
        subtitle = "2023",
@@ -459,7 +460,8 @@ fuels |>
        y = "") +
   scale_fill_manual(values = pal) +
   theme_minimal() +
-  theme(legend.position = "none")
+  theme(legend.position = "none",
+        axis.text.y = element_text(color = "black"))
 ```
 
 <img src="memo_files/figure-gfm/total_gallons_per_sf_updated-1.png" alt="Horizontal bar graph showing the building on the y-axis and the total gallons of fuel per square foot used by those buildings in 2023. The top 7 buildings in order are B&amp;G, Davis Center, Dorr Natural Hidtory Museum, Seafox, Turrets Annex, Kaelber, and Arts &amp; Sci + Gates. The fill color of the graph indicates the top 7 buildings with the most total fuel consumption (disregarding square foot) in order: Arts &amp; Science + Gates, Kaelber, Blair Tyson, Davis Village, Seafox, Dorr Natural History Museum and Davis Center. B&amp;G consumed almost 1 gallon per square foot, and Davis Center is second at around 0.8. The lowest of the 7 is Arts &amp; Science + Gates at around 0.3, and the lowest on campus is Carriage at near 0."  />
