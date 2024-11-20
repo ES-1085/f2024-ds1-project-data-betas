@@ -161,17 +161,27 @@ fuels |>
   geom_col(data = . %>% filter(Month == 12), color = "red", size = 1, show.legend = FALSE) +
   scale_y_continuous(limits = c(0, 65000), labels = scales::comma) +
   scale_x_continuous(breaks = 1:12, labels = month.abb) +
- facet_wrap(~ Fuel_type, ncol = 1) +    
+ facet_wrap(~ Fuel_type, ncol = 1, scales = "free_x") +    
   geom_text(aes(x = Month, y = month_sum, label = scales::comma(month_sum)), 
             vjust = -0.5, 
             size = 2.2) +
   labs(title = "Total Fuel Usage per Month",
-       subtitle = "2014 - 2023, all campus-owned buildings",
+       subtitle = "in all campus-owned buildings, summed from 2014 - 2023",
+       x = "",
        y = "Total Gallons",
        fill = "Fuel Type",
        caption = "Coastal biodiesel and kerosene are excluded from this graph as they are no longer used.") +
-  theme_minimal() +
-  theme(strip.text = element_blank()) +
+  
+  theme(strip.text = element_blank(),
+        panel.background = element_rect(fill = "transparent"), 
+        panel.grid = element_blank(),
+        legend.background = element_blank(),
+        plot.background = element_rect(fill = "transparent", color = NA),
+        axis.text.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        plot.margin = margin(20,20,20,20)
+        ) +
+  
   scale_fill_manual(values = c("#003f5c", "#d45087"))
 ```
 
@@ -181,10 +191,10 @@ fuels |>
     ## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
     ## generated.
 
-<img src="memo_files/figure-gfm/fuel_by_month-1.png" alt="A bar graph showin the total ful usage per month for all campus owned buildings from 2014 to 2023. Months are shown on the x-axis and gallons on the y-axis. The data is split into two graphs showing the usage of different fuel types, with heating oil on top in navy blue and propane on bottom in pink. January has the highest fuel usage for both fuel types and July and August have the least. The bar for December is outlined in red on both graphs. A not is made at the bottom reading: 'Coastal biodiesel and kerosene are excluded from this graph as they are no longer used.'"  />
+<img src="memo_files/figure-gfm/fuel_by_month-1.png" alt="A bar graph showin the total fuel usage per month for all campus owned buildings from 2014 to 2023. Months are shown on the x-axis and gallons on the y-axis. The data is split into two graphs showing the usage of different fuel types, with heating oil on top in navy blue and propane on bottom in pink. January has the highest fuel usage for both fuel types and July and August have the least. The bar for December is outlined in red on both graphs. A not is made at the bottom reading: 'Coastal biodiesel and kerosene are excluded from this graph as they are no longer used.'"  />
 
 ``` r
-ggsave("months.png", width = 8, height = 4)
+ggsave("months.png", width = 8, height = 6)
 ```
 
 ### Plot 2: Fuel consumption progression
@@ -198,29 +208,30 @@ pal=c("#003f5c",
       "#d45087",
       "#f95d6a",
       "#ff7c43",
+      #"darkorange",
       #"#ffa600",
-      "grey31",
-      "grey31",
-      "grey31",
-      "grey31",
-      "grey31",
-      "grey31",
-      "grey31",
-      "grey31",
-      "grey31",
-      "grey31",
-      "grey31",
-      "grey31",
-      "grey31",
-      "grey31",
-      "grey31",
-      "grey31",
-      "grey31",
-      "grey31",
-      "grey31",
-      "grey31",
-      "grey31",
-      "grey31")
+      "#92879B",
+      "#92879B",
+      "#92879B",
+      "#92879B",
+      "#92879B",
+      "#92879B",
+      "#92879B",
+      "#92879B",
+      "#92879B",
+      "#92879B",
+      "#92879B",
+      "#92879B",
+      "#92879B",
+      "#92879B",
+      "#92879B",
+      "#92879B",
+      "#92879B",
+      "#92879B",
+      "#92879B",
+      "#92879B",
+      "#92879B",
+      "#92879B")
 
 # Order of buildings for the fill
 order <- c( "Davis Center", "Dorr NHM", "Seafox", "Davis Village", "Blair Tyson", "Kaelber", "Arts & Sci + Gates", "Studio 5+6", "Pottery Studio", "Peach House", "Hatchery", "Greenhouse", "Carriage", "BHF New Greenhouse", "BHF Main Bldg/2 Greenhouses", "BHF Farm House", "18B Norris Ave", "171 Beech Hill Road", "14 Norris Ave", "Turrets", "Turrets Annex", "B&G", "Witchcliff Apartments", "Witchcliff", "PRF", "Cottage", "Peggy Barn", "Davis Carriage", "CHE Generator")
@@ -242,24 +253,25 @@ fuels |>
   
   coord_cartesian(clip = "off", xlim = c(2014,2023)) +
   
-  theme_minimal() +
   theme(
     axis.line.x = element_line(linewidth = .75),
-    # panel.grid = element_blank(),
-    axis.text.y = element_blank(),
+    panel.grid = element_blank(),
+    #axis.text.y = element_blank(),
+    #axis.ticks.y = element_blank(),
     axis.text.x = element_text(color="black", size=10, margin = margin(5,0,0,0)),
-    plot.margin = margin(10,70,10,10),
-    # panel.background = element_rect(fill = "white", colour = "white", 
-    #                                linetype = "solid", linewidth = 0.5),
-    legend.position = "none"
+    plot.margin = margin(20,90,20,20),
+    legend.position = "none",
+    panel.background = element_rect(fill = "transparent"), 
+    plot.background = element_rect(fill = "transparent", 
+                                       color = NA) 
   ) +
   labs(title = "Progression of Fuel Consumption",
-       subtitle = "2014 - 2023",
-       y = "Fuel Consumed per Year",
-       x = "Year") +
+       subtitle = "Across all Buildings, from 2014 - 2023",
+       y = "Gallons of Fuel Consumed per Year",
+       x = "") +
   
 # Labels
-  annotate("text", x = 2023.1, y = 47000,
+  annotate("text", x = 2023.1, y = 45000,
            label = "Davis Center",
            hjust=0,
            size=3,
@@ -275,7 +287,7 @@ fuels |>
            fontface="bold",
            color=pal[2]) +
   
-    annotate("text", x = 2023.1, y = 37000,
+    annotate("text", x = 2023.1, y = 39000,
            label = "Seafox",
            hjust=0,
            size=3,
@@ -291,7 +303,7 @@ fuels |>
            fontface="bold",
            color=pal[4]) +
   
-  annotate("text", x = 2023.1, y = 29000,
+  annotate("text", x = 2023.1, y = 30000,
            label = "Blair Tyson",
            hjust=0,
            size=3,
@@ -299,7 +311,7 @@ fuels |>
            fontface="bold",
            color=pal[5]) +
   
-  annotate("text", x = 2023.1, y = 23000,
+  annotate("text", x = 2023.1, y = 23200,
            label = "Kaelber",
            hjust=0,
            size=3,
@@ -315,7 +327,7 @@ fuels |>
            fontface="bold",
            color=pal[7]) +
   
-  annotate("text", x = 2023.1, y = 4000,
+  annotate("text", x = 2023.1, y = 3000,
            label = "Other",
            hjust=0,
            size=3,
@@ -332,9 +344,9 @@ fuels |>
            color=pal[2]) +
   
   # Fuel Lines
-  geom_segment(aes(x = 2014, y = 0, xend = 2014, yend = 60000+10000),color="black") +
-  geom_point(aes(x = 2014, y = 60000+10000),color="black") +
-  annotate("text", x = 2014, y = 60000+15000,
+  geom_segment(aes(x = 2014, y = 0, xend = 2014, yend = 63400+8000),color="black") +
+  geom_point(aes(x = 2014, y = 63400+8000),color="black") +
+  annotate("text", x = 2014, y = 63400+12000,
            label = "63,443",
            hjust=0.5,
            size=3,
@@ -342,9 +354,9 @@ fuels |>
            fontface="bold",
            color="black") +
   
-  geom_segment(aes(x = 2019, y = 0, xend = 2019, yend = 70000+10000),color="black") +
-  geom_point(aes(x = 2019, y = 70000+10000),color="black") +
-  annotate("text", x = 2019, y = 70000+15000,
+  geom_segment(aes(x = 2019, y = 0, xend = 2019, yend = 70300+8000),color="black") +
+  geom_point(aes(x = 2019, y = 70300+8000),color="black") +
+  annotate("text", x = 2019, y = 70300+12000,
            label = "70,333",
            hjust=0.5,
            size=3,
@@ -352,10 +364,10 @@ fuels |>
            fontface="bold",
            color="black") +
   
-  geom_segment(aes(x = 2023, y = 0, xend = 2023, yend = 50000+10000),color="black") +
-  geom_point(aes(x = 2023, y = 50000+10000),color="black") +
-  annotate("text", x = 2023, y = 50000+15000,
-           label = "22,938",
+  geom_segment(aes(x = 2023, y = 0, xend = 2023, yend = 46000+8000),color="black") +
+  geom_point(aes(x = 2023, y = 46000+8000),color="black") +
+  annotate("text", x = 2023, y = 46000+12000,
+           label = "46,050",
            hjust=0.5,
            size=3,
            lineheight=.8,
@@ -369,7 +381,7 @@ fuels |>
 <img src="memo_files/figure-gfm/progression-1.png" alt="Area graph showing the progression of total fuel consumption on campus between 2014 and 2023. The fill color of the graph indicates the building, highlighting the top 7 consumers: Arts &amp; Science + Gates, Kaelber, Blair Tyson, Davis Village, Seafox, Dorr Natural History Museum and Davis Center. Fuel consumption started at just over 60,000 in 2014, and is down to around 50,000 in 2023, with a peak in 2019 at around 70,000."  />
 
 ``` r
-ggsave("progression.png", width = 12, height = 6)
+ggsave("progression.png", width = 10, height = 6)
 ```
 
 ### Plot 3: Total fuel all buildings
@@ -417,21 +429,27 @@ fuels |>
             size = 2.7) +
   scale_fill_manual(values = pal) +
   scale_color_identity() +
-  theme_minimal() +
   theme(
     legend.position = "none",
-    axis.text.y = element_text(color = "black")
-  ) +
+    axis.text.y = element_text(color = "black"),
+    panel.background = element_rect(fill = "transparent"), 
+    panel.grid.major = element_blank(), 
+    panel.grid.minor = element_blank(),
+    plot.background = element_rect(fill = "transparent", 
+                                       color = NA) ,
+    plot.margin = margin(20,0,20,0),
+    axis.ticks.y = element_blank(),
+    ) +
   labs(title = "Use of Fuel Across COA Buildings",
-       subtitle = "2023",
+       subtitle = "In 2023",
        y = "",
-       x = "Total Amount of Fuel in Gallons")
+       x = "Total Amount of Fuel Consumed in Gallons")
 ```
 
 <img src="memo_files/figure-gfm/use-of-fuel-across-all-COA-buildings-1.png" alt="A horizontal bar graph showing the building on the y-axis and the total amount of gallons of fuel used by those buildings in 2023. The fill color of the graph indicates the top 7 buildings with the most fuel consumption in order: Arts &amp; Science + Gates, Kaelber, Blair Tyson, Davis Village, Seafox, Dorr Natural History Museum and Davis Center. The bars for the other buildings are uncolored. Arts &amp; Science + Gates is the greatest consumer by far at around 15,000 gallons. Kaelber is in second place at around 7000. Davis Center, the smallest consumer out of the 7 used around 3000 gallons."  />
 
 ``` r
-ggsave("buildings-total.png", width = 6, height = 4)
+ggsave("buildings-total.png", width = 6, height = 6)
 ```
 
 ### Plot 4: Fuel per square foot all buildings
@@ -454,20 +472,29 @@ fuels |>
                 color = "black",
                 hjust = -0.2,
             size = 2.7) +
-  labs(title = "Total Gallons per Square Foot",
-       subtitle = "2023",
-       x = "Total Gallons per Square Foot",
+  labs(title = "Use of Fuel per Square Foot Across COA Buildings",
+       subtitle = "In 2023",
+       x = "Total Gallons Consumed per Square Foot",
        y = "") +
   scale_fill_manual(values = pal) +
   theme_minimal() +
-  theme(legend.position = "none",
-        axis.text.y = element_text(color = "black"))
+  theme(
+    legend.position = "none",
+    panel.background = element_rect(fill = "transparent"), 
+    panel.grid.major = element_blank(), 
+    panel.grid.minor = element_blank(),
+    plot.background = element_rect(fill = "transparent", 
+                                       color = NA),
+    plot.margin = margin(20,0,20,0),
+    axis.ticks.y = element_blank(),
+    axis.text.y = element_text(color = "black")
+    )
 ```
 
 <img src="memo_files/figure-gfm/total_gallons_per_sf_updated-1.png" alt="Horizontal bar graph showing the building on the y-axis and the total gallons of fuel per square foot used by those buildings in 2023. The top 7 buildings in order are B&amp;G, Davis Center, Dorr Natural Hidtory Museum, Seafox, Turrets Annex, Kaelber, and Arts &amp; Sci + Gates. The fill color of the graph indicates the top 7 buildings with the most total fuel consumption (disregarding square foot) in order: Arts &amp; Science + Gates, Kaelber, Blair Tyson, Davis Village, Seafox, Dorr Natural History Museum and Davis Center. B&amp;G consumed almost 1 gallon per square foot, and Davis Center is second at around 0.8. The lowest of the 7 is Arts &amp; Science + Gates at around 0.3, and the lowest on campus is Carriage at near 0."  />
 
 ``` r
-ggsave("buildings-per-sf.png", width = 6, height = 4)
+ggsave("buildings-per-sf.png", width = 6, height = 6)
 ```
 
 ### Plot 5: Top 3 consumers
@@ -479,34 +506,47 @@ fuels |>
   summarize(year_sum = sum(Gallons), .groups = "drop") |>
   ggplot(aes(x = Year, y = year_sum, color = Building, group = Building)) +
   #geom_point() +
-  geom_line(linewidth = 1) +
+  geom_line(linewidth = 2, lineend = "round") +
   
-  theme_minimal() +
-  labs(title = "Total Gallons of Fuel per Year",
-       subtitle = "2014 - 2023, 3 biggest consumers",
+  labs(title = "Total Gallons of Fuel Consumed per Year",
+       subtitle = "by the highest three buildings, from 2014 - 2023",
+       x = "",
        y = "Total Gallons",
        caption = "HP = heat pumps (library stacks and archives), HPWH = heat pump water heating system") +
   scale_x_continuous(breaks = seq(from = 2014, to = 2024, by = 1)) +
   scale_color_manual(values = c("#ff7c43", "#d45087", "#f95d6a")) +
   ylim(0, NA) +
   scale_y_continuous(labels = scales::comma) +
-  #scale_color_viridis_d() +
+
   theme(legend.position = "none",
-        plot.margin = margin(0,50,0,0),) +
+        plot.margin = margin(20,20,20,20),
+        panel.background = element_rect(fill = "transparent"), 
+        panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(),
+        plot.background = element_rect(fill = "transparent", color = NA),
+        axis.line.x = element_line(linewidth = .25),
+        ) +
+  
   coord_cartesian(clip = "off") +
   
   geom_vline(xintercept = 2020, linetype = "dotted", linewidth = 1, colour = "black") +
-  geom_text(aes(x = 2020.5, y = 16000), label = "COVID", colour = "black") +
-  geom_text(aes(x = 2021.3, y = 8300), label = "BT HPWH installed", colour = "black", size = 3) +
+  geom_text(aes(x = 2020.5, y = 16000), label = "COVID", 
+            colour = "black") +
+  geom_text(aes(x = 2021.3, y = 8300), label = "BT HPWH installed", 
+            colour = "black", size = 3) +
   geom_point(aes(x = 2022, y = 7500), color = "black", size = 3, shape = 16) +
-  geom_text(aes(x = 2017, y = 8800), color = "black", label = "Kaelber HPs installed", size = 3) +
+  geom_text(aes(x = 2017, y = 8800), color = "black", label = "Kaelber HPs installed", 
+            size = 3) +
   geom_point(aes(x = 2017, y = 9550), color = "black", size = 3, shape = 16) +
-  geom_line(aes(y = 900), color = "black") +
+  geom_line(aes(y = 900), color = "#2f4b7c", linewidth = 2, lineend = "round") +
   geom_text(aes(x = 2021.75, y = 1500), label = "Well insulated family house", 
-            color = "black", size = 3) +
-  geom_text(aes(x = 2015, y = 15000), label = "Arts & Sci + Gates", colour = "#ff7c43", size = 3, fontface = "bold") +
-  geom_text(aes(x = 2015, y = 11000), label = "Kaelber", colour = "#f95d6a", size = 3, fontface = "bold") +
-  geom_text(aes(x = 2015, y = 7000), label = "Blair Tyson", colour = "#d45087", size = 3, fontface = "bold")
+            color = "#2f4b7c", size = 3) +
+  geom_text(aes(x = 2015, y = 15000), label = "Arts & Sci + Gates", 
+            colour = "#ff7c20", size = 3, fontface = "bold") +
+  geom_text(aes(x = 2015, y = 11000), label = "Kaelber", 
+            colour = "#f95d6a", size = 3, fontface = "bold") +
+  geom_text(aes(x = 2015, y = 7000), label = "Blair Tyson", 
+            colour = "#d45087", size = 3, fontface = "bold")
 ```
 
     ## Scale for y is already present.
@@ -515,5 +555,5 @@ fuels |>
 <img src="memo_files/figure-gfm/top-3-over-time-1.png" alt="A line graph showing the total gallons of fuel used by three biggest fuel consuming buildings, Arts &amp; Sciences + Gates, Kaebler, and Blair Tyson, from the years 2014 to 2023. There is also a line to show the average fuel consumption of a well insulated family home, which consumes much less fuel than either of the three buildings depicted. A dotted vertical line on 2020 marks where COVID affected fuel useage. A dot on Kaebler's line in 2017 shows when the heating pump was installed and a similar dot on Blair Tyston's line in 2022 shows when its heating pump was installed. Arts &amp; Sciences + Gates used the most fuel on average, while Blair Tyson used the least."  />
 
 ``` r
-ggsave("top-3.png", width = 8, height = 4)
+ggsave("top-3.png", width = 7, height = 5)
 ```
