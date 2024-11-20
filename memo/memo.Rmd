@@ -438,12 +438,12 @@ fuels |>
        x = "Total Gallons Consumed per Square Foot",
        y = "") +
   scale_fill_manual(values = pal) +
-  theme_minimal() +
   theme(
     legend.position = "none",
     panel.background = element_rect(fill = "transparent"), 
     panel.grid.major = element_blank(), 
     panel.grid.minor = element_blank(),
+
     plot.background = element_rect(fill = "transparent", 
                                        color = NA),
     plot.margin = margin(20,0,20,0),
