@@ -430,6 +430,7 @@ fuels |>
   scale_color_identity() +
   theme(
     legend.position = "none",
+    axis.text.y = element_text(color = "black"),
     panel.background = element_rect(fill = "transparent"), 
     panel.grid.major = element_blank(), 
     panel.grid.minor = element_blank(),
@@ -438,7 +439,6 @@ fuels |>
     plot.margin = margin(20,0,20,0),
     axis.ticks.y = element_blank(),
     ) +
-  
   labs(title = "Use of Fuel Across COA Buildings",
        subtitle = "In 2023",
        y = "",
@@ -476,7 +476,7 @@ fuels |>
        x = "Total Gallons Consumed per Square Foot",
        y = "") +
   scale_fill_manual(values = pal) +
-
+  theme_minimal() +
   theme(
     legend.position = "none",
     panel.background = element_rect(fill = "transparent"), 
@@ -485,7 +485,8 @@ fuels |>
     plot.background = element_rect(fill = "transparent", 
                                        color = NA),
     plot.margin = margin(20,0,20,0),
-    axis.ticks.y = element_blank()
+    axis.ticks.y = element_blank(),
+    axis.text.y = element_text(color = "black")
     )
 ```
 
