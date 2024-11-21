@@ -42,7 +42,7 @@ used in these buildings has still not increased to its previous levels, though o
 
 ## Handout
 
-Our presentation can be found [here](handout/handout.pdf). You can update the filename and extension of your handout.
+Our presentation can be found [here](data-betas-handout.pdf). You can update the filename and extension of your handout.
 
 ## Memo
 
