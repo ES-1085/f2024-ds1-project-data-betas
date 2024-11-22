@@ -50,12 +50,9 @@ A link to the code and how we created our graphics in our memo can be found [her
 
 ## Data
 
-Include a citation for your data here. See
-<http://libraryguides.vu.edu.au/c.php?g=386501&p=4347840> for guidance
-on proper citation for datasets. If you got your data off the web, make
-sure to note the retrieval date.
+COA Community Energy Center. (2024). _Dead River Data_ [Data set]. https://docs.google.com/spreadsheets/d/1_oFXMAKkEMwhg1HNeZJn0DBDePgjnmG9MIRcDo3z7JY/edit?usp=sharing
 
 ## References
 
-List any references here. You should, at a minimum, list your data
-source.
+COA Community Energy Center. (2024). _Dead River Data_ [Data set]. https://docs.google.com/spreadsheets/d/1_oFXMAKkEMwhg1HNeZJn0DBDePgjnmG9MIRcDo3z7JY/edit?usp=sharing
+U.S. Energy Information Administration - EIA - independent statistics and analysis [WWW Document]. (2024). EIA. URL https://www.eia.gov/environment/emissions/co2_vol_mass.php 
