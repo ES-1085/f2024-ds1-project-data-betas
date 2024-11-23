@@ -51,3 +51,7 @@ COA Community Energy Center. (2024). _Dead River Data_ [Data set]. https://docs.
 COA Community Energy Center. (2024). _Dead River Data_ [Data set]. https://docs.google.com/spreadsheets/d/1_oFXMAKkEMwhg1HNeZJn0DBDePgjnmG9MIRcDo3z7JY/edit?usp=sharing
 
 U.S. Energy Information Administration - EIA - independent statistics and analysis [WWW Document]. (2024). EIA. URL https://www.eia.gov/environment/emissions/co2_vol_mass.php 
+
+Holtz, Yan (2018). Stacked Line Chart with Inline Labels - r Graph Gallery.
+URL https://r-graph-gallery.com/web-stacked-area-chart-inline-labels.html
+
